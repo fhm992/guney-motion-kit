@@ -30,7 +30,8 @@ Load what a scene needs in its `<head>` (paths relative to the project folder), 
 - `CAP.words(tl, parent, words, { offset, color, accent, y, size, maxWords, hold })`: one word on screen at a time, popping in
   on the moment it is spoken. `words` is `[{ w, s, e }]`, normally `window.VO.captions.words`. `maxWords: 3` shows short phrases
   with the spoken word highlighted instead.
-- Get the timings from the voice with Whisper: from the project folder run
+- If the person already has a word-by-word SRT, skip Whisper: `node ../../tools/captions/import-srt.mjs <their.srt>` (same outputs, instant).
+- Otherwise get the timings from the voice with Whisper: from the project folder run
   `node ../../tools/captions/transcribe.mjs <voice.mp3|video.mp4> [--script script.txt] [--lang bn] [--model medium] [--shift -0.2]`.
   It writes `qa/words.json`, a word-by-word `qa/words.srt` and `assets/vo-times.js` (load that before your scene script).
   `--script` keeps your own words and spelling (any language) and reports how much matched the audio. Bangla: use `--lang bn --model medium`.

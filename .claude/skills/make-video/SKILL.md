@@ -9,7 +9,8 @@ description: Make a motion-graphics video or clip with this kit, end to end - br
 2. **Brief** in one message: topic, audience, length, where it goes, what they have (script, voiceover, talking-head edit,
    screen recordings, reference video, brand colours) and the background colour. Do not ask about things you can decide.
 3. `npm run new-video -- <slug>` and work inside `video-projects/<slug>/`.
-4. **Timing:** with a voiceover, get word timings with Whisper (`node ../../tools/captions/transcribe.mjs <voice>`; or any word-level transcript) into `assets/vo-times.js` as
+4. **Timing:** if the person gives a word-by-word SRT/VTT, use it and do NOT run Whisper: `node ../../tools/captions/import-srt.mjs <their.srt>`.
+   Otherwise, with a voiceover, get word timings with Whisper (`node ../../tools/captions/transcribe.mjs <voice>`; or any word-level transcript) into `assets/vo-times.js` as
    `window.VO = { <section>: { base, words: [{ w, s, e }] } }`. Every visual lands on its word.
    For word-by-word subtitles use `CAP.words(...)` from `assets/captions.js` (`docs/LIBRARY.md`).
 5. **Beat plan** in `plan/BEATS.md`: per beat the words, what is shown (what each key word names, as an animated object),
