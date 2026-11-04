@@ -26,6 +26,14 @@ Load what a scene needs in its `<head>` (paths relative to the project folder), 
 ## `claudewin.js`: Claude-style window (`window.CW`)
 - `W = CW.make(parent, { title, x, y, w, h })`; `W.type`, `W.send`, `W.reply`, `W.zoom`; `CW.live(tl, W, duration)`.
 
+## `captions.js`: word-by-word subtitles (`window.CAP`)
+- `CAP.words(tl, parent, words, { offset, color, accent, y, size, maxWords, hold })`: one word on screen at a time, popping in
+  on the moment it is spoken. `words` is `[{ w, s, e }]`, normally `window.VO.captions.words`. `maxWords: 3` shows short phrases
+  with the spoken word highlighted instead.
+- Get the timings from the voice with Whisper: from the project folder run
+  `node ../../tools/captions/transcribe.mjs <voice.mp3|video.mp4>`. It writes `qa/words.json` and `assets/vo-times.js`
+  (load `assets/vo-times.js` before your scene script). Read the printed transcript and fix misheard words in `qa/words.json`.
+
 ## Sound
 - `sfx/` (copied to `assets/audio/sfx/`): keystrokes, click, pop, thunk, rise, swish, whoosh. Mix a cue sheet with
   `node ../../tools/audio/sfxmix.mjs events.json <length> out.wav raw`.
