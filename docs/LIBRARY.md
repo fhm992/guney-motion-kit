@@ -31,8 +31,11 @@ Load what a scene needs in its `<head>` (paths relative to the project folder), 
   on the moment it is spoken. `words` is `[{ w, s, e }]`, normally `window.VO.captions.words`. `maxWords: 3` shows short phrases
   with the spoken word highlighted instead.
 - Get the timings from the voice with Whisper: from the project folder run
-  `node ../../tools/captions/transcribe.mjs <voice.mp3|video.mp4>`. It writes `qa/words.json` and `assets/vo-times.js`
-  (load `assets/vo-times.js` before your scene script). Read the printed transcript and fix misheard words in `qa/words.json`.
+  `node ../../tools/captions/transcribe.mjs <voice.mp3|video.mp4> [--script script.txt] [--lang bn] [--model medium] [--shift -0.2]`.
+  It writes `qa/words.json`, a word-by-word `qa/words.srt` and `assets/vo-times.js` (load that before your scene script).
+  `--script` keeps your own words and spelling (any language) and reports how much matched the audio. Bangla: use `--lang bn --model medium`.
+  Whisper times are usually within 0.2 to 0.3 s: if words show a little late, use `--shift -0.2`. Check the printed words and fix mistakes in `qa/words.json`.
+  The speech model downloads once from huggingface.co (needs network access).
 
 ## Sound
 - `sfx/` (copied to `assets/audio/sfx/`): keystrokes, click, pop, thunk, rise, swish, whoosh. Mix a cue sheet with
