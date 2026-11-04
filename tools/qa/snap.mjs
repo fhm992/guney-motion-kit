@@ -1,5 +1,6 @@
 // Headless stills from a composition: seeks the timeline (and its videos) to each time and screenshots.
 // Usage: node qa/snap.mjs s1-step.html s1 out-dir 0.5 1.0 1.5 ...   (or a range: --range 0 5 0.25)
+// Vertical compositions: VIEW=1080x1920 node ...
 import fs from 'node:fs';
 import { puppeteer, chromePath } from '../chrome.mjs';
 const EXE = chromePath();
@@ -8,7 +9,7 @@ let times = rest.map(Number);
 if (rest[0] === '--range') { const [a, b, s] = rest.slice(1).map(Number); times = []; for (let t = a; t <= b + 1e-9; t += s) times.push(+t.toFixed(4)); }
 fs.mkdirSync(OUT, { recursive: true });
 const browser = await puppeteer.launch({ executablePath: EXE, headless: true, args: ['--allow-file-access-from-files', '--use-angle=metal', '--enable-gpu', '--ignore-gpu-blocklist', '--autoplay-policy=no-user-gesture-required'] });
-const page = await browser.newPage(); await page.setViewport({ width: 1920, height: 1080 });
+const page = await browser.newPage(); const [VW, VH] = (process.env.VIEW || '1920x1080').split('x').map(Number); await page.setViewport({ width: VW, height: VH });   // VIEW=1080x1920 for vertical
 const errs = []; page.on('pageerror', (e) => errs.push(e.message)); page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') errs.push(m.text()); });
 // compositions use project-root-relative paths: load a copy with <base> at the project root
 const [FPATH, HASH = ''] = FILE.split('#');
