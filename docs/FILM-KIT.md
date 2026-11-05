@@ -3,11 +3,17 @@
 The engine, characters, sets, sound effects and music from the "11 Ways to Use AI for Your Job Search" videos, made reusable
 so a new video starts from them instead of rebuilding (and re-spending tokens on) the same pieces.
 
-Two looks ship with it:
+Three looks ship with it:
 - **Road movie** (`lib/art.js`): a story with one hero on a journey, flat shapes, an indigo night that turns into morning,
   parallax camera, no outlines. Inspired by science-explainer animation.
 - **Infographic explainer** (`lib/explainer.js`): a bright teal day world, bold outlines, versus split-screens, meters,
   charts, stamps, a level bar that fills tip by tip, prompts typed on a big phone.
+- **Paper cut-out** (`lib/paper.js`): everything cut from coloured card with rough edges, soft shadows and grain; poses step
+  at 12 a second like stop-motion while the camera glides. Split screens (two characters, one scoreboard), round banners,
+  torn-paper labels, pencil notes, paper wipes, a big monitor that types the prompt as it is said. Music: `tools/audio/paper_score.py`
+  (marimba, plucked strings, felt pad). Build with `make_compositions.py --paper`; put film tables (score, props) in `assets/story.js`
+  (example: `templates/film/examples/paper-story.js`, scenes `paper-hook.js`, `paper-round.js`). Keep the grain/vignette static
+  (paper.js mounts them once): a full-frame image rebuilt every frame costs about a second per frame.
 
 ## What is where
 
