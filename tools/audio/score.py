@@ -208,7 +208,9 @@ def build(MAP, CHAPTERS):
                 break
             name = prog[b % len(prog)]
             root, tones = CH[name]
-            d = min(BAR, t1 - bt) if not M.get('hold') else DUR - bt - 2.5
+            if M.get('hold') and b > 0:
+                break
+            d = min(BAR, t1 - bt) if not M.get('hold') else max(BAR, DUR - bt - 2.5)
             # pad (rising filter inside 'build' moods)
             cut = M['cut'] * (1 + (0.8 * (b / max(1, nb - 1)) if M.get('rise') else 0))
             if M['pad']:
