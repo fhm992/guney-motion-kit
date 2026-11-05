@@ -19,7 +19,8 @@ Follow `docs/WORKFLOW.md` (the `make-video` skill walks through it): brief, timi
 first, build, check, render, deliver. Skills in `.claude/skills/` (mirrored in `.agents/skills/`):
 `make-video`, `animated-background`, `claude-ui`, `check-before-sending`, `resolve-overlay` (graphics over their footage in
 DaVinci Resolve), `capcut-story-film` (idea -> storyboard, free narration voice and Flow pictures -> a cinematic CapCut
-project; free CapCut features only). Building blocks: `docs/LIBRARY.md`.
+project; free CapCut features only). Building blocks: `docs/LIBRARY.md`. Character explainer films (hero rig, sets, 82
+synthesised sound effects, 22 mood music loops, score generator, mixdown): `docs/FILM-KIT.md`. Reuse them before making new ones.
 
 ## Building rules (HyperFrames)
 

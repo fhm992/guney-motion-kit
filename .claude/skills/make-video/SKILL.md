@@ -16,7 +16,8 @@ description: Make a motion-graphics video or clip with this kit, end to end - br
 5. **Beat plan** in `plan/BEATS.md`: per beat the words, what is shown (what each key word names, as an animated object),
    layout, key phrase (1 to 3 words), sounds. Neighbouring beats must look different. Show it to them.
 6. **Stills first** for any new direction (2 to 4 frames with `node ../../tools/qa/snap.mjs`), then build.
-7. **Build** each scene in `compositions/` on the animated background (`animated-background` skill): big text with
+7. **Build** each scene in `compositions/` on the animated background (for a character story or infographic explainer with
+   music and sound, use the film kit in `docs/FILM-KIT.md`: reuse its character, sets, effects and music) (`animated-background` skill): big text with
    `assets/text.js`, 3D-style cards with `assets/cards.js`, build-on outlines and pieces with `assets/build.js`, Claude windows
    with `claude-ui`; motion with `STAGE.driver` + GSAP tweens on the same timeline (`docs/LIBRARY.md`). Every element enters
    on its own, filled in.
