@@ -3,9 +3,12 @@
 The engine, characters, sets, sound effects and music from the "11 Ways to Use AI for Your Job Search" videos, made reusable
 so a new video starts from them instead of rebuilding (and re-spending tokens on) the same pieces.
 
-Three looks ship with it:
+Four looks ship with it:
 - **Road movie** (`lib/art.js`): a story with one hero on a journey, flat shapes, an indigo night that turns into morning,
   parallax camera, no outlines. Inspired by science-explainer animation.
+- **Flat explainer** (`lib/explainer-flat.js`): saturated flat shapes, deep gradient skies, soft glows, drifting particles,
+  layered parallax hills. Same scene API as the paper look (`P`), so a paper film's scenes run on it unchanged:
+  `make_compositions.py --flat`. Pair it with the ambient score (`tools/audio/score.py`).
 - **Infographic explainer** (`lib/explainer.js`): a bright teal day world, bold outlines, versus split-screens, meters,
   charts, stamps, a level bar that fills tip by tip, prompts typed on a big phone.
 - **Paper cut-out** (`lib/paper.js`): everything cut from coloured card with rough edges, soft shadows and grain; everything moves
