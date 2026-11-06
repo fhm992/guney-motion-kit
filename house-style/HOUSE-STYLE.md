@@ -28,3 +28,9 @@ the person asks you to, and write their own preferences here as you learn them.
 
 ## Before showing anything
 - Look at the frames (the `check-before-sending` skill): first frame, last frame, every change of layout. Fix, then show.
+
+## Fahim's preferences (learned)
+- Background music about 15 dB under the voice, matched to each scene's mood. **No piano music.**
+- Camera and motion smooth: not tiring on the eyes, not slow enough to feel boring. Show every micro beat of the script.
+- Audience 30+ on LinkedIn and YouTube, 16:9. No captions unless asked; prompts the voice reads are typed on screen.
+- Liked: the paper cut-out storytelling look with acting characters (`paper-film` skill). Storyboard images first, then build.

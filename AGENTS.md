@@ -17,7 +17,8 @@ edit code.
 Follow `docs/WORKFLOW.md` (the `make-video` skill walks through it): brief, timing from their voice, beat plan, stills
 first, build, check, render, deliver. Skills in `.claude/skills/` (mirrored in `.agents/skills/`):
 `make-video`, `animated-background`, `claude-ui`, `check-before-sending`, `resolve-overlay` (graphics over their footage in
-DaVinci Resolve), `capcut-story-film` (idea -> storyboard, free narration voice and Flow pictures -> a cinematic CapCut
+DaVinci Resolve), `paper-film` (paper cut-out storytelling film with acting characters, UI screens and a code-made score;
+manual in `docs/PAPER-FILM.md`), `capcut-story-film` (idea -> storyboard, free narration voice and Flow pictures -> a cinematic CapCut
 project; free CapCut features only). Building blocks: `docs/LIBRARY.md`.
 
 ## Building rules (HyperFrames)

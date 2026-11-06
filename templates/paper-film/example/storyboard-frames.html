@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Storyboard panels</title>
+<script src="assets/gsap.min.js"></script>
+<script src="assets/stage.js"></script>
+<script src="assets/paper.js"></script>
+<link rel="stylesheet" href="assets/fonts.css">
+<style>
+  html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #EFE6D3; }
+  .frame { position: absolute; inset: 0; overflow: hidden; display: none; }
+  .hand { font-family: 'Caveat'; }
+  .chip { display:inline-block; padding: 0 12px; border-radius: 10px; background:#F6D9CF; color:#C9441F; border:2px dashed #E4572E; }
+  .caret { display:inline-block; width:4px; height:38px; background:#E4572E; vertical-align:-6px; margin-left:4px; }
+  .msg { font: 500 34px/1.35 Inter; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="storyboard" data-start="0" data-duration="22" data-width="1920" data-height="1080"></div>
+<script>
+(() => {
+  const PA = PAPER, C = PA.C, P = PA.P, T = PA.T, $ = (id) => document.getElementById(id);
+  PA.defs();
+  ['500 40px Inter','600 40px Inter','700 40px Inter','800 40px "Bricolage Grotesque"','400 40px "Archivo Black"','700 40px Caveat'].forEach(f => document.fonts.load(f));
+  const root = $('root'), panels = [];
+  function panel(bg, draw) {
+    const i = panels.length, f = document.createElement('div'); f.className = 'frame clip'; f.id = 'p' + i;
+    f.dataset.start = 0; f.dataset.duration = 22; f.dataset.trackIndex = i; root.appendChild(f); PA.ground(f, bg || C.paper);
+    const s = PA.svg(f); draw(s, f); panels.push(f);
+  }
+  const add = (s, html) => PA.g(s, html);
+
+  // 1 — 0:05 hook: manager 30 seconds vs you 4 hours
+  panel(null, (s, f) => {
+    add(s, `<g filter="url(#cutflat)"><rect x="980" y="90" width="820" height="520" rx="10" fill="${C.white}"/><rect x="1000" y="110" width="780" height="480" fill="${C.sky}"/>
+      <path d="M1000 590 L1000 420 L1070 420 L1070 360 L1150 360 L1150 440 L1230 440 L1230 300 L1300 300 L1300 400 L1390 400 L1390 340 L1470 340 L1470 470 L1560 470 L1560 380 L1640 380 L1640 450 L1780 450 L1780 590 Z" fill="#B9C9C4"/>
+      <rect x="1385" y="110" width="10" height="480" fill="${C.white}"/></g>` + P.floor(780));
+    PA.person(s, 'manager', 1280, 790, 1.35, { mood: 'smile', armR: 'type', armL: 'type' });
+    add(s, P.desk(900, 700, 900) + P.laptopBack(1170, 700, 1.1));
+    add(s, P.sheet(870, 470, -14) + P.sheet(720, 360, -24) + P.sheet(560, 280, -8));
+    PA.person(s, 'you', 330, 1240, 1.9, { mood: 'sad' });
+    add(s, P.stopwatch(700, 760, 1, '0:30') + P.sticky(250, 230, -6, 'you:|4 hrs', 84, C.sticky, 270));
+  });
+  // 2 — 0:15 the team-chat ping, stomach in a knot
+  panel('#E9DDC6', (s, f) => {
+    add(s, P.floor(860, C.kraft));
+    PA.person(s, 'you', 620, 1300, 2.6, { mood: 'worry' });
+    add(s, `<g filter="url(#cut)" transform="translate(620 940)"><path d="M-70 0 q35 -60 70 0 q35 60 70 0" stroke="${C.tomato}" stroke-width="22" fill="none" stroke-linecap="round"/><path d="M-40 -40 q40 40 80 0 q-40 -40 -80 0z" fill="${C.tomato2}"/></g>`);
+    add(s, P.phone(1340, 560, 1.7, 6));
+    const d = document.createElement('div'); Object.assign(d.style, { position: 'absolute', left: '1190px', top: '330px', width: '310px', transform: 'rotate(6deg)', font: '600 26px Inter', color: C.navy });
+    d.innerHTML = `<div style="font:700 22px Inter;color:#8a8f9c;margin-bottom:12px">Team chat · now</div>
+      <div style="display:flex;gap:12px;align-items:flex-start"><div style="width:52px;height:52px;border-radius:50%;background:${C.tomato2};flex:none"></div>
+      <div style="background:#F1E9DA;border-radius:16px;padding:14px 16px;font:500 28px/1.3 Inter"><b>Manager</b><br>What are you working on this afternoon?</div></div>`;
+    f.appendChild(d);
+    add(s, `<g filter="url(#cut)" transform="translate(1530 250)"><circle r="44" fill="${C.tomato}"/>${T('1', 0, 18, 50, C.white)}</g>`);
+    add(s, T('stomach in a knot', 300, 200, 70, C.tomato2, 'Caveat', 'start', 'transform="rotate(-4 300 200)"'));
+  });
+  // 3 — 0:21 nine ways, shield outline, 07 gold
+  panel(null, (s) => {
+    add(s, P.shield(960, 560, 1.05, 0));
+    const pos = [[140, 140, -8], [220, 440, 5], [120, 740, -6], [1560, 140, 7], [1620, 440, -5], [1520, 740, 6], [1250, 400, -4], [400, 860, 4], [1420, 900, -8]];
+    pos.forEach(([x, y, r], i) => add(s, P.tag(x, y, r, '0' + (i + 1), i === 6 ? C.gold : C.white, i === 6 ? 1.6 : 1)));
+    add(s, T('9 ways to protect your job', 960, 1040, 64, C.navy, 'Bricolage Grotesque', 'middle', 'font-weight="800"'));
+  });
+  // 4 — 0:47 AI eats tasks: the Intern snips a task out of "your job"
+  panel(null, (s) => {
+    add(s, P.floor(900));
+    // job silhouette made of task cards
+    let cards = ''; const labels = ['email', 'report', 'data', 'meeting', 'ideas', 'clients', 'slides', 'notes', 'plans', 'team', 'calls', 'budget'];
+    labels.forEach((l, i) => { const r = Math.floor(i / 3), c = i % 3, x = 520 + c * 150, y = 260 + r * 150; if (i === 4) return;
+      cards += `<g filter="url(#cut)"><rect x="${x}" y="${y}" width="140" height="140" fill="${[C.navy, C.navy2, C.kraft2][(i * 7) % 3]}"/>${T(l, x + 70, y + 82, 30, C.white, 'Caveat')}</g>`; });
+    add(s, `<g filter="url(#cut)"><circle cx="745" cy="170" r="90" fill="${C.navy}"/></g>` + cards + `<rect x="672" y="412" width="140" height="140" fill="none" stroke="${C.tomato}" stroke-width="5" stroke-dasharray="12 10"/>`);
+    add(s, T('YOUR JOB', 745, 990, 64, C.navy, 'Archivo Black'));
+    PA.person(s, 'intern', 1320, 900, 1.5, { armL: 'forward', armR: 'up', mood: 'happy' });
+    add(s, `<g filter="url(#cut)" transform="translate(1030 730) rotate(-20)"><rect x="-70" y="-70" width="140" height="140" fill="${C.navy2}"/>${T('ideas', 0, 12, 30, C.white, 'Caveat')}</g>
+      <g filter="url(#cut)" transform="translate(1455 430) rotate(20)"><circle cx="-22" cy="40" r="22" fill="none" stroke="${C.navy}" stroke-width="10"/><circle cx="22" cy="40" r="22" fill="none" stroke="${C.navy}" stroke-width="10"/><path d="M-14 20 L30 -70 M14 20 L-30 -70" stroke="${C.grey2}" stroke-width="12" stroke-linecap="round"/></g>`);
+    add(s, T('it eats tasks', 1500, 230, 92, C.tomato2, 'Caveat'));
+  });
+  // 5 — 0:55 the castle, 80% easy bricks
+  panel(null, (s) => {
+    add(s, P.floor(860));
+    const BW = 120, BH = 64, x0 = 520, base = 860, human = new Set(['0-3', '1-1', '2-5', '3-2', '4-4', '0-0', '2-0']); let b = '';
+    for (let r = 0; r < 5; r++) for (let i = 0; i < 7; i++) { if ((r === 0 && i === 6) || (r % 2 && i === 6)) continue;
+      const x = x0 + i * BW + (r % 2 ? 60 : 0), y = base - (r + 1) * BH; b += P.brick(x + 3, y + 3, human.has(r + '-' + i) ? C.navy : C.tomato);
+      if (human.has(r + '-' + i)) b += `<path d="M${x + 44} ${y + 36} q8 -14 16 -2 q8 -12 16 2 q4 10 -6 14 h-20 q-10 -4 -6 -14z" fill="${C.sage}"/>`; }
+    [x0, x0 + 6 * BW].forEach((tx, ti) => { for (let k = 0; k < 3; k++) b += P.brick(tx + 3, base - (6 + k) * BH + 3, k === 1 - ti ? C.navy : C.tomato);
+      const top = base - 8 * BH; b += `<g filter="url(#cut)"><path d="M${tx - 10} ${top} L${tx + BW / 2} ${top - 130} L${tx + BW + 10} ${top} Z" fill="${C.navy}"/><path d="M${tx + BW / 2} ${top - 130} v-60" stroke="${C.navy}" stroke-width="5"/><path d="M${tx + BW / 2} ${top - 190} l46 14 l-46 14z" fill="${C.sage}"/></g>`; });
+    add(s, b); PA.person(s, 'intern', 1580, 860, 1.25, { armL: 'up', mood: 'happy' });
+    add(s, `<g transform="rotate(-16 1460 470)">${P.brick(1410, 440, C.tomato)}</g>`);
+    add(s, `<g filter="url(#cut)" transform="translate(250 330)"><path d="M-170 0 A170 170 0 0 1 170 0" stroke="${C.paper2}" stroke-width="44" fill="none"/><path d="M-170 0 A170 170 0 0 1 137 -100" stroke="${C.tomato}" stroke-width="44" fill="none"/><path d="M0 0 L120 -88" stroke="${C.navy}" stroke-width="10" stroke-linecap="round"/><circle r="18" fill="${C.navy}"/>${T('80%', 0, 96, 92)}${T('easy bricks', 0, 146, 52, C.tomato2, 'Caveat')}</g>`);
+  });
+  // 6 — 1:05 the prompt, typed in the AI chat
+  panel(null, (s, f) => {
+    add(s, P.floor(900, C.kraft) + `<g filter="url(#cut)"><path d="M250 40 L1670 40 Q1700 40 1700 70 L1700 880 L220 880 L220 70 Q220 40 250 40Z" fill="${C.navy}"/><path d="M120 880 L1800 880 L1740 960 L180 960 Z" fill="${C.navy2}"/></g>` + P.mug(1700, 900, 1.3));
+    PA.ui(f, 270, 86, 1380, 760, `<div style="padding:56px 90px 0"><div style="font:700 28px Inter;color:#8a8f9c;letter-spacing:.08em;margin-bottom:22px">TYPE THIS</div>
+      <div style="background:#fff;border:2px solid #E6DAC2;border-radius:22px;padding:38px 44px;font:500 46px/1.45 Inter;box-shadow:0 10px 24px rgba(30,42,68,.10)">I am a <span class="chip">your job title</span>, and here are the 10 things I do every week. Tell me which five AI can do right now and which five need a<span class="caret"></span></div></div>`);
+    add(s, P.sticky(1790, 300, 7, 'pause &amp;|copy!', 56, C.sticky, 200));
+  });
+  // 7 — 1:28 the race you lose
+  panel(null, (s) => {
+    add(s, `<rect x="-40" y="560" width="2000" height="600" fill="${C.kraft}" filter="url(#cutflat)"/><path d="M-40 760 H1960" stroke="${C.white}" stroke-width="10" stroke-dasharray="60 40"/>`);
+    let flag = ''; for (let r = 0; r < 10; r++) for (let c = 0; c < 2; c++) flag += `<rect x="${1560 + c * 30}" y="${560 + r * 50}" width="30" height="50" fill="${(r + c) % 2 ? C.navy : C.white}"/>`;
+    add(s, `<g filter="url(#cutflat)">${flag}</g>`);
+    PA.person(s, 'intern', 1470, 740, 1.15, { armL: 'up', armR: 'wave', mood: 'proud' });
+    add(s, `<g filter="url(#cut)"><rect x="1350" y="700" width="230" height="70" rx="10" fill="${C.navy}"/><rect x="1370" y="660" width="190" height="50" fill="${C.navy2}"/></g>`);
+    PA.person(s, 'you', 430, 1000, 1.5, { mood: 'shock', armL: 'type', armR: 'type', sweat: true });
+    add(s, P.desk(200, 860, 640) + `<g filter="url(#cut)"><path d="M560 860 L580 730 L800 730 L780 860Z" fill="${C.navy2}"/><rect x="540" y="854" width="280" height="12" rx="4" fill="${C.navy}"/></g>`);
+    add(s, `<g filter="url(#cut)" opacity=".92"><circle cx="680" cy="690" r="40" fill="${C.grey}"/><circle cx="730" cy="640" r="52" fill="${C.grey}"/><circle cx="790" cy="680" r="36" fill="${C.grey}"/></g>`);
+    add(s, `<path d="M300 380 L1200 380" stroke="${C.navy}" stroke-width="6" stroke-dasharray="4 18" stroke-linecap="round"/>`);
+    add(s, T('you lose every single time', 760, 300, 80, C.navy, 'Bricolage Grotesque', 'middle', 'font-weight="800"'));
+  });
+  // 8 — 1:58 the eager intern: 10 coffees, zero common sense
+  panel('#EEDFCB', (s) => {
+    add(s, P.floor(820) + P.desk(500, 740, 1000));
+    PA.person(s, 'intern', 960, 740, 1.7, { mood: 'twitch', armL: 'forward', armR: 'up' });
+    let cups = ''; for (let i = 0; i < 10; i++) { const x = 1240 + (i % 4) * 66, y = 740 - Math.floor(i / 4) * 92; cups += `<g filter="url(#cut)"><path d="M${x - 26} ${y} L${x - 30} ${y - 86} L${x + 30} ${y - 86} L${x + 26} ${y}Z" fill="${C.white}"/><rect x="${x - 30}" y="${y - 60}" width="60" height="22" fill="${C.kraft2}"/></g>`; }
+    add(s, cups);
+    add(s, P.sheet(700, 640, -6, 1.1) + `<g filter="url(#cut)" transform="translate(690 610) rotate(-8)"><path d="M-70 -20 Q0 -60 70 -20 L60 10 L-60 10Z" fill="${C.kraft}"/><rect x="-66" y="10" width="132" height="14" fill="${C.sage}"/><rect x="-62" y="24" width="124" height="12" fill="${C.tomato}"/><path d="M-60 36 Q0 56 60 36 L60 46 L-60 46Z" fill="${C.kraft}"/></g>
+      <g filter="url(#cut)" transform="translate(760 560) rotate(-30)"><rect x="-60" y="-14" width="120" height="28" rx="6" fill="${C.navy}"/></g>`);
+    add(s, T('read the whole internet · 10 coffees · zero common sense', 960, 160, 64, C.navy, 'Caveat'));
+    add(s, T('EAGER INTERN', 960, 1010, 72, C.tomato2, 'Archivo Black'));
+  });
+  // 9 — 2:47 the video call AI can't handle
+  panel('#E3D7C1', (s, f) => {
+    add(s, `<g filter="url(#cut)"><rect x="150" y="90" width="1620" height="900" rx="20" fill="${C.navy}"/></g>`);
+    const tiles = [[190, 130, '#F2E3D8'], [980, 130, C.sky], [190, 560, '#E7EFE4'], [980, 560, '#EFE6D3']];
+    tiles.forEach(([x, y, c]) => add(s, `<rect x="${x}" y="${y}" width="750" height="390" rx="14" fill="${c}" filter="url(#cutflat)"/>`));
+    const tile = (x, y) => { const t = document.createElementNS(PA.NS, 'svg'); t.setAttribute('x', x); t.setAttribute('y', y); t.setAttribute('width', 750); t.setAttribute('height', 390); t.setAttribute('overflow', 'hidden'); s.appendChild(t); return t; };
+    const t0 = tile(190, 130), t1 = tile(980, 130), t2 = tile(190, 560), t3 = tile(980, 560);
+    PA.person(t0, 'client', 375, 600, 1.45, { mood: 'angry', armR: 'point' });
+    add(t0, `<g filter="url(#cut)"><path d="M280 120 q-16 -30 4 -54 M470 120 q16 -30 -4 -54" stroke="${C.grey2}" stroke-width="12" fill="none" stroke-linecap="round"/></g>`);
+    PA.person(t1, 'intern', 300, 520, 1.15, { mood: 'twitch' });
+    add(t1, `<g transform="translate(560 195)"><circle r="60" fill="none" stroke="${C.grey}" stroke-width="12"/><path d="M0 -60 A60 60 0 0 1 60 0" stroke="${C.tomato}" stroke-width="12" fill="none" stroke-linecap="round"/></g>`);
+    PA.person(t2, 'you', 330, 580, 1.45, { mood: 'smile', armL: 'out', armR: 'out' });
+    PA.person(t3, 'co1', 260, 580, 1.45, { mood: 'shock' });
+    add(t3, `<g filter="url(#cut)" transform="translate(560 220) rotate(6)"><rect x="-110" y="-70" width="220" height="140" fill="${C.kraft}"/><path d="M-110 -26 H110" stroke="${C.kraft2}" stroke-width="8"/><rect x="-80" y="10" width="160" height="44" fill="${C.sage2}"/>${T('ON ITS WAY', 0, 42, 24, C.white)}</g>`);
+    [['Client', 210, 500], ['AI intern', 1000, 500], ['You', 210, 930], ['Ops', 1000, 930]].forEach(([n, x, y]) => add(s, `<rect x="${x}" y="${y - 34}" width="${n.length * 18 + 30}" height="44" rx="8" fill="${C.navy}" opacity=".85"/>` + T(n, x + 15, y - 2, 28, C.white, 'Inter', 'start', 'font-weight="600"')));
+    
+  });
+  // 10 — 3:00 raise your hand: three vignettes
+  panel(null, (s) => {
+    const panelsX = [80, 690, 1300];
+    panelsX.forEach((x, i) => add(s, `<rect x="${x}" y="170" width="560" height="700" fill="${[C.white, '#F3EBDD', '#EDE4D3'][i]}" filter="url(#cut)"/>`));
+    PA.person(s, 'you', 330, 860, 1.25, { mood: 'smile', armR: 'hold' });
+    add(s, `<g filter="url(#cut)" transform="translate(410 520) rotate(-20)"><rect x="-22" y="-60" width="44" height="120" rx="14" fill="${C.navy}"/></g>` + T('call the unhappy customer', 360, 250, 44, C.navy, 'Caveat'));
+    add(s, `<g filter="url(#cut)"><rect x="740" y="300" width="300" height="200" fill="${C.white}" stroke="${C.navy}" stroke-width="6"/><path d="M770 440 l60 -60 l50 40 l70 -90" stroke="${C.tomato}" stroke-width="8" fill="none"/></g>`);
+    PA.person(s, 'you', 1110, 860, 1.25, { mood: 'happy', armL: 'point' });
+    add(s, T('lead the messy meeting', 970, 250, 44, C.navy, 'Caveat'));
+    PA.person(s, 'newhire', 1420, 860, 1.05, { mood: 'worry' });
+    PA.person(s, 'you', 1690, 860, 1.25, { mood: 'smile', armL: 'forward' });
+    add(s, T('train the new hire', 1580, 250, 44, C.navy, 'Caveat'));
+    add(s, P.banner(560, 920, 800, 120, 'RAISE YOUR HAND', C.navy, C.white, 76, -1));
+  });
+  // 11 — 3:35 "Your boss notices."
+  panel('#E2D5BE', (s) => {
+        PA.person(s, 'manager', 960, 1060, 2.2, { mood: 'angry' });
+    add(s, `<g filter="url(#cut)"><rect x="380" y="530" width="1160" height="700" fill="${C.white}"/></g>`);
+    const words = [['delve', 520, 670, -6], ['leverage', 860, 680, 4], ['synergy', 1240, 670, -3], ['in today\'s fast-paced world', 960, 830, 0]];
+    words.forEach(([w, x, y, r]) => add(s, `<g filter="url(#cut)" transform="rotate(${r} ${x} ${y})"><rect x="${x - w.length * 17 - 20}" y="${y - 54}" width="${w.length * 34 + 40}" height="80" fill="${C.kraft}"/>${T(w, x, y, 50, C.navy, 'Inter', 'middle', 'font-weight="700"')}</g>`));
+    [930, 980, 1030].forEach(y => add(s, `<rect x="480" y="${y}" width="${940 - (y % 3) * 40}" height="16" fill="${C.grey}" filter="url(#cutflat)"/>`));
+    add(s, T('Your boss notices.', 960, 140, 96, C.navy, 'Bricolage Grotesque', 'middle', 'font-weight="800"'));
+  });
+  // 12 — 4:22 "You won't." Monday 9am dread
+  panel('#E6DCCB', (s) => {
+    add(s, P.floor(820) + P.clock(1580, 280, 160, 9, 0, 'MON 9:00'));
+    PA.person(s, 'you', 800, 890, 1.6, { mood: 'tired', armL: 'type', armR: 'type' });
+    add(s, P.desk(300, 740, 1000) + P.mug(1100, 740, 1, false));
+    add(s, `<g filter="url(#cut)" transform="translate(0 60)"><ellipse cx="800" cy="170" rx="210" ry="70" fill="${C.grey2}"/><ellipse cx="700" cy="150" rx="110" ry="70" fill="${C.grey2}"/><ellipse cx="900" cy="140" rx="120" ry="80" fill="${C.grey2}"/></g>` +
+      [660, 740, 820, 900].map((x, i) => `<path d="M${x} 250 l-14 ${40 + (i % 2) * 20}" stroke="#7FA4BC" stroke-width="7" stroke-linecap="round"/>`).join(''));
+    add(s, P.sticky(1450, 960, 28, 'WEEKEND:|fix status sheet', 40, C.sticky, 230));
+    add(s, T("You won't.", 1580, 640, 120, C.tomato2, 'Bricolage Grotesque', 'middle', 'font-weight="800"'));
+  });
+  // 13 — 4:55 the person who builds the tools
+  panel(null, (s) => {
+    add(s, P.floor(860));
+    [220, 480, 1440, 1700].forEach((x, i) => PA.person(s, 'grey', x, 900, 1.15, { mood: 'neutral' }));
+    PA.person(s, 'you', 960, 940, 1.5, { mood: 'happy', armR: 'up', armL: 'hold', badge: `<path d="M34 -168 l8 17 l18 3 l-13 12 l3 18 l-16 -9 l-16 9 l3 -18 l-13 -12 l18 -3z" fill="${C.gold}"/>` });
+    add(s, P.banner(560, 90, 800, 150, '+3 HRS / WEEK', C.sage2, C.white, 96, -2));
+    add(s, T('the person who builds the tools', 960, 1030, 60, C.navy, 'Caveat'));
+  });
+  // 14 — 5:01 CTA: comment SECURE
+  panel('#E9DFC9', (s, f) => {
+    add(s, `<g filter="url(#cut)" transform="translate(560 560) rotate(-3)"><rect x="-260" y="-360" width="520" height="720" rx="20" fill="${C.kraft2}"/><rect x="-220" y="-310" width="440" height="640" fill="${C.white}"/><rect x="-90" y="-390" width="180" height="70" rx="14" fill="${C.navy}"/></g>`);
+    for (let i = 0; i < 9; i++) add(s, `<g transform="rotate(-3 560 560)"><rect x="370" y="${270 + i * 66}" width="${340 - (i % 3) * 30}" height="40" rx="6" fill="${i === 6 ? C.gold : C.paper2}" filter="url(#cutflat)"/>${T('prompt 0' + (i + 1), 390, 300 + i * 66, 26, C.navy, 'Inter', 'start', 'font-weight="700"')}</g>`);
+    add(s, `<g filter="url(#cut)" transform="translate(720 820)"><rect x="-70" y="-30" width="140" height="110" rx="14" fill="${C.gold}"/><path d="M-40 -30 v-40 a40 40 0 0 1 80 0 v40" stroke="${C.navy}" stroke-width="16" fill="none"/><circle cx="0" cy="22" r="14" fill="${C.navy}"/></g>`);
+    add(s, `<rect x="980" y="380" width="800" height="300" rx="24" fill="${C.white}" filter="url(#cut)"/>`);
+    const d = document.createElement('div'); Object.assign(d.style, { position: 'absolute', left: '1020px', top: '410px', width: '720px', color: C.navy });
+    d.innerHTML = `<div style="font:600 30px Inter;color:#8a8f9c">Add a comment…</div><div style="margin-top:34px;font:800 120px 'Bricolage Grotesque';letter-spacing:.02em">SECURE<span class="caret" style="height:100px;width:8px"></span></div>`; f.appendChild(d);
+    add(s, T('free prompt list', 1380, 300, 70, C.tomato2, 'Caveat'));
+  });
+  // 15 — 5:38 managers nodding about "LLM", one secretly panicking
+  panel('#E8DCC6', (s) => {
+    add(s, `<g filter="url(#cut)"><rect x="660" y="80" width="600" height="300" fill="${C.white}"/></g>` + T('LLM ??', 960, 270, 130, C.navy, 'Archivo Black'));
+    add(s, P.floor(800) + `<g filter="url(#cut)"><ellipse cx="960" cy="860" rx="820" ry="110" fill="${C.kraft}"/></g>`);
+    [[360, 'co2'], [700, 'exec'], [1220, 'co1'], [1560, 'grey']].forEach(([x, k], i) => PA.person(s, k, x, 830, 1.2, { mood: 'smile', look: { top: [C.navy, C.navy2, C.sage2, C.kraft2][i] } }));
+    PA.person(s, 'manager', 960, 830, 1.35, { mood: 'shock', sweat: true });
+    [360, 700, 1220, 1560].forEach(x => add(s, `<path d="M${x - 20} 400 q20 -20 40 0" stroke="${C.navy}" stroke-width="4" fill="none" opacity=".5"/>`));
+    add(s, T('nodding… secretly panicking', 960, 1030, 64, C.navy, 'Caveat'));
+  });
+  // 16 — 6:01 chapter card 07 (gold) + shield
+  panel('#E9DFC9', (s) => {
+    add(s, P.shield(1400, 540, 1, 6));
+    add(s, `<g filter="url(#cut)" transform="translate(1050 640) rotate(-10)"><rect width="150" height="190" fill="${C.gold}"/>${T('7', 75, 120, 64)}</g>`);
+    add(s, `<g filter="url(#cut)" transform="translate(150 260) rotate(-3)"><path d="M0 0 L640 0 L640 420 L0 420 Z" fill="${C.gold}"/><circle cx="64" cy="64" r="22" fill="#E9DFC9"/>${T('07', 330, 250, 250)}${T('/09', 560, 250, 64, C.navy, 'Archivo Black', 'middle', 'opacity=".55"')}</g>`);
+    add(s, P.banner(170, 720, 760, 120, 'THE FACT-CHECKER', C.navy, C.white, 72, 1));
+    add(s, T('the move that makes you impossible to fire', 560, 910, 58, C.tomato2, 'Caveat'));
+  });
+  // 17 — 6:10 paragraph three: the fake number, the guessing intern
+  panel(null, (s) => {
+    add(s, `<g filter="url(#cut)" transform="rotate(-2 700 560)"><rect x="260" y="60" width="900" height="1000" fill="${C.white}"/></g>`);
+    add(s, `<g transform="rotate(-2 700 560)">${T('Q3 Report', 340, 170, 56, C.navy, 'Archivo Black', 'start')}` +
+      [260, 300, 340, 420, 460, 500, 700, 740, 780, 820].map((y, i) => `<rect x="340" y="${y}" width="${700 - (i % 3) * 80}" height="16" fill="${C.grey}"/>`).join('') +
+      `<rect x="320" y="560" width="760" height="110" fill="${C.tomato}" opacity=".18"/>${T('¶3', 300, 630, 40, C.tomato2, 'Archivo Black', 'end')}
+       <rect x="340" y="580" width="260" height="16" fill="${C.grey}"/>${T('47.3%', 690, 600, 52, C.tomato2, 'Archivo Black')}<rect x="780" y="580" width="240" height="16" fill="${C.grey}"/>
+       <rect x="340" y="630" width="520" height="16" fill="${C.tomato}"/></g>`);
+    add(s, `<g filter="url(#cut)" transform="translate(860 520) rotate(12)"><path d="M0 0 v-80" stroke="${C.navy}" stroke-width="6"/><path d="M0 -80 h70 l-14 22 l14 22 h-70z" fill="${C.tomato}"/></g>`);
+    PA.person(s, 'intern', 1530, 900, 1.4, { mood: 'proud', armR: 'up', armL: 'hip' });
+    add(s, `<g filter="url(#cut)" transform="translate(1500 300)"><circle r="120" fill="${C.white}"/><circle r="90" fill="${C.tomato}"/><circle r="60" fill="${C.white}"/><circle r="30" fill="${C.tomato}"/></g>
+      <g filter="url(#cut)"><path d="M1480 340 L1560 260" stroke="${C.navy}" stroke-width="8"/><path d="M1550 250 l30 -10 l-10 30z" fill="${C.sage}"/></g>`);
+    add(s, T('AI loves to guess', 1530, 1010, 64, C.tomato2, 'Caveat'));
+  });
+  // 18 — 6:28 you, the safety net
+  panel('#DFE6E1', (s) => {
+    add(s, `<g filter="url(#cutflat)"><path d="M1300 1100 L1300 260 L1560 200 L1560 1100Z" fill="#9DB3AD"/><rect x="1340" y="300" width="180" height="60" fill="${C.white}"/></g>` + T('CLIENT', 1430, 345, 40, C.navy));
+    add(s, P.floor(900, C.paper2));
+    PA.person(s, 'you', 680, 1020, 1.25, { mood: 'happy', armL: 'up', armR: 'up' });
+    let net = ''; for (let i = 0; i <= 10; i++) net += `<path d="M${380 + i * 60} 560 Q${380 + i * 60} 650 ${380 + i * 60} 660" stroke="${C.navy}" stroke-width="3"/>`;
+    add(s, `<g filter="url(#cut)"><path d="M380 560 Q680 720 980 560" stroke="${C.navy}" stroke-width="8" fill="none"/><path d="M380 560 Q680 660 980 560" stroke="${C.navy}" stroke-width="4" fill="none"/>${[...Array(9)].map((_, i) => `<path d="M${410 + i * 64} ${575 + Math.sin((i + 1) / 10 * Math.PI) * 70} l40 ${-30 - Math.sin((i + 1) / 10 * Math.PI) * 10}" stroke="${C.navy}" stroke-width="3"/>`).join('')}<rect x="360" y="520" width="20" height="400" fill="${C.kraft2}"/><rect x="980" y="520" width="20" height="400" fill="${C.kraft2}"/></g>`);
+    add(s, `<g filter="url(#cut)" transform="translate(700 600) rotate(8) scale(1.3)"><path d="M-120 0 L120 -30 L-40 40 Z" fill="${C.white}"/><path d="M-40 40 L120 -30 L-20 70Z" fill="#E1D8C8"/></g>`);
+    add(s, `<path d="M1280 330 Q1000 250 760 560" stroke="${C.navy}" stroke-width="5" fill="none" stroke-dasharray="6 18" stroke-linecap="round"/>`);
+    
+    add(s, T('the safety net', 680, 200, 100, C.navy, 'Bricolage Grotesque', 'middle', 'font-weight="800"'));
+  });
+  // 19 — 7:12 bridge the gap between sales and support
+  panel('#E4EAE5', (s) => {
+    add(s, `<g filter="url(#cut)"><path d="M-40 640 L620 640 L700 1120 L-40 1120Z" fill="${C.kraft}"/><path d="M1960 640 L1300 640 L1220 1120 L1960 1120Z" fill="${C.kraft}"/><rect x="40" y="200" width="520" height="440" fill="${C.white}"/><rect x="1360" y="200" width="520" height="440" fill="${C.white}"/></g>`);
+    add(s, T('SALES', 300, 280, 64, C.navy) + T('SUPPORT', 1620, 280, 64, C.navy));
+    PA.person(s, 'co2', 220, 640, 0.75, { mood: 'neutral' }); PA.person(s, 'grey', 420, 640, 0.75, { mood: 'neutral', look: { top: C.navy2 } });
+    PA.person(s, 'co1', 1520, 640, 0.75, { mood: 'worry' }); PA.person(s, 'newhire', 1720, 640, 0.75, { mood: 'worry' });
+    add(s, `<g filter="url(#cut)"><path d="M620 650 Q960 560 1300 650 L1300 680 Q960 600 620 680 Z" fill="${C.kraft2}"/>${[...Array(9)].map((_, i) => `<rect x="${660 + i * 70}" y="${640 - Math.sin((i + 0.5) / 9 * Math.PI) * 60}" width="50" height="16" fill="${C.kraft}"/>`).join('')}</g>`);
+    PA.person(s, 'you', 960, 600, 0.95, { mood: 'happy', armR: 'forward' });
+    [[1140, 520, -8], [1210, 470, 10], [1270, 540, -4]].forEach(([x, y, r], i) => add(s, `<g filter="url(#cut)" transform="translate(${x} ${y}) rotate(${r})"><rect x="-34" y="-24" width="68" height="48" fill="${C.white}"/><rect x="-24" y="-12" width="40" height="6" fill="${C.tomato}"/></g>`));
+    add(s, `<g filter="url(#cut)"><rect x="740" y="40" width="440" height="200" fill="${C.white}"/></g>` + T('top 3 complaints', 960, 100, 40, C.navy, 'Caveat') + ['#1', '#2', '#3'].map((n, i) => `<rect x="${780 + i * 135}" y="130" width="110" height="80" fill="${C.tomato}" filter="url(#cutflat)"/>` + T(n, 835 + i * 135, 185, 40, C.white)).join(''));
+    add(s, T('bridge the gap', 960, 1000, 96, C.navy, 'Bricolage Grotesque', 'middle', 'font-weight="800"'));
+  });
+  // 20 — 7:50 hard work is invisible, results stand out
+  panel(null, (s) => {
+    add(s, `<g filter="url(#cut)" transform="rotate(-2 960 560)"><rect x="300" y="80" width="1320" height="860" fill="${C.white}"/></g>`);
+    add(s, `<g transform="rotate(-2 960 560)">${T('BUDGET 2027', 380, 220, 56, C.navy, 'Archivo Black', 'start')}` +
+      [300, 380, 460, 540, 700, 780, 860].map((y, i) => `<rect x="380" y="${y}" width="1160" height="2" fill="${C.grey}"/><rect x="380" y="${y + 24}" width="${300 + (i * 97) % 300}" height="16" fill="${C.grey}"/><rect x="1300" y="${y + 24}" width="${120 + (i * 41) % 100}" height="16" fill="${C.grey}"/>`).join('') + `</g>`);
+    PA.person(s, 'you', 640, 980, 1.05, { mood: 'tired', look: { top: '#C9C2B6', top2: '#D6D0C5', skin: '#E6DCD0', hair: '#C9C2B6' } });
+    add(s, `<g filter="url(#cut)" transform="translate(1050 640) rotate(-3)"><rect x="-300" y="-56" width="620" height="112" fill="${C.tomato}"/>${T('Saved $40k · −6 hrs/wk', 10, 18, 46, C.white, 'Inter', 'middle', 'font-weight="800"')}</g>`);
+    add(s, T('hard work: invisible', 640, 600, 54, C.grey2, 'Caveat', 'middle', 'transform="rotate(-2 640 600)"'));
+    add(s, T('results stand out', 1080, 1040, 92, C.navy, 'Bricolage Grotesque', 'middle', 'font-weight="800"'));
+  });
+  // 21 — 8:15 the ping again: no knot this time
+  panel('#E9DDC6', (s, f) => {
+    add(s, P.floor(860, C.kraft));
+    PA.person(s, 'you', 620, 1300, 2.6, { mood: 'happy', armR: 'hold' });
+    add(s, `<g filter="url(#cut)" transform="translate(620 940)"><path d="M-110 10 q50 -30 100 -10 M10 0 q50 20 100 -10" stroke="${C.sage2}" stroke-width="18" fill="none" stroke-linecap="round"/></g>`);
+    add(s, P.phone(1340, 560, 1.7, 6));
+    const d = document.createElement('div'); Object.assign(d.style, { position: 'absolute', left: '1190px', top: '310px', width: '310px', transform: 'rotate(6deg)', color: C.navy });
+    d.innerHTML = `<div style="display:flex;gap:10px;align-items:flex-start"><div style="width:46px;height:46px;border-radius:50%;background:${C.tomato2};flex:none"></div><div style="background:#F1E9DA;border-radius:16px;padding:12px 14px;font:500 24px/1.3 Inter">What are you working on?</div></div>
+      <div style="margin-top:18px;margin-left:40px;background:${C.navy};color:#fff;border-radius:16px;padding:12px 14px;font:500 22px/1.35 Inter">✓ Saved team 3 hrs/wk<br>✓ Caught $40k error<br>✓ Q3 report in 20 min</div>`;
+    f.appendChild(d);
+    add(s, `<g filter="url(#cut)"><circle cx="300" cy="260" r="80" fill="${C.white}"/><path d="M300 260 L300 200" stroke="${C.navy}" stroke-width="8"/></g>` + [...Array(10)].map((_, i) => `<rect x="${200 + (i * 53) % 220}" y="${150 + (i * 71) % 220}" width="22" height="14" fill="${[C.tomato, C.white, C.gold][i % 3]}" transform="rotate(${i * 37} ${210 + (i * 53) % 220} ${157 + (i * 71) % 220})" filter="url(#cutflat)"/>`).join(''));
+    add(s, T('your stomach doesn\'t drop', 760, 120, 66, C.sage2, 'Caveat'));
+  });
+  // 22 — 8:38 finale: the full shield, you and the Intern on the same team
+  panel(null, (s) => {
+    add(s, P.floor(900) + P.shield(960, 470, 1.05, 9, true));
+    PA.person(s, 'you', 640, 980, 1.35, { mood: 'happy', armR: 'up' });
+    PA.person(s, 'intern', 1290, 980, 1.25, { mood: 'happy', armL: 'up' });
+    add(s, `<g filter="url(#cut)" transform="translate(960 1000)"><rect x="-200" y="-50" width="400" height="90" fill="${C.navy}"/>${T('FAHIM', 0, 22, 56, C.white)}</g>`);
+    add(s, T('the person your company cannot afford to lose', 960, 90, 60, C.navy, 'Caveat'));
+  });
+
+  const N = panels.length;
+  const tl = STAGE.driver(N, (t) => { const k = Math.min(N - 1, Math.floor(t)); panels.forEach((p, i) => p.style.display = i === k ? 'block' : 'none'); });
+  window.__timelines = window.__timelines || {}; window.__timelines['storyboard'] = tl;
+})();
+</script>
+</body>
+</html>

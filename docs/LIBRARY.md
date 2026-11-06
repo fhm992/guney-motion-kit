@@ -41,3 +41,7 @@ Load what a scene needs in its `<head>` (paths relative to the project folder), 
 ## Sound
 - `sfx/` (copied to `assets/audio/sfx/`): keystrokes, click, pop, thunk, rise, swish, whoosh. Mix a cue sheet with
   `node ../../tools/audio/sfxmix.mjs events.json <length> out.wav raw`.
+
+## Paper film (`paper.js`, `film.js`)
+- The paper cut-out engine: acting puppets, parallax camera, props, UI screens, chapter cards, sound cues. Manual: `docs/PAPER-FILM.md`;
+  tools in `tools/paper/`; 95 paper sound effects in `sfx/paper/`; a full example in `templates/paper-film/example/`.
