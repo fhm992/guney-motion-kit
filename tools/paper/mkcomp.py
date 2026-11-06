@@ -5,6 +5,7 @@ import sys, json
 SCENES = json.load(open('plan/scenes.json'))['scenes']
 for sid in (sys.argv[1:] or SCENES):
     a, b = SCENES[sid]; d = round(b - a, 3)
+    pal = '<script src="assets/palette.js"></script>\n' if __import__('os').path.exists('assets/palette.js') else ''
     html = f'''<!doctype html>
 <html lang="en">
 <head>
@@ -14,7 +15,7 @@ for sid in (sys.argv[1:] or SCENES):
 <script src="assets/stage.js"></script>
 <script src="assets/vo-times.js"></script>
 <script src="assets/paper.js"></script>
-<script src="assets/film.js"></script>
+{pal}<script src="assets/film.js"></script>
 <link rel="stylesheet" href="assets/fonts.css">
 <style> html, body {{ margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #EFE6D3; }} </style>
 </head>

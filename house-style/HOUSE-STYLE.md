@@ -34,3 +34,5 @@ the person asks you to, and write their own preferences here as you learn them.
 - Camera and motion smooth: not tiring on the eyes, not slow enough to feel boring. Show every micro beat of the script.
 - Audience 30+ on LinkedIn and YouTube, 16:9. No captions unless asked; prompts the voice reads are typed on screen.
 - Liked: the paper cut-out storytelling look with acting characters (`paper-film` skill). Storyboard images first, then build.
+- Current favourite palette (Nov 2026): Blue #4285F4, Red #EA4335, Yellow #FBBC05, Green #34A853, White, Orange #F5820D on cream
+  paper (`templates/paper-film/palettes/bright.js`). Thumbnails: cream background, big face, huge words, high CTR.

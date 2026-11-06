@@ -97,3 +97,16 @@ Acting: `.mood(t, m)`, `.arm(t, 'l'|'r', pose, dur)`, `.arms(t, l, r)`, `.tilt(t
 Styles: `tension` (minor pulse, clock ticks), `groove` (marimba arpeggio, bass, shaker, brushes at 3), `play` (adds
 pizzicato), `warm` (kalimba, soft), `cta` (sparse), `lift` (bright, kalimba sparkle). Instruments: marimba, kalimba,
 pizzicato, bass, pads, brushes, shaker, soft kick. **No piano.** Chords: D Bm G A Em C Dm Bb Gm F F#m A7.
+
+## Colour palettes
+
+The default colours are cream paper, navy, tomato, sage and gold. To recolour a whole video, copy a palette to the
+project as `assets/palette.js` (for example `templates/paper-film/palettes/bright.js`: Blue #4285F4, Red #EA4335,
+Yellow #FBBC05, Green #34A853, White, Orange #F5820D). `mkcomp.py` loads it automatically before `film.js`. A palette
+remaps `navy` (surfaces, labels, your character), keeps `ink` dark for eyes and small text, and `orange` dresses the manager.
+
+## Thumbnails
+
+`templates/paper-film/example/scenes/thumbnails.js` makes three 1920x1080 thumbnails (snap at 0.5, 1.5, 2.5, then save
+1280x720 JPGs): one huge emotional face, 3-4 heavy words with a hard shadow, one key phrase on a paper strip, cream
+background, nothing important in the bottom-right corner. Always check them at phone size (about 360 px wide).
