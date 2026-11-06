@@ -6,7 +6,8 @@ fs = sorted(glob.glob(d + '/t*.png'), key=lambda f: float(re.findall(r't([\d.]+)
 if not fs: sys.exit("no frames")
 W, H = 640, 360; rows = (len(fs) + cols - 1) // cols
 im = Image.new('RGB', (cols * W, rows * H), 'white'); dr = ImageDraw.Draw(im)
-f = ImageFont.truetype(os.path.dirname(__file__) + '/../../../fonts/figtree-800-latin.woff2', 26)
+try: f = ImageFont.truetype(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../fonts/figtree-800-latin.woff2'), 26)
+except OSError: f = ImageFont.load_default(26)
 for i, fn in enumerate(fs):
     x, y = (i % cols) * W, (i // cols) * H
     im.paste(Image.open(fn).convert('RGB').resize((W, H)), (x, y))
