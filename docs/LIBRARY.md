@@ -42,7 +42,8 @@ Load what a scene needs in its `<head>` (paths relative to the project folder), 
 - `sfx/` (copied to `assets/audio/sfx/`): keystrokes, click, pop, thunk, rise, swish, whoosh. Mix a cue sheet with
   `node ../../tools/audio/sfxmix.mjs events.json <length> out.wav raw`.
 
-## Film kit (`film.js`, `hero.js`, `art.js`, `explainer.js`): character explainer films
-- A whole-film engine with a reusable character rig, sets, props, chat and phone prompts, an infographic look, plus
+## Film kit (`film.js`, `hero.js`, `paper.js`, `explainer-flat.js`): character explainer films
+- A whole-film engine with a reusable character rig, a smooth camera, split screens, scoreboards, prompt screens and two looks
+  (paper cut-out, flat explainer), plus
   `sfx/synth/` (82 synthesised sound effects), `music/` (22 mood loops), `tools/audio/score.py` (a story score from a
   mood map) and `tools/audio/mixdown.py` (voice + ducked music + effects, -14 LUFS). Full guide: `docs/FILM-KIT.md`.

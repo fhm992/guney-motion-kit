@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Write one HyperFrames composition per section for a film-engine video.
-Run from a project folder:  python3 ../../tools/film/make_compositions.py plan/sections.json [--explainer]
+Run from a project folder:  python3 ../../tools/film/make_compositions.py plan/sections.json --paper | --flat
 plan/sections.json: [["s00", 0, 24], ["s01", 24, 56.6], ...]  (seconds on the voiceover; the last one may run past the voice)
 Writes compositions/<id>.html (each loads assets/scenes/<id>.js) and assets/sections.js (window.FILM_SECTIONS).
---explainer also loads assets/explainer.js (the bright infographic look).
 --paper loads assets/paper.js (the paper cut-out look) and assets/story.js (the film's own tables, e.g. the score).
 --flat loads assets/explainer-flat.js (deep skies, glows, particles; same scene API as --paper) and assets/story.js."""
 import json, pathlib, sys
@@ -11,7 +10,7 @@ args = [a for a in sys.argv[1:] if not a.startswith('--')]
 if not args:
     print(__doc__); sys.exit(1)
 sections = json.load(open(args[0]))
-extra = ('<script src="assets/explainer.js"></script>\n' if '--explainer' in sys.argv else '') + ('<script src="assets/paper.js"></script>\n<script src="assets/story.js"></script>\n' if '--paper' in sys.argv else '') + ('<script src="assets/explainer-flat.js"></script>\n<script src="assets/story.js"></script>\n' if '--flat' in sys.argv else '')
+extra = ('<script src="assets/paper.js"></script>\n<script src="assets/story.js"></script>\n' if '--paper' in sys.argv else '') + ('<script src="assets/explainer-flat.js"></script>\n<script src="assets/story.js"></script>\n' if '--flat' in sys.argv else '')
 T = """<!doctype html>
 <html lang="en">
 <head>
@@ -24,7 +23,6 @@ T = """<!doctype html>
 <script src="assets/sections.js"></script>
 <script src="assets/film.js"></script>
 <script src="assets/hero.js"></script>
-<script src="assets/art.js"></script>
 {extra}<style>html, body {{ margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #0E1236; }} svg {{ position: absolute; inset: 0; }}</style>
 </head>
 <body>

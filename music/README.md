@@ -21,4 +21,4 @@ They loop cleanly enough under a voice; for a whole video that changes mood with
 | resolve, uplift | the problem solved, morning, success |
 | outro | a final held chord to end on |
 
-Mix them under the voice with `tools/audio/mixdown.py` (music about 14 dB under the voice, ducked further while speaking).
+Mix them under the voice with `tools/audio/mixdown.py` (music about 19 dB under the voice by default, ducked further while speaking; keep it low).

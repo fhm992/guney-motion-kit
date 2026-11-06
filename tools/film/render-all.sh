@@ -4,7 +4,7 @@
 ids=${@:-$(ls compositions/s*.html | xargs -n1 basename | sed 's/.html//')}
 for id in $ids; do
   out=renders/$id.mp4
-  fresh=1; for dep in assets/scenes/$id.js assets/film.js assets/art.js assets/hero.js assets/explainer.js; do [ -f $dep ] && [ $dep -nt $out ] && fresh=0; done
+  fresh=1; for dep in assets/scenes/$id.js assets/film.js assets/hero.js assets/paper.js assets/explainer-flat.js assets/story.js; do [ -f $dep ] && [ $dep -nt $out ] && fresh=0; done
   if [ -f $out ] && [ $fresh = 1 ]; then echo "skip $id"; continue; fi
   echo "render $id $(date +%T)"
   npx hyperframes render -c compositions/$id.html -o $out --fps 60 --quality high --video-frame-format png > qa/render-$id.log 2>&1 || echo "FAILED $id"
