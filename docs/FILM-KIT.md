@@ -9,7 +9,7 @@ Three looks ship with it:
 - **Infographic explainer** (`lib/explainer.js`): a bright teal day world, bold outlines, versus split-screens, meters,
   charts, stamps, a level bar that fills tip by tip, prompts typed on a big phone.
 - **Paper cut-out** (`lib/paper.js`): everything cut from coloured card with rough edges, soft shadows and grain; poses step
-  at 12 a second like stop-motion while the camera glides. Split screens (two characters, one scoreboard), round banners,
+  smoothly (set `P.STOP = 12` only if you want stepped stop-motion poses; it reads as a tremble, so it is off). Split screens (two characters, one scoreboard), round banners,
   torn-paper labels, pencil notes, paper wipes, a big monitor that types the prompt as it is said. Music: `tools/audio/paper_score.py`
   (marimba, plucked strings, felt pad). Build with `make_compositions.py --paper`; put film tables (score, props) in `assets/story.js`
   (example: `templates/film/examples/paper-story.js`, scenes `paper-hook.js`, `paper-round.js`). Keep the grain/vignette static
