@@ -28,6 +28,13 @@ because a full-frame image rebuilt every frame costs about a second per frame.
 | Film tools | `tools/film/` | `make_compositions.py` (sections -> compositions), `render-all.sh` (render what changed, then join), `collect-cues.mjs` (sound cues out of the scenes), `sheet.sh` (contact sheet). |
 | Templates | `templates/film/` | `s00.js` (a starting scene), `sections.json`, `score.json`, and example scenes and story table (`examples/paper-*.js`). |
 
+## Thumbnails
+
+`templates/film/thumbnails.js`: six designs (`#p1` .. `#p6`) in the approved middle style for a 30+ audience: the video's own
+background and characters at a modest size with calm expressions, big straight headlines about the topic, and realistic
+screens (inbox, AI assistant results, prompt and answer, job-offer notification, recruiter search, the tip list). Avoid
+cartoon stamps and wild expressions. Change the words and screens to fit each video; export at 1280 x 720.
+
 ## Making a film with it
 
 From the kit folder: `npm run new-video -- <slug>`, then from `video-projects/<slug>/`:

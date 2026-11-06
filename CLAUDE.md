@@ -43,4 +43,5 @@ synthesised sound effects, 22 mood music loops, score generator, mixdown): `docs
 - Never edit, re-encode or delete their original footage or recordings; work on copies or render your own layers.
 - Keep background music very low under the voice (the mixdown default, about 29 dB under it; Fahim asked for this) and sound effects subtle.
 - Camera work is smooth and pleasing to the eye, not too slow: one continuous move per shot, no snap zooms, no jitter.
+- Their audience is mostly over 30: thumbnails use the video's look but stay grown-up (see Thumbnails in `docs/FILM-KIT.md`).
 - Send finished renders with a one-line note of what changed. Clean up your drafts once a video is delivered.
