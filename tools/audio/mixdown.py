@@ -2,7 +2,7 @@
 """Final sound for a film-engine video: voice + background music (ducked under the voice) + sound effects from cues.
 Run from a project folder:
   python3 ../../tools/audio/mixdown.py --voice assets/audio/vo/voice.mp3 --music qa/audio/score.wav --cues qa/audio/cues.json --out qa/audio/final.wav
-Options: --music-db -38 (bed level; about 19 dB under the voice; lower = quieter. Keep the music low.)  --sfx-db -21  --duck 0.6 (how far the music dips under speech)
+Options: --music-db -48 (bed level; about 29 dB under the voice; lower = quieter. Keep the music low.)  --sfx-db -21  --duck 0.6 (how far the music dips under speech)
          --dur <seconds> (default: length of the voice + 1.5 s)
 Cues: [{"t": 1.2, "name": "whoosh", "gain": 0.5}, ...] collected with tools/film/collect-cues.mjs; names come from
 tools/audio/sfx_synth.py (or any WAV in sfx/synth/). The voice file is only read, never changed.
@@ -52,7 +52,7 @@ for i in range(1, len(env)):
     env[i] = env[i - 1] + (act[i] - env[i - 1]) * (0.5 if act[i] > env[i - 1] else 0.04)
 envN = np.pad(np.repeat(env, hop), (0, N))[:N]
 if np.abs(music).max() > 0:
-    music *= 10 ** (float(arg('--music-db', -38)) / 20) / np.sqrt((music ** 2).mean())
+    music *= 10 ** (float(arg('--music-db', -48)) / 20) / np.sqrt((music ** 2).mean())
 music *= 1 - float(arg('--duck', 0.6)) * envN
 
 # effects

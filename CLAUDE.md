@@ -41,6 +41,6 @@ synthesised sound effects, 22 mood music loops, score generator, mixdown): `docs
   yourself, fix, then show. Never claim something works without having looked.
 - Ask before anything that costs money (paid AI generation, stock media) or publishes anything.
 - Never edit, re-encode or delete their original footage or recordings; work on copies or render your own layers.
-- Keep background music low under the voice (the mixdown default, about 19 dB under it) and sound effects subtle.
+- Keep background music very low under the voice (the mixdown default, about 29 dB under it; Fahim asked for this) and sound effects subtle.
 - Camera work is smooth and pleasing to the eye, not too slow: one continuous move per shot, no snap zooms, no jitter.
 - Send finished renders with a one-line note of what changed. Clean up your drafts once a video is delivered.

@@ -24,7 +24,7 @@ because a full-frame image rebuilt every frame costs about a second per frame.
 | Pieces | `lib/paper.js` / `lib/explainer-flat.js` (`P`) | Backgrounds by mood, people (`P.ch`), labels, notes, rings, résumé sheets, job posts, laptop, phone, envelope, paper plane, desk, plant, cloud, split screen (`P.splitShot`), scoreboard (`P.board`), round banner (`P.round`), desk scene, full-screen prompt that types the voice word by word (`P.promptShot`), wipes. |
 | Sound effects | `sfx/synth/*.wav` (82 files, copied into each project) and `tools/audio/sfx_synth.py` | Whooshes, pops, clicks, keys, typing, paper, stamps, doors, footsteps, chimes, dings, bells, ice, crash, engine, water, wind, crowd murmur, robot, whistle, risers, impacts, and more. All synthesised: no licences, no downloads. |
 | Background music | `music/*.mp3` (22 mood loops) and `tools/audio/score.py` | Ambient-electronic explainer music: mystery, reveal, curious, curious16, dark, warm, lonely, wide, tension, freeze, build, climax, light, playful, night, adventure, resolve, calm, groove, uplift, finale, outro. `score.py` writes a full score that changes mood at the times you give it. |
-| Mixdown | `tools/audio/mixdown.py` | Voice + music (ducked under speech, EQ'd out of the voice's way) + effects from cues, normalised to -14 LUFS. Quiet by default: music about 19 dB and effects about 20 dB under the voice. Keep the music low. |
+| Mixdown | `tools/audio/mixdown.py` | Voice + music (ducked under speech, EQ'd out of the voice's way) + effects from cues, normalised to -14 LUFS. Quiet by default: music about 29 dB and effects about 20 dB under the voice. Keep the music low. |
 | Film tools | `tools/film/` | `make_compositions.py` (sections -> compositions), `render-all.sh` (render what changed, then join), `collect-cues.mjs` (sound cues out of the scenes), `sheet.sh` (contact sheet). |
 | Templates | `templates/film/` | `s00.js` (a starting scene), `sections.json`, `score.json`, and example scenes and story table (`examples/paper-*.js`). |
 
@@ -52,6 +52,6 @@ From the kit folder: `npm run new-video -- <slug>`, then from `video-projects/<s
 - Fonts are loaded explicitly before the first frame (SVG text set through `innerHTML` does not trigger a font load by itself).
 - Smooth camera work: each shot glides on one curve from its start to its end camera (a gentle drift runs underneath).
   Move at a calm, steady pace: no snap zooms, no stop-and-go.
-- Background music stays low: about 19 dB under the voice (the mixdown default).
+- Background music stays very low: about 29 dB under the voice (the mixdown default, `--music-db -48`).
 - Scene scripts must live under `assets/` (the renderer only serves that folder).
 - `FILM.section(id)` reads `window.FILM_SECTIONS` from `assets/sections.js`; a test slice can set `data-t0` / `data-t1` on `#root`.
