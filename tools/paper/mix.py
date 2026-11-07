@@ -1,5 +1,5 @@
-# Run from a project folder: python3 ../../tools/paper/mix.py  -> audio/mix.wav  (voice -15 LUFS, music 15 dB under, effects ~13 under, mix -14.5)
-# Final mix: voice (their recording, untouched apart from gain) + score at ~15 dB under the voice + sound effects.
+# Run from a project folder: python3 ../../tools/paper/mix.py  -> audio/mix.wav  (voice -15 LUFS, music 25 dB under, effects ~13 under, mix -14.5)
+# Final mix: voice (their recording, untouched apart from gain) + score at ~25 dB under the voice + sound effects.
 import numpy as np, wave, json, subprocess, os, re
 SR = 44100
 D = '.'; CFG = json.load(open('plan/scenes.json'))
@@ -25,7 +25,7 @@ for c in cues:
     if n > 0: sfx[i:i + n] += b[:n] * c['gain']
 VT = -15.0
 gv = 10 ** ((VT - lufs(v)) / 20); v *= gv
-gm = 10 ** ((VT - 15.0 - lufs(m)) / 20); m *= gm
+gm = 10 ** ((VT - 25.0 - lufs(m)) / 20); m *= gm
 gs = 10 ** ((VT - 13.0 - lufs(sfx)) / 20); sfx *= gs   # effects sit ~13 LU under the voice on average
 print('gains dB  voice %.1f  music %.1f  sfx %.1f' % tuple(20 * np.log10([gv, gm, gs])))
 mixed = v + m + sfx

@@ -25,7 +25,7 @@ Steps (run from the project folder):
    (snap times are composition-local seconds, i.e. global minus the scene start).
 5. Render: `../../tools/paper/render.sh c00 c01 ...` (60 fps, 3 workers; ~5 frames/s per worker).
 6. Sound: `node ../../tools/paper/cues.mjs` (collects every `F.sfx` cue) -> `python3 ../../tools/paper/music.py`
-   -> `python3 ../../tools/paper/mix.py` (voice -15 LUFS, music exactly 15 dB under, effects ~13 under, mix -14.5 LUFS).
+   -> `python3 ../../tools/paper/mix.py` (voice -15 LUFS, music exactly 25 dB under, effects ~13 under, mix -14.5 LUFS).
 7. `../../tools/paper/join.sh <name>` -> `renders/<name>.mp4`. Make a copy under 400 MB to send in chat
    (2-pass x264 `-preset slow -tune animation -b:v 5600k` fits ~8.5 min).
 

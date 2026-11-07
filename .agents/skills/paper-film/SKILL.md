@@ -20,5 +20,5 @@ Workflow (follow `make-video` for the brief and checks; this adds the paper spec
 4. Sound: `tools/paper/cues.mjs` -> `music.py` (sections per chapter in `plan/music.json`) -> `mix.py`.
 5. `tools/paper/join.sh <name>`; send a copy under 400 MB (2-pass x264, see the manual) and say where the master is.
 
-Their preferences (also in `house-style/HOUSE-STYLE.md`): music about 15 dB under the voice, matched to each scene,
+Their preferences (also in `house-style/HOUSE-STYLE.md`): music about 25 dB under the voice, matched to each scene,
 no piano; smooth camera, never fast; every micro beat of the script shown; prompts typed on screen; no captions unless asked.
