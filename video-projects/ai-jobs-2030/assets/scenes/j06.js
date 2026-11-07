@@ -72,7 +72,7 @@
     const crowd = [[260, 'client'], [460, 'co2'], [1100, 'co1'], [1280, 'exec']].map(([x, k]) => F.puppet(S, S.mid, k, x, 960, 0.9, { mood: 'neutral', z: 5 }));
     const to = w('offend', 362.6);
     crowd.forEach((c, i) => c.mood(to - 0.1 + i * 0.1, i % 2 ? 'shock' : 'angry')); F.sfx(to, 'gasp', 0.45);
-    const tb = F.html(S.ui, `<div style="width:260px;height:320px;border-radius:8px;background:#C3CDDC;box-shadow:0 14px 26px rgba(14,24,48,.25);padding:20px;box-sizing:border-box;font:400 32px 'Archivo Black';color:${INK};text-align:center;transform:rotate(3deg)">STIFF<br>TEXT<br>BOOK<div style="font:600 20px 'JetBrains Mono',monospace;margin-top:20px;color:#5D6B88">“Greetings, valued purchaser.”</div></div>`, 1560, 300, 0, 0, 9);
+    const tb = F.html(S.ui, `<div style="width:260px;height:320px;border-radius:8px;background:#C3CDDC;box-shadow:0 14px 26px rgba(14,24,48,.25);padding:20px;box-sizing:border-box;font:400 32px 'Archivo Black';color:${INK};text-align:center;transform:rotate(3deg)">STIFF<br>TEXT<br>BOOK<div style="font:600 20px 'JetBrains Mono',monospace;margin-top:20px;color:#5D6B88">“Greetings, valued purchaser.”</div></div>`, 1560, 150, 0, 0, 9);
     F.in(tb, w('stiff', 364.6) - 0.3, 'right', { dur: 0.35, sfx: 'creak', gain: 0.4 });
     const you = F.puppet(S, S.mid, 'you', 1640, 960, 1.15, { mood: 'smile', armL: 'down', flip: true, z: 6 });
     you.enter(w('buyers', 363.3), 'right').arm(w('sound', 364.1), 'l', 'point', 0.4);
@@ -90,8 +90,8 @@
     F.in(rep, w('audit', 367.7) - 0.4, 'below', { dur: 0.45, sfx: 'paperslide' });
     F.fromTo(rep.querySelector('.r'), w('machine', 369.3), { strokeDashoffset: 1 }, { strokeDashoffset: 0 }, 1.6, 'power1.inOut'); F.sfx(w('machine', 369.3), 'deflate', 0.4);
     F.fromTo(rep.querySelector('.g'), w('alone', 370.3) - 0.6, { strokeDashoffset: 1 }, { strokeDashoffset: 0 }, 1.4, 'power1.inOut');
-    const l1 = F.label(S.ui, 'MACHINE ONLY ↓', 1640, 820, { size: 40, bg: RD, color: WH, rot: -2 }); F.in(l1, w('hurt', 371), 'right', { dur: 0.3, sfx: false });
-    const l2 = F.label(S.ui, 'LOCALIZED ↑', 1640, 300, { size: 40, bg: GR, color: WH, rot: 2 }); F.in(l2, w('alone', 370.3), 'right', { dur: 0.3, sfx: false });
+    const l1 = F.label(S.ui, 'MACHINE ONLY ↓', 1720, 820, { size: 40, bg: RD, color: WH, rot: -2 }); F.in(l1, w('hurt', 371), 'right', { dur: 0.3, sfx: false });
+    const l2 = F.label(S.ui, 'LOCALIZED ↑', 1720, 300, { size: 40, bg: GR, color: WH, rot: 2 }); F.in(l2, w('alone', 370.3), 'right', { dur: 0.3, sfx: false });
     const you = F.puppet(S, S.mid, 'you', 230, 980, 1.3, { mood: 'smile', armR: 'point' });
     const emp = F.hand(S.ui, 'show employers', 230, 270, 54, BL, -3); F.in(emp, w('employers', 368.5), 'none', { dur: 0.35, sfx: false });
     S.cam(366, 960, 560, 1.02, 6, 'inOutSine');
