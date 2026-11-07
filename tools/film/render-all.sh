@@ -7,7 +7,7 @@ for id in $ids; do
   fresh=1; for dep in assets/scenes/$id.js assets/film.js assets/hero.js assets/paper.js assets/explainer-flat.js assets/story.js; do [ -f $dep ] && [ $dep -nt $out ] && fresh=0; done
   if [ -f $out ] && [ $fresh = 1 ]; then echo "skip $id"; continue; fi
   echo "render $id $(date +%T)"
-  npx hyperframes render -c compositions/$id.html -o $out --fps 60 --quality high --video-frame-format png > qa/render-$id.log 2>&1 || echo "FAILED $id"
+  PATH="$(cd ../../tools/film/shim && pwd):$PATH" HYPERFRAMES_SKIP_SKILLS=1 npx hyperframes render -c compositions/$id.html -o $out --fps 60 --quality high --video-frame-format png > qa/render-$id.log 2>&1 || echo "FAILED $id"
   grep -E "PAGEERROR" qa/render-$id.log | head -3
 done
 ls renders/s*.mp4 | sed "s#.*#file '$PWD/&'#" > qa/concat.txt

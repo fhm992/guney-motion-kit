@@ -1,0 +1,5 @@
+#!/bin/bash
+# HyperFrames' start-up "recover orphaned browsers" step searches `pgrep -f chrome-headless-shell` and kills any match whose parent is init.
+# On this machine that matches the session's own start-up shell, so a render would kill the session. Report "no matches" for that search only.
+for a in "$@"; do case "$a" in *chrome-headless-shell*|*chrome_headless_shell*|*puppeteer_dev_chrome_profile*) exit 1;; esac; done
+exec /usr/bin/pgrep "$@"

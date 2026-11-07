@@ -7,6 +7,8 @@ Two looks ship with it (both tell the same kind of story: two characters side by
 - **Paper cut-out** (`lib/paper.js`): everything cut from coloured card with rough edges, soft shadows and grain. Split
   screens, round banners, torn-paper labels, pencil notes, paper wipes, a big monitor that types the prompt as it is said.
   Music: `tools/audio/paper_score.py` (marimba, plucked strings, felt pad). Build with `make_compositions.py --paper`.
+- **Paper cut-out in the Google-style palette** (`lib/paper-google.js`, `make_compositions.py --paper-google`): the same look and scenes in
+  Blue #4285F4, Red #EA4335, Yellow #FBBC05, Green #34A853, White and Orange #F5820D (plus tints and shades), cool grey grain.
 - **Flat explainer** (`lib/explainer-flat.js`): saturated flat shapes, deep gradient skies, soft glows, drifting particles,
   layered parallax hills. Same scene API (`P`) as the paper look, so the same scenes run on either:
   `make_compositions.py --flat`. Music: the ambient score (`tools/audio/score.py`).
@@ -52,6 +54,14 @@ From the kit folder: `npm run new-video -- <slug>`, then from `video-projects/<s
    change the times and moods), then
    `python3 ../../tools/audio/mixdown.py --voice assets/audio/vo/voice.mp3 --music qa/audio/score.wav --cues qa/audio/cues.json --out qa/audio/final.wav`.
 7. Join: `ffmpeg -i renders/video-only.mp4 -i qa/audio/final.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 320k -shortest renders/final.mp4`.
+
+## Rendering on the cloud machine (important)
+
+`hyperframes render` starts by killing "orphaned browser processes" it finds with `pgrep -f chrome-headless-shell`. On the cloud
+machine that search can match the session's own start-up shell, so the render kills the session (the session restarts and the
+render dies within seconds). `tools/film/render-all.sh` therefore runs renders with `tools/film/shim/pgrep` first in `PATH`, which
+reports "no matches" for that one search only. If you render by hand, do the same: `PATH="<kit>/tools/film/shim:$PATH" npx hyperframes render ...`.
+Also skip finished sections when re-running after an interruption (render-all.sh does).
 
 ## Rules the engine already follows
 
