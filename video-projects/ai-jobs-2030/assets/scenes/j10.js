@@ -35,7 +35,7 @@
       F.fromTo(e, w('email', 574.7) + i * 0.1, { opacity: 0, x: -120, rotation: -20 }, { opacity: 1, x: 0, rotation: (i * 9) % 30 - 15 }, 0.35); return e; });
     F.sfx(w('email', 574.7), 'flutter', 0.35);
     const dl = F.label(S.ui, '<span class="n">0</span> dials', 1400, 860, { size: 56, bg: YL, color: INK, rot: -3, font: "'Archivo Black'", weight: 400 }); F.in(dl, w('dial', 576) - 0.1, 'left', { dur: 0.3, sfx: false });
-    const n = dl.querySelector('.n'); F.every(S, (G) => { n.textContent = Math.round(3000 * Math.max(0, Math.min(1, (G - w('dial', 576)) / 1.2))).toLocaleString('en-US'); });
+    const n = dl.querySelector('.n'); F.every(S, (G) => { const u = Math.max(0, Math.min(1, (G - w('dial', 576)) / 1.2)); n.textContent = Math.round(1000 * u).toLocaleString('en-US') + (u >= 1 ? 's' : ''); });
     for (let x = w('dial', 576); x < w('dial', 576) + 1.2; x += 0.08) F.sfx(x, 'tick', 0.12);
     const ob = F.html(S.ui, `<div style="display:flex;flex-direction:column;gap:12px;font:700 28px Inter"><div class="q" style="align-self:flex-start;padding:14px 20px;border-radius:18px;background:#fff;color:${INK};box-shadow:0 10px 18px rgba(14,24,48,.15)">“Not interested.”</div><div class="a" style="align-self:flex-end;padding:14px 20px;border-radius:18px;background:${RD};color:#fff">“Totally fair — can I send a 2-min summary?”</div></div>`, 120, 420, 0, 0, 9);
     F.in(ob.querySelector('.q'), w('handle', 577.8) - 0.2, 'left', { dur: 0.3, sfx: 'pop', gain: 0.3 }); F.in(ob.querySelector('.a'), w('objections,', 578.3), 'right', { dur: 0.3, sfx: 'blip', gain: 0.3 });
