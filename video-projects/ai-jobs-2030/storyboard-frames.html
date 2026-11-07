@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Storyboard panels</title>
+<script src="assets/gsap.min.js"></script>
+<script src="assets/stage.js"></script>
+<script src="assets/paper.js"></script>
+<link rel="stylesheet" href="assets/fonts.css">
+<style>
+  html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #E9EDF3; }
+  .frame { position: absolute; inset: 0; overflow: hidden; display: none; }
+  .chip { display:inline-block; padding: 0 12px; border-radius: 10px; background:#FFF3CC; color:#A86F00; border:2px dashed #F5820D; }
+  .caret { display:inline-block; width:4px; height:1em; background:#4285F4; vertical-align:-6px; margin-left:4px; }
+  .vig { position:absolute; inset:0; pointer-events:none; background: radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 55%, rgba(10,18,40,.28) 100%); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="storyboard" data-start="0" data-duration="30" data-width="1920" data-height="1080"></div>
+<script>
+(() => {
+  const PA = PAPER, C = PA.C, P = PA.P, T = PA.T, $ = (id) => document.getElementById(id);
+  PA.defs();
+  ['500 40px Inter','600 40px Inter','700 40px Inter','800 40px Inter','800 40px "Bricolage Grotesque"','400 40px "Archivo Black"','700 40px Caveat'].forEach(f => document.fonts.load(f));
+  const root = $('root'), panels = [];
+  const INK = C.ink, BL = C.blue, RD = C.red, YL = C.yellow, GR = C.green, OR = C.orange, WH = C.white;
+  function panel(bg, draw, dark = false) {
+    const i = panels.length, f = document.createElement('div'); f.className = 'frame clip'; f.id = 'p' + i;
+    f.dataset.start = 0; f.dataset.duration = 30; f.dataset.trackIndex = i; root.appendChild(f); PA.ground(f, bg || C.paper);
+    if (dark) f.style.backgroundImage = `radial-gradient(ellipse at 50% 42%, #2A3E6A 0%, #14213D 60%, #0B1428 100%)`;
+    const s = PA.svg(f); draw(s, f); const v = document.createElement('div'); v.className = 'vig'; f.appendChild(v); panels.push(f);
+  }
+  const add = (s, html) => PA.g(s, html);
+  const html = (f, x, y, w, inner, extra = {}) => { const d = document.createElement('div'); Object.assign(d.style, { position: 'absolute', left: x + 'px', top: y + 'px', width: w + 'px', color: INK }, extra); d.innerHTML = inner; f.appendChild(d); return d; };
+  const B = (t, x, y, size, fill = INK, anchor = 'middle', extra = '') => T(t, x, y, size, fill, 'Bricolage Grotesque', anchor, 'font-weight="800" ' + extra);
+  // colour shading for isometric faces
+  const shade = (hex, k) => { const n = parseInt(hex.slice(1), 16); let r = n >> 16, g = (n >> 8) & 255, b = n & 255; const f = (c) => Math.max(0, Math.min(255, Math.round(k > 0 ? c + (255 - c) * k : c * (1 + k)))); return '#' + [f(r), f(g), f(b)].map(c => c.toString(16).padStart(2, '0')).join(''); };
+  // isometric projection: ground (u, v) and height z -> screen
+  const ISO = (ox, oy, sc = 1) => { const p = (u, v, z = 0) => [ox + (u - v) * 0.866 * sc, oy + (u + v) * 0.5 * sc - z * sc];
+    const box = (u, v, w, d, h, col, z = 0) => { const a = p(u, v, z + h), b = p(u + w, v, z + h), c = p(u + w, v + d, z + h), e = p(u, v + d, z + h), b0 = p(u + w, v, z), c0 = p(u + w, v + d, z), e0 = p(u, v + d, z);
+      const pt = (q) => q.map(n => n.toFixed(1)).join(' ');
+      return `<g filter="url(#cutflat)"><path d="M${pt(e)} L${pt(c)} L${pt(c0)} L${pt(e0)}Z" fill="${shade(col, -0.18)}"/><path d="M${pt(c)} L${pt(b)} L${pt(b0)} L${pt(c0)}Z" fill="${shade(col, -0.38)}"/><path d="M${pt(a)} L${pt(b)} L${pt(c)} L${pt(e)}Z" fill="${shade(col, 0.12)}"/></g>`; };
+    const tile = (u, v, w, d, col, z = 0) => { const q = [p(u, v, z), p(u + w, v, z), p(u + w, v + d, z), p(u, v + d, z)]; return `<path d="M${q.map(x => x.join(' ')).join(' L')}Z" fill="${col}"/>`; };
+    return { p, box, tile }; };
+  // an iso "chapter card" diorama: dark ground, platform, tag
+  function chapterCard(s, f, n, title, build) {
+    const I = ISO(1180, 430, 1);
+    add(s, `<ellipse cx="1180" cy="640" rx="620" ry="250" fill="#000" opacity=".25" filter="url(#cutflat)"/>` + I.box(-260, -260, 520, 520, 40, '#DCE3EE'));
+    build(I, s);
+    add(s, `<g filter="url(#cut)" transform="translate(110 250) rotate(-3)"><rect width="430" height="250" fill="${YL}"/><circle cx="44" cy="44" r="16" fill="#14213D"/>${T(String(n).padStart(2, '0'), 205, 200, 190, INK)}${T('/10', 375, 200, 52, INK, 'Archivo Black', 'middle', 'opacity=".5"')}</g>`);
+    add(s, `<g filter="url(#cut)" transform="rotate(1 400 650)"><rect x="110" y="580" width="${Math.max(560, title.length * 44)}" height="130" fill="${WH}"/>${B(title, 140, 670, 78, INK, 'start')}</g>`);
+    add(s, `<g filter="url(#cut)" transform="translate(420 800) rotate(-8)"><rect x="-150" y="-46" width="300" height="92" rx="8" fill="none" stroke="${RD}" stroke-width="9"/>${T('AT RISK', 0, 22, 56, RD)}</g>`);
+  }
+  // the Switch Board (learning spine)
+  const JOBS = [['DATA ENTRY CLERK', 'DATA QUALITY ANALYST'], ['TIER 1 SUPPORT REP', 'AI CONVERSATION DESIGNER'], ['JUNIOR COPYWRITER', 'AI CONTENT STRATEGIST'], ['BASIC BOOKKEEPER', 'CASH-FLOW ADVISOR'], ['MANUAL SOFTWARE TESTER', 'AI QA ENGINEER'],
+    ['TRADITIONAL TRANSLATOR', 'LOCALIZATION SPECIALIST'], ['JUNIOR GRAPHIC DESIGNER', 'UX PRODUCT DESIGNER'], ['PARALEGAL', 'LEGAL OPS · AI COMPLIANCE'], ['CASHIER & BANK TELLER', 'RELATIONSHIP BANKER'], ['APPOINTMENT SETTER', 'ACCOUNT EXECUTIVE']];
+  function board(s, x, y, sc, flipped, hi = -1) {
+    let r = `<g transform="translate(${x} ${y}) scale(${sc})"><g filter="url(#cut)"><rect x="0" y="0" width="1500" height="900" rx="18" fill="#14213D"/><rect x="0" y="0" width="1500" height="92" rx="18" fill="#1D2E52"/></g>`;
+    r += T('THE SWITCH BOARD', 40, 64, 40, WH, 'Archivo Black', 'start') + T('2030', 1460, 66, 46, YL, 'Archivo Black', 'end');
+    JOBS.forEach(([a, b], i) => { const yy = 118 + i * 77, on = flipped.includes(i), h = i === hi;
+      r += `<g filter="url(#cutflat)"><rect x="30" y="${yy}" width="1440" height="64" rx="8" fill="${h ? '#2B4373' : '#1D2E52'}"/><rect x="30" y="${yy}" width="72" height="64" rx="8" fill="${on ? GR : RD}"/></g>`;
+      r += T(String(i + 1).padStart(2, '0'), 66, yy + 45, 32, WH);
+      r += T(a, 130, yy + 44, 30, on ? '#7F8BA3' : WH, 'Inter', 'start', 'font-weight="800"' + (on ? ' text-decoration="line-through"' : ''));
+      r += on ? `<path d="M770 ${yy + 32} h60 m-18 -14 l18 14 l-18 14" stroke="${YL}" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` + `<rect x="860" y="${yy + 8}" width="590" height="48" rx="6" fill="${GR}"/>` + T(b, 1155, yy + 43, 28, WH, 'Inter', 'middle', 'font-weight="800"')
+        : `<rect x="860" y="${yy + 8}" width="590" height="48" rx="6" fill="#26385F"/>` + T('? ? ?', 1155, yy + 44, 30, '#5D6B88', 'Archivo Black');
+    });
+    return r + '</g>';
+  }
+  const laptop = (s, f, x, y, w, h, inner, title) => { add(s, `<g filter="url(#cut)"><rect x="${x - 40}" y="${y - 40}" width="${w + 80}" height="${h + 80}" rx="26" fill="${INK}"/><path d="M${x - 140} ${y + h + 40} L${x + w + 140} ${y + h + 40} L${x + w + 80} ${y + h + 110} L${x - 80} ${y + h + 110}Z" fill="#24365E"/></g>`); return PA.ui(f, x, y, w, h, inner, title); };
+  const chatPrompt = (text, kicker = 'TYPE THIS') => `<div style="padding:46px 80px 0"><div style="font:700 28px Inter;color:#7D879A;letter-spacing:.08em;margin-bottom:22px">${kicker}</div>
+      <div style="background:#fff;border:2px solid #E3E8F0;border-radius:22px;padding:34px 42px;font:500 40px/1.45 Inter;box-shadow:0 14px 30px rgba(20,33,61,.14)">${text}<span class="caret"></span></div></div>`;
+  const robot = (s, x, y, sc, o = {}) => PA.person(s, 'intern', x, y, sc, o);
+
+  // ===== HOOK =====
+  // 1 — 0:00 LinkedIn feed this morning
+  panel('#DDE6F5', (s, f) => {
+    add(s, P.floor(820, '#C9D4E6') + `<g filter="url(#cut)"><rect x="1240" y="120" width="520" height="420" fill="#BFD6FB"/><rect x="1240" y="400" width="520" height="140" fill="#FFE6A8"/><circle cx="1620" cy="420" r="70" fill="${YL}"/><rect x="1240" y="460" width="520" height="80" fill="#9FB6DA"/><rect x="1240" y="320" width="520" height="16" fill="${WH}"/><rect x="1492" y="120" width="16" height="420" fill="${WH}"/></g>`);
+    PA.person(s, 'you', 560, 1260, 2.4, { mood: 'look', armR: 'hold', armL: 'hold' });
+    add(s, P.mug(330, 900, 1.5));
+    add(s, P.phone(1000, 560, 2.0, 4));
+    html(f, 830, 230, 340, `<div style="transform:rotate(4deg);transform-origin:170px 330px"><div style="font:800 26px Inter;color:${BL};margin-bottom:14px">Feed</div>
+      <div style="background:#fff;border:2px solid #E3E8F0;border-radius:16px;padding:16px">
+      <div style="display:flex;gap:10px;align-items:center"><div style="width:44px;height:44px;border-radius:8px;background:${INK}"></div><div style="font:700 20px Inter">Big Corp Inc.<div style="font:500 16px Inter;color:#7D879A">2h · promoted</div></div></div>
+      <div style="font:700 25px/1.3 Inter;margin-top:14px">We're streamlining: 300 roles moving to our new AI platform.</div>
+      <div style="height:120px;margin-top:12px;border-radius:10px;background:linear-gradient(135deg,${BL},#2A62C9)"></div></div></div>`);
+    add(s, T('0:00 · "You checked your LinkedIn feed this morning"', 960, 1050, 34, INK, 'Inter', 'middle', 'font-weight="700" opacity=".0"'));
+  });
+  // 2 — 0:04 300 workers replaced with a software update (isometric)
+  panel(null, (s, f) => {
+    const I = ISO(1080, 250, 1.12); let g = I.tile(-420, -420, 840, 840, '#D5DCE7');
+    add(s, `<g filter="url(#cutflat)">${g}</g>`);
+    const pts = []; for (let r = 0; r < 12; r++) for (let c = 0; c < 12; c++) pts.push([r, c]);
+    pts.sort((a, b) => (a[0] + a[1]) - (b[0] + b[1]));
+    pts.forEach(([r, c]) => { const [x, y] = I.p(-390 + c * 66, -390 + r * 66); const gone = (r + c) < 13; PA.person(s, gone ? 'grey' : 'you', x, y + 46, 0.21, { mood: 'neutral', look: gone ? { top: '#C3CDDC', top2: '#D5DCE7', skin: '#E3E8F0', hair: '#C3CDDC' } : {} }); });
+    add(s, `<g filter="url(#cut)" transform="translate(1080 980)"><rect x="-520" y="-60" width="1040" height="120" rx="16" fill="${INK}"/><rect x="-490" y="-22" width="600" height="44" rx="10" fill="${RD}"/><rect x="-490" y="-22" width="760" height="44" rx="10" fill="none" stroke="#3A4C74" stroke-width="4"/>${T('UPDATE 78%', 395, 14, 34, WH, 'Inter', 'middle', 'font-weight="800"')}</g>`);
+    add(s, `<g filter="url(#cut)" transform="translate(250 470) rotate(-4)"><rect x="-190" y="-80" width="380" height="160" fill="${WH}"/>${T('300', 0, 50, 140, RD)}</g>` + T('workers', 250, 610, 64, INK, 'Caveat'));
+  });
+  // 3 — 0:10 boss + shared spreadsheet, the AI peeking
+  panel(null, (s, f) => {
+    add(s, P.floor(840));
+    robot(s, 1340, 330, 0.75, { mood: 'twitch', armL: 'up' });
+    laptop(s, f, 520, 110, 900, 520, `<div style="padding:18px 22px;font:600 22px Inter">
+      <div style="display:grid;grid-template-columns:60px 220px 1fr 120px;border:2px solid #E3E8F0">${['#', 'Name', 'Daily task', 'Mins'].map(h => `<div style="padding:8px 10px;background:#F4F6FA;font-weight:800">${h}</div>`).join('')}
+      ${[['1', 'Sam', 'Copy invoice totals', '90'], ['2', 'Priya', 'Answer ticket inbox', '120'], ['3', 'You', 'Weekly status report', '75'], ['4', 'Leo', 'Update CRM fields', '60'], ['5', 'Ana', 'Reconcile receipts', '45']].map((r, i) => r.map(c => `<div style="padding:9px 10px;border-top:2px solid #E3E8F0;${i === 2 ? 'background:#FFF3CC' : ''}">${c}</div>`).join('')).join('')}</div></div>`, 'Team tasks · shared');
+    PA.person(s, 'manager', 330, 1000, 1.55, { mood: 'smile', armR: 'point' });
+    PA.person(s, 'you', 1580, 1010, 1.5, { mood: 'worry', armL: 'hold' }); PA.person(s, 'co1', 1780, 1030, 1.35, { mood: 'look' });
+    add(s, T('…the quiet part', 1640, 120, 60, RD, 'Caveat'));
+  });
+  // 4 — 0:19 10 jobs AI will erase by 2030 — the Switch Board
+  panel(null, (s) => {
+    add(s, board(s, 260, 60, 0.93, [0], 0));
+    add(s, `<g filter="url(#cut)" transform="translate(1560 1000) rotate(-3)"><rect x="-230" y="-70" width="460" height="140" fill="${YL}"/>${T('+ THE PROMPTS', 0, 24, 54, INK)}</g>`);
+  }, true);
+
+  // ===== JOB 01 =====
+  // 5 — 0:29 chapter card, isometric diorama
+  panel(null, (s, f) => {
+    chapterCard(s, f, 1, 'DATA ENTRY CLERK', (I) => {
+      add(s, I.box(-180, -120, 300, 150, 110, '#9AA8BE') + I.box(-150, -110, 140, 30, 120, INK, 110) + I.box(-140, -102, 120, 14, 100, '#D6E4FB', 116));
+      for (let k = 0; k < 4; k++) add(s, I.box(60 + k * 4, -100 + k * 34, 70, 50, 26 + k * 18, WH, 110));
+      add(s, I.box(-60, 80, 120, 120, 70, RD) + I.box(-60, 80, 120, 120, 4, '#FFFFFF', 70));
+    });
+    PA.person(s, 'you', 1330, 720, 0.75, { mood: 'tired', armL: 'type', armR: 'type' });
+  }, true);
+  // 6 — 0:33 OCR agents pull numbers into the database (iso)
+  panel(null, (s, f) => {
+    const I = ISO(1240, 520, 1);
+    add(s, I.tile(-300, -300, 600, 600, '#D5DCE7'));
+    // database cylinder
+    add(s, `<g filter="url(#cut)" transform="translate(1240 600)">${[0, 1, 2].map(k => `<path d="M-170 ${-k * 110} v-90 a170 60 0 0 0 340 0 v90 a170 60 0 0 1 -340 0z" fill="${k % 2 ? '#2A62C9' : BL}"/><ellipse cx="0" cy="${-k * 110 - 90}" rx="170" ry="60" fill="#7BA9F7"/>`).join('')}</g>`);
+    add(s, T('COMPANY DATABASE', 1240, 760, 40, INK));
+    [['INVOICE', 180, 210, -6], ['RECEIPT', 260, 520, 4], ['PDF', 160, 800, -3]].forEach(([n, x, y, r]) => add(s, `<g filter="url(#cut)" transform="translate(${x} ${y}) rotate(${r})"><rect x="-110" y="-130" width="220" height="260" fill="${WH}"/>${T(n, 0, -84, 34, n === 'PDF' ? RD : INK)}${[0, 1, 2, 3].map(k => `<rect x="-80" y="${-54 + k * 38}" width="${160 - (k % 2) * 40}" height="10" fill="${C.grey}"/>`).join('')}<rect x="-80" y="90" width="160" height="26" fill="${YL}"/></g>`));
+    ['$1,240.00', '$86.50', '#INV-3391', '07/14', '$412.09'].forEach((n, i) => add(s, `<g filter="url(#cutflat)" transform="translate(${470 + i * 120} ${300 + (i % 3) * 140}) rotate(${i * 7 - 10})"><rect x="-80" y="-30" width="160" height="60" rx="8" fill="${YL}"/>${T(n, 0, 12, 28, INK, 'Inter', 'middle', 'font-weight="800"')}</g>`));
+    robot(s, 1640, 940, 0.9, { mood: 'happy', armL: 'point' }); robot(s, 820, 980, 0.7, { mood: 'neutral', armR: 'up' });
+    add(s, `<path d="M290 200 Q700 120 1080 420" stroke="${RD}" stroke-width="6" fill="none" stroke-dasharray="4 16" stroke-linecap="round"/>`);
+    add(s, `<g filter="url(#cut)" transform="translate(1640 200)"><circle r="110" fill="${WH}"/>${T('0:03', 0, 22, 66, INK)}</g>` + T('in seconds', 1640, 360, 56, RD, 'Caveat'));
+  });
+  // 7 — 0:52 switch: data quality analyst catches the edge case
+  panel(null, (s, f) => {
+    add(s, `<g transform="translate(40 30) scale(.42)">${board(s, 0, 0, 1, [0], 0)}</g>`);
+    laptop(s, f, 760, 170, 1000, 520, `<div style="padding:18px 22px;font:600 24px Inter"><div style="display:grid;grid-template-columns:200px 240px 200px 1fr;border:2px solid #E3E8F0">${['Customer', 'Email', 'Date', 'Total'].map(h => `<div style="padding:8px 10px;background:#F4F6FA;font-weight:800">${h}</div>`).join('')}
+      ${[['M. Ortiz', 'mo@site.com', '12/03/2026', '$240'], ['K. Lee', 'klee@site', '<b style="color:#EA4335">31/02/2026</b>', '$1,240'], ['K. Lee', 'klee@site', '31/02/2026', '$1,240'], ['A. Ruiz', '—', '05/04/2026', '$88']].map((r, i) => r.map(c => `<div style="padding:10px;border-top:2px solid #E3E8F0;${i > 0 && i < 3 ? 'background:#FDECEA' : ''}">${c}</div>`).join('')).join('')}</div></div>`, 'Database audit');
+    PA.person(s, 'you', 470, 1040, 1.6, { mood: 'smile', armR: 'point', badge: `<circle cx="30" cy="-150" r="16" fill="${GR}"/>` });
+    s = PA.svg(f); add(s, `<g filter="url(#cut)" transform="translate(1180 330)"><circle r="95" fill="none" stroke="${INK}" stroke-width="18"/><rect x="60" y="60" width="34" height="120" rx="12" fill="${INK}" transform="rotate(-45 60 60)"/></g>`);
+    robot(s, 1700, 1000, 0.9, { mood: 'twitch', armL: 'out', armR: 'out' });
+    add(s, `<g filter="url(#cut)" transform="translate(1060 870) rotate(-2)"><rect x="-300" y="-56" width="600" height="112" fill="${GR}"/>${B('DATA QUALITY ANALYST', 0, 20, 50, WH)}</g>`);
+    add(s, T('edge case the machine missed', 1250, 760, 46, RD, 'Caveat'));
+  });
+  // 8 — 1:11 the prompt, typed in sync
+  panel(null, (s, f) => {
+    add(s, P.floor(930, '#C9D4E6'));
+    laptop(s, f, 270, 90, 1380, 760, chatPrompt(`Act as a senior data analyst. Give me a sample table of <b>20 messy customer records</b> with missing values, duplicate rows, and formatting errors. Walk me through five steps to audit and clean this data using basic Excel rules and explain how to set up an automated check for my manager.`), 'AI chat');
+    add(s, P.sticky(1790, 250, 7, 'pause &amp;|copy', 54, C.sticky, 200));
+    add(s, `<g filter="url(#cut)" transform="translate(150 930) rotate(-4)"><rect x="-110" y="-44" width="220" height="88" fill="${BL}"/>${T('PROMPT 01', 0, 16, 36, WH)}</g>`);
+  });
+
+  // ===== JOB 02 =====
+  // 9 — 1:40 AI agents in 40 languages at 2 a.m.
+  panel(null, (s, f) => {
+    f.style.backgroundImage = 'linear-gradient(#14213D,#24365E)';
+    add(s, `<circle cx="1660" cy="180" r="80" fill="#FFF3CC" filter="url(#cut)"/><circle cx="1700" cy="150" r="70" fill="#1A2A4C"/>`);
+    add(s, `<g filter="url(#cut)" transform="translate(960 560)"><circle r="250" fill="${BL}"/><path d="M-250 0 h500 M0 -250 v500" stroke="#7BA9F7" stroke-width="6"/><ellipse rx="120" ry="250" fill="none" stroke="#7BA9F7" stroke-width="6"/><ellipse rx="250" ry="110" fill="none" stroke="#7BA9F7" stroke-width="6"/></g>`);
+    robot(s, 960, 1040, 1.05, { mood: 'happy', armL: 'wave', armR: 'up', headExtra: '' });
+    [['Hola, ¡resuelto!', 380, 260], ['Bonjour ✓', 1440, 330], ['こんにちは', 360, 560], ['مرحبا', 1560, 600], ['Olá ✓', 560, 800], ['Hallo ✓', 1500, 860], ['你好', 760, 180], ['Ciao ✓', 1200, 160]].forEach(([t, x, y]) => { add(s, P.bubble(x - 130, y - 50, 260, 90, 'bl', WH)); add(s, T(t, x, y + 12, 36, INK, 'Inter', 'middle', 'font-weight="700"')); });
+    add(s, P.clock(170, 920, 90, 2, 0, '') + T('2:00 AM', 330, 935, 48, WH, 'Archivo Black', 'start'));
+    add(s, `<g filter="url(#cut)" transform="translate(1660 980)"><rect x="-150" y="-60" width="300" height="120" fill="${YL}"/>${T('40', -60, 34, 90, INK)}${T('languages', 70, 22, 34, INK, 'Caveat')}</g>`);
+  });
+  // 10 — 1:48 World Economic Forum: 92M fading, 170M growing
+  panel(null, (s, f) => {
+    add(s, P.floor(860));
+    add(s, `<g filter="url(#cut)"><rect x="420" y="${860 - 330}" width="300" height="330" fill="${RD}" opacity=".55"/><rect x="420" y="${860 - 330}" width="300" height="330" fill="none" stroke="${RD}" stroke-width="8" stroke-dasharray="20 14"/></g>` + T('92M', 570, 480, 120, RD) + T('repetitive jobs fading', 570, 920, 46, INK, 'Caveat'));
+    add(s, `<g filter="url(#cut)"><rect x="1100" y="${860 - 610}" width="300" height="610" fill="${GR}"/></g>` + T('170M', 1250, 220, 120, C.sage2) + T('new roles growing', 1250, 920, 46, INK, 'Caveat'));
+    PA.person(s, 'you', 1620, 860, 1.25, { mood: 'look', armL: 'point' });
+    add(s, `<g filter="url(#cut)" transform="translate(220 140) rotate(-3)"><rect x="-170" y="-50" width="340" height="100" fill="${WH}"/>${T('World Economic Forum', 0, 12, 30, INK, 'Inter', 'middle', 'font-weight="800"')}</g>` + T('by 2030', 220, 250, 56, INK, 'Archivo Black'));
+  });
+  // 11 — 2:36 save the output as a PDF, attach to your LinkedIn profile
+  panel(null, (s, f) => {
+    laptop(s, f, 300, 110, 1320, 740, `<div style="padding:28px 46px"><div style="height:150px;border-radius:14px;background:linear-gradient(120deg,${BL},#2A62C9)"></div>
+      <div style="display:flex;gap:26px;align-items:flex-end;margin-top:-70px;padding-left:30px"><div style="width:150px;height:150px;border-radius:50%;background:#E8B08C;border:8px solid #fff"></div><div><div style="font:800 40px Inter">Your Name</div><div style="font:600 26px Inter;color:#5A6478">AI Conversation Designer · ex-Support</div></div></div>
+      <div style="margin-top:30px;font:800 26px Inter">Featured</div><div style="display:flex;gap:20px;margin-top:14px">
+      <div style="width:330px;border:2px solid #E3E8F0;border-radius:14px;padding:18px;background:#FFF;box-shadow:0 10px 24px rgba(20,33,61,.15)"><div style="display:flex;gap:12px;align-items:center"><div style="width:58px;height:70px;background:${RD};border-radius:6px;color:#fff;font:800 20px Inter;display:grid;place-items:center">PDF</div><div style="font:700 22px/1.25 Inter">Support Bot Playbook: decision tree + 5 templates</div></div></div>
+      <div style="width:250px;border:2px dashed #C3CDDC;border-radius:14px"></div></div></div>`, 'Profile');
+    add(s, `<g filter="url(#cut)" transform="translate(1660 880) rotate(6)"><rect x="-140" y="-56" width="280" height="112" fill="${GR}"/>${T('PROOF', 0, 22, 62, WH)}</g>`);
+  });
+
+  // ===== JOB 03 =====
+  // 12 — 2:59 the very fast intern: read every website, zero original ideas
+  panel(null, (s) => {
+    add(s, P.floor(880));
+    robot(s, 960, 940, 1.45, { mood: 'twitch', armL: 'up', armR: 'up' });
+    for (let i = 0; i < 14; i++) { const a = -2.9 + i * 0.4, x = 960 + Math.cos(a) * 640, y = 330 + Math.sin(a) * 230; add(s, `<g filter="url(#cutflat)" transform="translate(${x} ${y}) rotate(${i * 13 - 40})"><rect x="-60" y="-44" width="120" height="88" rx="6" fill="${[WH, '#D6E4FB', '#FFF3CC'][i % 3]}"/><rect x="-60" y="-44" width="120" height="16" fill="${[BL, RD, GR, YL, OR][i % 5]}"/></g>`); }
+    add(s, `<path d="M500 300 Q960 520 960 360 M1420 300 Q960 520 960 360" stroke="${INK}" stroke-width="4" stroke-dasharray="4 14" fill="none"/>`);
+    add(s, `<g filter="url(#cut)" transform="translate(360 760)"><circle r="90" fill="${WH}"/><path d="M-30 80 h60 v40 h-60z" fill="${C.grey2}"/>${T('0', 0, 32, 100, C.grey2)}</g>` + T('original ideas', 360, 940, 50, RD, 'Caveat'));
+    add(s, `<g filter="url(#cut)" transform="translate(1570 760) rotate(5)"><rect x="-130" y="-100" width="260" height="200" fill="${WH}"/><rect x="-100" y="-70" width="200" height="140" fill="#E9EDF3"/>${T('?', 0, 28, 90, C.grey2)}</g>` + T('real-life stories', 1570, 940, 50, RD, 'Caveat'));
+  });
+  // 13 — 3:07 AI content strategist: funnel + expert interview
+  panel(null, (s) => {
+    add(s, P.floor(900));
+    add(s, `<g filter="url(#cut)" transform="translate(560 160)">${[[BL, 'AWARE', 520], [YL, 'CONSIDER', 400], [OR, 'COMPARE', 290], [GR, 'BUY', 180]].map(([c, t, w], i) => `<path d="M${-w / 2} ${i * 150} L${w / 2} ${i * 150} L${w / 2 - 50} ${i * 150 + 130} L${-w / 2 + 50} ${i * 150 + 130}Z" fill="${c}"/>${T(t, 0, i * 150 + 80, 40, i === 1 ? INK : WH)}`).join('')}</g>`);
+    PA.person(s, 'you', 1150, 960, 1.5, { mood: 'smile', armR: 'hold' }); PA.person(s, 'exec', 1620, 960, 1.5, { mood: 'happy', armL: 'out', flip: true });
+    add(s, `<g filter="url(#cut)" transform="translate(1290 640) rotate(-30)"><rect x="-14" y="-10" width="28" height="90" rx="10" fill="${INK}"/><rect x="-26" y="-60" width="52" height="64" rx="26" fill="#3A4C74"/></g>`);
+    add(s, `<g filter="url(#cut)" transform="translate(960 1000) rotate(-1)"><rect x="-380" y="-60" width="760" height="120" fill="${GR}"/>${B('AI CONTENT STRATEGIST', 0, 22, 56, WH)}</g>`);
+    add(s, T('interviews real experts', 1400, 230, 56, INK, 'Caveat'));
+  });
+
+  // ===== JOB 04 =====
+  // 14 — 3:48 accounting platform auto-categorises; the owner's cash still feels tight
+  panel(null, (s, f) => {
+    laptop(s, f, 120, 120, 960, 600, `<div style="padding:18px 24px;font:600 24px Inter">${[['Coffee beans supplier', '-$640', 'Supplies', OR], ['Card payments', '+$2,310', 'Revenue', GR], ['Rent · April', '-$1,800', 'Rent', BL], ['Payroll', '-$3,120', 'Payroll', '#8C97AA'], ['Equipment lease', '-$420', 'Equipment', YL]].map(([n, a, c, col]) => `<div style="display:flex;align-items:center;gap:16px;padding:16px 8px;border-bottom:2px solid #E3E8F0"><div style="flex:1">${n}</div><div style="width:130px;text-align:right;font-weight:800">${a}</div><div style="width:190px;text-align:center;padding:6px;border-radius:30px;background:${col};color:#fff;font-weight:800">${c}</div><div style="color:${GR};font-weight:800">✓</div></div>`).join('')}</div>`, 'Bank feed · auto-categorised');
+    PA.person(s, 'client', 1520, 1060, 1.3, { mood: 'worry', armL: 'hold', look: { top: OR, top2: C.orange2 } });
+    add(s, `<g filter="url(#cut)" transform="translate(1520 230)"><rect x="-200" y="-110" width="400" height="220" rx="20" fill="${INK}"/>${T('BANK', -110, -52, 34, '#7F8BA3', 'Inter', 'start', 'font-weight="800"')}${T('$1,084', 0, 50, 92, RD)}</g>`);
+    add(s, `<g filter="url(#cut)"><rect x="1270" y="170" width="40" height="130" fill="#8C97AA"/><rect x="1730" y="170" width="40" height="130" fill="#8C97AA"/></g>`);
+    add(s, T('balanced… but tight', 1520, 440, 60, RD, 'Caveat'));
+    add(s, `<g filter="url(#cut)" transform="translate(600 900) rotate(-2)"><rect x="-330" y="-56" width="660" height="112" fill="${GR}"/>${B('CASH-FLOW ADVISOR', 0, 20, 52, WH)}</g>`);
+  });
+
+  // ===== JOB 05 =====
+  // 15 — 4:48 thousands of screen sizes, overnight (iso device wall)
+  panel(null, (s) => {
+    const I = ISO(960, 360, 1);
+    add(s, I.tile(-460, -460, 920, 920, '#1D2E52'));
+    const devs = []; for (let r = 0; r < 7; r++) for (let c = 0; c < 7; c++) devs.push([r, c]);
+    devs.sort((a, b) => a[0] + a[1] - b[0] - b[1]).forEach(([r, c]) => { const k = (r * 7 + c) % 3, w = [50, 80, 120][k], d = [12, 14, 16][k], h = [90, 120, 80][k]; add(s, I.box(-420 + c * 120, -420 + r * 120, w, d, h, '#5B7BC0') + `<g>${''}</g>`);
+      const [x, y] = I.p(-420 + c * 120 + w / 2, -420 + r * 120, h / 2 + 10); add(s, `<circle cx="${x}" cy="${y - 4}" r="14" fill="${GR}"/><path d="M${x - 6} ${y - 4} l5 5 l9 -10" stroke="#fff" stroke-width="4" fill="none"/>`); });
+    robot(s, 1580, 900, 1.0, { mood: 'proud', armL: 'type', armR: 'type' });
+    add(s, `<circle cx="260" cy="170" r="70" fill="#FFF3CC" filter="url(#cut)"/><circle cx="292" cy="150" r="62" fill="#14213D"/>` + T('overnight', 260, 300, 60, WH, 'Caveat'));
+    add(s, `<g filter="url(#cut)" transform="translate(330 900) rotate(-3)"><rect x="-210" y="-56" width="420" height="112" fill="${YL}"/>${T('1,000s ✓', 0, 22, 62, INK)}</g>`);
+  }, true);
+
+  // ===== CTA =====
+  // 16 — 5:35 comment "AI jobs"
+  panel(null, (s, f) => {
+    add(s, `<g filter="url(#cut)" transform="translate(520 560) rotate(-4)"><rect x="-260" y="-360" width="520" height="720" rx="18" fill="${BL}"/><rect x="-220" y="-310" width="440" height="640" fill="${WH}"/>${T('10 PROMPTS', 0, -220, 52, INK)}${[...Array(10)].map((_, i) => `<rect x="-180" y="${-170 + i * 46}" width="${300 - (i % 3) * 40}" height="26" rx="6" fill="${[BL, RD, YL, GR, OR][i % 5]}" opacity=".8"/>`).join('')}</g>`);
+    add(s, `<rect x="940" y="400" width="860" height="300" rx="24" fill="${WH}" filter="url(#cut)"/>`);
+    html(f, 990, 430, 780, `<div style="font:600 30px Inter;color:#7D879A">Add a comment…</div><div style="margin-top:34px;font:800 130px 'Bricolage Grotesque';letter-spacing:.02em">AI JOBS<span class="caret" style="height:110px;width:8px;background:${BL}"></span></div>`);
+    add(s, `<g filter="url(#cut)" transform="translate(1600 250) rotate(-14)"><path d="M-90 0 L90 -50 L20 60 Z" fill="${WH}"/><path d="M20 60 L90 -50 L0 20Z" fill="#D5DCE7"/></g>` + T('free list → your DMs', 1330, 300, 56, OR, 'Caveat'));
+  });
+
+  // ===== JOB 06 =====
+  // 17 — 5:59 localisation: a campaign that offends local buyers — you fix it
+  panel(null, (s) => {
+    add(s, P.floor(860));
+    add(s, `<g filter="url(#cut)"><rect x="300" y="120" width="760" height="380" fill="${WH}"/><rect x="330" y="150" width="700" height="320" fill="${OR}"/><rect x="660" y="500" width="40" height="360" fill="#8C97AA"/></g>`);
+    add(s, B('“Eat your fingers off!”', 680, 300, 62, WH) + T('(literal translation)', 680, 380, 40, '#FFF3CC', 'Caveat'));
+    [[300, 'client'], [470, 'co2'], [1010, 'co1'], [1180, 'exec']].forEach(([x, k]) => PA.person(s, k, x, 980, 0.95, { mood: k === 'exec' ? 'shock' : 'angry' }));
+    PA.person(s, 'you', 1560, 980, 1.35, { mood: 'smile', armL: 'point', armR: 'hold' });
+    add(s, P.sticky(1600, 300, 6, '“So good you\'ll|lick your fingers”', 44, '#C8EED3', 300));
+    add(s, `<g filter="url(#cut)" transform="translate(1540 860) rotate(-2)"><rect x="-300" y="-46" width="600" height="92" fill="${GR}"/>${B('LOCALIZATION SPECIALIST', 0, 16, 42, WH)}</g>`);
+  });
+
+  // ===== JOB 07 =====
+  // 18 — 6:47 a 10-word text box does the work; the team shrinks to one director
+  panel(null, (s, f) => {
+    laptop(s, f, 140, 140, 1000, 600, `<div style="padding:26px 34px;font:600 26px Inter"><div style="border:2px solid ${BL};border-radius:14px;padding:16px 20px;font:500 30px Inter">summer sale banner, bold yellow, smiling family, beach, 40% off<span class="caret"></span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px">${[BL, YL, OR, GR].map((c, i) => `<div style="height:170px;border-radius:12px;background:linear-gradient(135deg,${c},${['#2A62C9', '#F5820D', '#EA4335', '#1E8040'][i]});position:relative"><div style="position:absolute;left:18px;bottom:16px;color:#fff;font:800 34px Bricolage Grotesque">SUMMER SALE</div></div>`).join('')}</div></div>`, 'Design tool · generate');
+    PA.person(s, 'you', 1520, 990, 1.55, { mood: 'happy', armR: 'up', armL: 'hold' });
+    [1300, 1380, 1460, 1660, 1740].forEach((x, i) => PA.person(s, 'grey', x, 560 + (i % 2) * 20, 0.55, { mood: 'neutral', look: { top: '#C3CDDC', top2: '#D5DCE7', skin: '#E3E8F0', hair: '#C3CDDC' } }));
+    add(s, T('team of 6 → 1', 1520, 260, 60, RD, 'Caveat'));
+    add(s, `<g filter="url(#cut)" transform="translate(640 900) rotate(-1)"><rect x="-330" y="-56" width="660" height="112" fill="${GR}"/>${B('UX PRODUCT DESIGNER', 0, 20, 52, WH)}</g>`);
+  });
+
+  // ===== JOB 08 =====
+  // 19 — 7:48 legal AI scans 10,000 pages, flags risky clauses (iso stack)
+  panel(null, (s) => {
+    const I = ISO(760, 620, 1);
+    add(s, I.tile(-300, -300, 600, 600, '#D5DCE7'));
+    for (let k = 0; k < 14; k++) add(s, I.box(-120, -160, 240, 320, 22, k % 2 ? '#F4F6FA' : WH, k * 22));
+    const [x, y] = I.p(0, 0, 330); add(s, `<path d="M${x - 330} ${y - 10} L${x + 330} ${y - 10}" stroke="${RD}" stroke-width="8" opacity=".85"/><path d="M${x - 330} ${y - 10} L${x + 480} ${y + 330}" stroke="${RD}" stroke-width="3" opacity=".4"/>`);
+    robot(s, 1250, 950, 1.1, { mood: 'happy', armL: 'point' });
+    add(s, `<g filter="url(#cut)" transform="translate(1520 330) rotate(3)"><rect x="-230" y="-230" width="460" height="460" fill="${WH}"/>${T('NDA §7.2', -190, -170, 34, INK, 'Inter', 'start', 'font-weight="800"')}${[0, 1, 2, 3, 4, 5, 6].map(k => `<rect x="-190" y="${-130 + k * 46}" width="${360 - (k % 3) * 50}" height="16" fill="${k === 2 || k === 5 ? YL : C.grey}"/>`).join('')}<path d="M200 -40 v-60 h50 l-12 15 l12 15 h-50" fill="${RD}"/></g>`);
+    add(s, `<g filter="url(#cut)" transform="translate(300 160) rotate(-3)"><rect x="-200" y="-70" width="400" height="140" fill="${YL}"/>${T('10,000', 0, 30, 88, INK)}</g>` + T('pages · under a minute', 300, 300, 50, INK, 'Caveat'));
+  });
+
+  // ===== JOB 09 =====
+  // 20 — 8:46 the trusted human face before a big financial choice
+  panel(null, (s) => {
+    add(s, P.floor(860) + `<g filter="url(#cut)" transform="translate(960 180) rotate(-2)"><rect x="-260" y="-120" width="520" height="250" fill="${WH}"/><path d="M-90 90 L0 0 L90 90Z" fill="${BL}"/><rect x="-60" y="90" width="120" height="10" fill="${INK}"/></g>` + T('NEW HOME?', 960, 130, 42, INK));
+    add(s, P.desk(560, 760, 820));
+    PA.person(s, 'client', 640, 760, 1.4, { mood: 'smile', armR: 'forward' }); PA.person(s, 'co1', 440, 760, 1.3, { mood: 'smile', look: { top: YL, top2: '#D99E00' } });
+    PA.person(s, 'you', 1250, 760, 1.5, { mood: 'happy', armL: 'forward', flip: true, look: { top: INK, top2: '#24365E' }, badge: `<circle cx="-30" cy="-150" r="14" fill="${GR}"/>` });
+    add(s, `<g filter="url(#cut)" transform="translate(1640 330)"><path d="M0 -150 L130 -100 Q140 80 0 160 Q-140 80 -130 -100Z" fill="${GR}"/><path d="M-50 0 l35 35 l70 -80" stroke="#fff" stroke-width="22" fill="none" stroke-linecap="round"/></g>` + T('trusted human face', 1640, 560, 56, INK, 'Caveat'));
+    add(s, `<g filter="url(#cut)" transform="translate(960 1000) rotate(-1)"><rect x="-360" y="-54" width="720" height="108" fill="${GR}"/>${B('RELATIONSHIP BANKER', 0, 20, 52, WH)}</g>`);
+  });
+
+  // ===== JOB 10 =====
+  // 21 — 9:33 AI voice callers dial thousands; calendar books itself
+  panel(null, (s, f) => {
+    add(s, P.floor(860));
+    for (let i = 0; i < 6; i++) robot(s, 160 + i * 140, 860 - (i % 2) * 30, 0.55, { mood: 'happy', armR: 'up', headExtra: '' });
+    add(s, `<g>${[...Array(8)].map((_, i) => `<g filter="url(#cutflat)" transform="translate(${200 + i * 100} ${300 - (i % 2) * 60}) rotate(${i * 9 - 30})"><rect x="-40" y="-28" width="80" height="56" fill="${WH}"/><path d="M-40 -28 L0 6 L40 -28" stroke="${RD}" stroke-width="4" fill="none"/></g>`).join('')}</g>`);
+    add(s, `<g filter="url(#cut)" transform="translate(470 500) rotate(-3)"><rect x="-200" y="-56" width="400" height="112" fill="${YL}"/>${T('1,000s of dials', 0, 20, 52, INK)}</g>`);
+    laptop(s, f, 1100, 130, 700, 560, `<div style="padding:18px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px;font:700 20px Inter">${['MON', 'TUE', 'WED', 'THU', 'FRI'].map(d => `<div style="text-align:center;color:#7D879A">${d}</div>`).join('')}${[...Array(20)].map((_, i) => `<div style="height:84px;border-radius:8px;background:${(i * 7) % 5 < 3 ? GR : '#F4F6FA'};color:#fff;padding:6px">${(i * 7) % 5 < 3 ? 'Booked' : ''}</div>`).join('')}</div>`, 'Calendar');
+    add(s, `<g filter="url(#cut)" transform="translate(1450 900) rotate(-1)"><rect x="-360" y="-54" width="720" height="108" fill="${GR}"/>${B('ACCOUNT EXECUTIVE', 0, 20, 52, WH)}</g>`);
+  });
+
+  // ===== OUTRO =====
+  // 22 — 10:27 you are the person running the update
+  panel(null, (s) => {
+    add(s, `<g transform="translate(1040 90) scale(.53)">${board(s, 0, 0, 1, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])}</g>`);
+    PA.person(s, 'you', 520, 1000, 1.9, { mood: 'happy', armR: 'point' });
+    add(s, `<g filter="url(#cut)" transform="translate(860 800)"><rect x="-110" y="-30" width="220" height="80" rx="10" fill="${INK}"/><ellipse cx="0" cy="-34" rx="90" ry="34" fill="${GR}"/></g>` + T('RUN UPDATE', 860, 930, 44, INK));
+    add(s, `<g filter="url(#cut)" transform="translate(1440 700)"><rect x="-420" y="-46" width="840" height="92" rx="14" fill="${INK}"/><rect x="-396" y="-22" width="792" height="44" rx="10" fill="${GR}"/>${T('UPDATE COMPLETE · run by YOU', 0, 14, 30, WH, 'Inter', 'middle', 'font-weight="800"')}</g>`);
+    [1180, 1330, 1480, 1630, 1780].forEach(x => robot(s, x, 1010, 0.5, { mood: 'happy' }));
+  });
+
+  const N = panels.length;
+  const tl = STAGE.driver(N, (t) => { const k = Math.min(N - 1, Math.floor(t)); panels.forEach((p, i) => p.style.display = i === k ? 'block' : 'none'); });
+  window.__timelines = window.__timelines || {}; window.__timelines['storyboard'] = tl;
+})();
+</script>
+</body>
+</html>
