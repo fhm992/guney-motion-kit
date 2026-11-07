@@ -36,7 +36,7 @@
     const rob = F.puppet(S, S.mid, 'intern', 820, 960, 1.2, { mood: 'proud', armL: 'type', armR: 'type' });
     const code = F.html(S.ui, `<div style="width:780px;border-radius:18px;background:${INK};padding:28px 34px;box-sizing:border-box;font:500 28px/1.55 'JetBrains Mono',monospace;color:#C3CDDC;box-shadow:0 20px 40px rgba(14,24,48,.3)">${['test("login works")', 'test("checkout total")', 'test("reset password")', 'test("cart persists")', 'test("mobile menu")', 'test("coupon applies")'].map((t, i) => `<div class="l${i}" style="display:flex;justify-content:space-between;opacity:0"><span>${t}</span><span style="color:${GR};font-weight:800">✓ pass</span></div>`).join('')}</div>`, 1080, 260, 0, 0, 9);
     F.in(code, w('write', 289.2) - 0.3, 'right', { dur: 0.4 });
-    [...Array(6)].forEach((_, i) => { const t = w('run', 289.8) + i * 0.2; F.fromTo(code.querySelector('.l' + i), t, { opacity: 0, x: -20 }, { opacity: 1, x: 0 }, 0.2); F.sfx(t + 0.1, 'tick', 0.3); });
+    [...Array(6)].forEach((_, i) => { const t = w('write', 289.2) + i * 0.25; F.fromTo(code.querySelector('.l' + i), t, { opacity: 0, x: -20 }, { opacity: 1, x: 0 }, 0.2); F.sfx(t + 0.1, 'tick', 0.3); });
     const lb = F.label(S.ui, 'AI TESTING AGENTS', 820, 200, { size: 56, bg: RD, color: WH, rot: -2 }); F.in(lb, w('testing', 288.5) - 0.2, 'above', { dur: 0.35 });
     const dis = F.hand(S.ui, 'disappearing…', 380, 300, 60, '#5D6B88', -3); F.in(dis, 287, 'none', { dur: 0.4, sfx: false });
     for (let x = 289.2; x < 291; x += 0.1) F.sfx(x, 'key', 0.1);
@@ -55,7 +55,7 @@
       const tk = F.set(S.mid, `<circle cx="${x}" cy="${y - 4}" r="15" fill="${GR}"/><path d="M${x - 7} ${y - 4} l5 6 l10 -11" stroke="#fff" stroke-width="4" fill="none"/>`, 3);
       F.fromTo(tk, w('thousands', 291.5) + (r + c) * 0.1, { opacity: 0, scale: 0.3, transformOrigin: `${x}px ${y}px` }, { opacity: 1, scale: 1 }, 0.25, 'back.out(2)'); });
     F.sfx(w('thousands', 291.5), 'shimmer', 0.4);
-    const moon = F.set(S.ui, `<g filter="url(#cut)"><circle cx="0" cy="0" r="70" fill="#FFF3CC"/></g><circle cx="32" cy="-20" r="62" fill="#1A2A4D"/>`, 5); F.fromTo(moon, 291.2, { x: 160, y: 110 }, { x: 1760, y: 100 }, 3.0, 'sine.inOut');
+    const moon = F.set(S.back, `<g filter="url(#cut)"><circle cx="0" cy="0" r="70" fill="#FFF3CC"/></g><circle cx="32" cy="-20" r="62" fill="#1A2A4D"/>`, 5); F.fromTo(moon, 291.2, { x: 160, y: 110 }, { x: 1760, y: 100 }, 3.0, 'sine.inOut');
     const lb = F.label(S.ui, '1,000s OF SCREEN SIZES', 400, 960, { size: 52, bg: YL, color: INK, rot: -2, font: "'Archivo Black'", weight: 400 }); F.in(lb, w('sizes', 292.6), 'left', { dur: 0.35 });
     const on = F.hand(S.ui, 'overnight', 1560, 960, 70, WH, -3); F.in(on, w('overnight.', 293), 'none', { dur: 0.35, sfx: 'swell', gain: 0.3 });
     S.cam(291.2, 960, 520, 1.06, 3, 'inOutSine');
