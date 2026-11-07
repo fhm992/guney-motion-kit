@@ -76,6 +76,7 @@
     const path = F.set(S.mid, (() => { const pts = scr.map((_, i) => I.p(-330 + i * 220, 150, 0)); return `<path d="M${pts.map(q => q.join(' ')).join(' L')}" stroke="${OR}" stroke-width="8" stroke-dasharray="14 14" fill="none" stroke-linecap="round"/>`; })(), 1);
     F.fromTo(path, w('move', 427.5) - 0.3, { opacity: 0 }, { opacity: 1 }, 0.4);
     const walker = F.puppet(S, S.mid, 'client', I.p(-330, 150)[0], I.p(-330, 150)[1], 0.55, { mood: 'smile', z: 9 });
+    F.hidden(walker.root); F.fromTo(walker.root, w('solves', 426) + 1.0, { opacity: 0 }, { opacity: 1 }, 0.3);
     const tm = w('move', 427.5); walker.walk(tm, tm + 2.0);
     const end = I.p(330, 150); walker.move(tm, end[0], end[1], 2.0, 'none');
     F.sfx(tm, 'step', 0.3); F.sfx(w('something.', 429.4), 'ding', 0.5);
