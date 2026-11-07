@@ -104,7 +104,7 @@
     F.fromTo(arr, w('translating', 249.7) + 0.2, { opacity: 0 }, { opacity: 1 }, 0.3);
     const adv = F.html(S.ui, `<div style="width:520px;background:#fff;border-radius:24px;padding:26px 30px;box-shadow:0 16px 30px rgba(14,24,48,.2);font:700 38px/1.3 Inter;color:${INK}">“You pay suppliers in 30 days, but customers pay you in 61. That’s the squeeze.”</div>`, 1180, 220, 0, 0, 9);
     F.in(adv, w('plain', 251.7), 'right', { dur: 0.45, sfx: 'chime', gain: 0.4 });
-    const pe = F.label(S.ui, 'PLAIN ENGLISH', 1440, 530, { size: 50, bg: GR, color: WH, rot: -2 }); F.in(pe, w('English', 252), 'below', { dur: 0.35, sfx: false });
+    const pe = F.label(S.ui, 'PLAIN ENGLISH', 1440, 165, { size: 50, bg: GR, color: WH, rot: -2 }); F.in(pe, w('English', 252), 'below', { dur: 0.35, sfx: false });
     const own = F.puppet(S, S.mid, 'client', 1560, 960, 1.35, { mood: 'happy', armL: 'fwd', look: apron, flip: true });
     own.enter(w('small', 253) - 0.3, 'right');
     const chq = F.prop(S.mid, K.paycheck('$ FEE'), 1300, 700, 320, 160, 8); F.in(chq, w('gladly', 254.1), 'right', { dur: 0.4, sfx: 'kaching', gain: 0.4 });
