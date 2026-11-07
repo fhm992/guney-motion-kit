@@ -102,8 +102,17 @@ pizzicato, bass, pads, brushes, shaker, soft kick. **No piano.** Chords: D Bm G 
 
 The default colours are cream paper, navy, tomato, sage and gold. To recolour a whole video, copy a palette to the
 project as `assets/palette.js` (for example `templates/paper-film/palettes/bright.js`: Blue #4285F4, Red #EA4335,
-Yellow #FBBC05, Green #34A853, White, Orange #F5820D). `mkcomp.py` loads it automatically before `film.js`. A palette
-remaps `navy` (surfaces, labels, your character), keeps `ink` dark for eyes and small text, and `orange` dresses the manager.
+Yellow #FBBC05, Green #34A853, White, Orange #F5820D). `mkcomp.py` loads it automatically before `film.js`. Colour by role, never
+swap colours one for one: keep `navy`/`ink` dark for laptops, frames, labels and text (the anchor), give the hero the bright
+`blue` (sets `you`'s cardigan), `orange` dresses the manager, and use red/green/yellow for accents and the cast. A straight
+swap of navy to bright blue made everything the same blue and the person rejected it. For video use
+`palettes/bright-video.js`; `palettes/bright.js` is the thumbnail set.
+
+## Depth
+
+The `#cut` filter gives every cut-out a tight contact shadow, a soft lifted shadow and a light top edge; `P.floor` adds a
+soft shadow where wall meets floor; each scene has a gentle vignette; puppets get a contact shadow at their feet
+(`noShadow: true` turns it off). Without these the film read as flat.
 
 ## Thumbnails
 
