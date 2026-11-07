@@ -27,7 +27,7 @@
 
 ## Sound (all generated in Python, no piano)
 
-- **Music:** an original score, mixed **≈ 20 dB under the voice** (your request: −20 dB or more), changing with each scene:
+- **Music:** an original score, mixed **about 25 dB under the voice** (your request: −20 dB or lower), changing with each scene:
   **Pulse** (dark synth-pluck pulse, clock ticks: the hook and every "threat" act) → **Groove** (marimba, bass, soft kick, shaker: the switch and the prompt) → **Night** (sparse kalimba and pads: Job 2's 2 a.m.) → **Data** (tight pizzicato ostinato: numbers and spreadsheets) → **Lift** (bright, kalimba sparkle: outro). Key changes per chapter so 10 chapters don't loop the same bed; short drops to near-silence on the big lines ("your job is next", "AI is not erasing work itself").
 - **SFX:** paper slides and flips, card flicks for the board rows (a soft split-flap clatter on each flip), keyboard ticks under every typed prompt, scanner sweep, stamp thunk ("AT RISK"), cash register (soft), phone buzz, chat knock, stopwatch tick + ding, whoosh for camera tilts, eraser rub, crowd murmur, notification ping. Everything sits under the voice.
 
