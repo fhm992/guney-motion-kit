@@ -25,13 +25,22 @@
     const root = document.getElementById('root');
     stage = document.getElementById('stage');
     Object.assign(stage.style, { position: 'absolute', inset: '0', overflow: 'hidden', background: C.paper });
-    overlay = document.createElement('div'); Object.assign(overlay.style, { position: 'absolute', inset: '0', zIndex: 50, pointerEvents: 'none' }); stage.appendChild(overlay);
+    overlay = document.createElement('div'); Object.assign(overlay.style, { position: 'absolute', inset: '0', zIndex: 50, pointerEvents: 'none' }); stage.appendChild(overlay); const vig = document.createElement('div'); Object.assign(vig.style, { position: 'absolute', inset: '0', zIndex: 49, pointerEvents: 'none', background: 'radial-gradient(ellipse 75% 70% at 50% 45%, rgba(0,0,0,0) 55%, rgba(14,24,48,.24) 100%)' }); stage.appendChild(vig);
     tl = S.driver(dur, frame);
     F.tl = tl;
     return F;
   };
-  F.boot = () => { const r = document.getElementById('root'); return F.init(r.dataset.compositionId, +r.dataset.voStart, +r.dataset.duration); };
-  F.done = () => { frame(0); window.__timelines = window.__timelines || {}; window.__timelines[ID] = tl; };
+  // chunked rendering: data-chunk-off = seconds into the scene, data-scene-dur = full scene length
+  let CHUNK = 0;
+  F.boot = () => { const r = document.getElementById('root'); CHUNK = +(r.dataset.chunkOff || 0); return F.init(r.dataset.compositionId, +r.dataset.voStart, +(r.dataset.sceneDur || r.dataset.duration)); };
+  F.done = () => {
+    frame(0); window.__timelines = window.__timelines || {};
+    if (!CHUNK) { window.__timelines[ID] = tl; return; }
+    const D = +document.getElementById('root').dataset.duration;
+    const wrap = gsap.timeline({ paused: true }); wrap.add(tl.tweenFromTo(CHUNK, CHUNK + D, { ease: 'none' }), 0);
+    window.__timelines[ID] = wrap; tl.time(CHUNK); frame(CHUNK);
+    window.addEventListener('hf-seek', () => frame(tl.time()));   // runs after the driver's own (chunk-local) redraw
+  };
 
   // ---------------- per-frame ----------------
   function frame(t) {
@@ -75,7 +84,7 @@
   // ---------------- transitions ----------------
   // a torn sheet of paper sweeps across; switch shots at time t (covered then)
   F.wipe = (t, dir = 1, color = C.paper2) => {
-    const w = document.createElement('div'); Object.assign(w.style, { position: 'absolute', top: '-40px', left: 0, width: '2600px', height: '1160px', willChange: 'transform', filter: 'drop-shadow(-14px 0 18px rgba(40,30,20,.28)) drop-shadow(14px 0 18px rgba(40,30,20,.28))' });
+    const w = document.createElement('div'); Object.assign(w.style, { position: 'absolute', top: '-40px', left: 0, width: '2600px', height: '1160px', willChange: 'transform', filter: 'drop-shadow(-14px 0 18px rgba(14,24,48,.28)) drop-shadow(14px 0 18px rgba(14,24,48,.28))' });
     const inner = document.createElement('div'); Object.assign(inner.style, { position: 'absolute', inset: 0 }); PA.ground(inner, color);
     let pts = []; const R = S.mulberry32(Math.round(t * 100)); for (let y = 0; y <= 100; y += 4) pts.push(`${2 + R() * 2.2}% ${y}%`); let pts2 = []; for (let y = 100; y >= 0; y -= 4) pts2.push(`${96 + R() * 2.2}% ${y}%`);
     inner.style.clipPath = `polygon(${pts.concat(pts2).join(',')})`; w.appendChild(inner); overlay.appendChild(w);
@@ -110,7 +119,7 @@
   // a cut-paper label: text on a strip of paper. (x,y) = centre
   F.label = (parent, text, x, y, o = {}) => {
     const wrap = document.createElement('div');
-    Object.assign(wrap.style, { position: 'absolute', left: x + 'px', top: y + 'px', zIndex: o.z || 5, filter: o.flat ? 'none' : 'drop-shadow(3px 6px 6px rgba(40,30,20,.30))' }); gsap.set(wrap, { xPercent: -50, yPercent: -50 });
+    Object.assign(wrap.style, { position: 'absolute', left: x + 'px', top: y + 'px', zIndex: o.z || 5, filter: o.flat ? 'none' : 'drop-shadow(3px 6px 6px rgba(14,24,48,.30))' }); gsap.set(wrap, { xPercent: -50, yPercent: -50 });
     const box = document.createElement('div'); const size = o.size || 72;
     Object.assign(box.style, { position: 'relative', padding: o.pad || `${size * 0.22}px ${size * 0.42}px`, background: o.bg || C.navy, color: o.color || C.white, font: `${o.weight || 800} ${size}px/1.05 ${o.font || "'Bricolage Grotesque'"}`, whiteSpace: 'nowrap', clipPath: o.bg === 'none' ? 'none' : F.rough(seedN++), letterSpacing: o.ls || '0', transform: `rotate(${o.rot || 0}deg)`, textAlign: 'center' });
     if (o.bg === 'none') box.style.background = 'none'; else if (!o.plain) { box.style.backgroundImage = paperTex(); }
@@ -174,8 +183,10 @@
     newhire: { top: C.gold, top2: '#D99E00', skin: C.skin3, hair: C.hair2, hairStyle: 'side', collar: C.white },
     teacher: { top: C.sage2, top2: C.sage, skin: C.skin3, hair: C.grey, hairStyle: 'bun', collar: C.white }
   };
+  if (C.orange) { LOOK.manager.top = C.orange; LOOK.manager.top2 = C.orange2 || C.orange; }
+  if (C.blue) { LOOK.you.top = C.blue; LOOK.you.top2 = C.blueDark || C.blue; }
   F.LOOK = LOOK;
-  const N = C.navy;
+  const N = C.ink || C.navy;   // dark ink for faces, legs, laptops (a palette may recolour navy surfaces)
   function hairPath(style, color) {
     return {
       short: `<path d="M-56 -270 Q-62 -340 4 -344 Q62 -340 58 -282 Q30 -300 -6 -296 Q-30 -296 -44 -262 Z" fill="${color}"/>`,
@@ -260,10 +271,10 @@
   F.A = { down: 6, hip: 26, out: 62, fwd: 82, point: 96, wave: 140, up: 168, in: -18, type: -30, hold: 40, high: 125 };
 
   // kind: you | manager | grey | client | exec | co1 | co2 | newhire | intern
-  F.puppet = (shot, layer, kind, x, y, s = 1, o = {}) => {
+  F.puppet = (shot, layer, kind, x, y, s = 1, o = {}) => { let p0sh = null;
     const isI = kind === 'intern', L = Object.assign({}, LOOK[kind] || LOOK.you, o.look || {});
     const root = abs(x, y, 0, 0, '0 0'); root.style.zIndex = o.z || 3; (layer || shot.mid).appendChild(root);
-    const rig = abs(0, 0, 0, 0, '0 0'); rig.style.transform = `scale(${o.flip ? -s : s}, ${s})`; root.appendChild(rig);
+    if (!o.noShadow) { const sh = abs(-85 * s, -16 * s, 170 * s, 30 * s); sh.style.background = 'radial-gradient(ellipse at 50% 50%, rgba(14,24,48,.38), rgba(14,24,48,0) 70%)'; root.appendChild(sh); p0sh = sh; } const rig = abs(0, 0, 0, 0, '0 0'); rig.style.transform = `scale(${o.flip ? -s : s}, ${s})`; root.appendChild(rig);
     const bob = abs(0, 0, 0, 0, '0 0'); rig.appendChild(bob);
     const p = { root, rig, bob, kind, moods: [[-1e9, o.mood || 'neutral']], heads: {}, waves: [], walks: [], nods: [], shakesH: [], seed: (x * 0.37 + y * 0.11) % 5, shot };
     const body = abs(isI ? -75 : -80, isI ? -160 : -210, isI ? 150 : 160, isI ? 165 : 222); body.innerHTML = svgBox(isI ? -75 : -80, isI ? -160 : -210, isI ? 150 : 160, isI ? 165 : 222, isI ? internBody(o) : personBody(L, o)); bob.appendChild(body);
@@ -340,7 +351,7 @@
         if (sent) { tx.innerHTML = ''; ph.style.display = 'inline'; return; }
         ph.style.display = n ? 'none' : 'inline'; let left = n, h = '';
         for (const sg of segs) { if (left <= 0) break; if (sg.chip) { h += `<span style="display:inline-block;padding:0 12px;border-radius:10px;background:#FFF3CC;color:#A86F00;border:2px dashed #F5820D">${sg.chip}</span>`; left -= 1; } else { h += sg.t.slice(0, left).replace(/\n/g, '<br>'); left -= sg.t.length; } }
-        tx.innerHTML = h + (n < total || !o2.noCaret ? `<span style="display:inline-block;width:4px;height:1.05em;background:#EA4335;vertical-align:-4px;margin-left:3px"></span>` : ''); });
+        tx.innerHTML = h + (n < total || !o2.noCaret ? `<span style="display:inline-block;width:4px;height:1.05em;background:#4285F4;vertical-align:-4px;margin-left:3px"></span>` : ''); });
       for (let x = t0; x < t1; x += 0.11) F.sfx(x, 'key', 0.18);
       api.text = text;
     };
