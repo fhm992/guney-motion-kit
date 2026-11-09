@@ -56,7 +56,7 @@
             const a = S.E.outCubic(S.seg(T, t92, t92 + 1.2)), f = S.seg(T, t92 + 1.0, t92 + 5);
             n92.textContent = Math.round(92 * a) + 'M'; n92.style.opacity = a > 0 ? 1 : 0;
             blks.forEach((b, i) => { const k = (47 - i) / 47; const o = S.seg(f, k * 0.8, k * 0.8 + 0.2); b.style.opacity = (a * (1 - o)).toFixed(2); b.style.transform = `translateY(${(-o * 120).toFixed(0)}px) rotate(${(o * (i % 2 ? 40 : -40)).toFixed(0)}deg)`; });
-            const g = S.E.outCubic(S.seg(T, t170, t170 + 2.5)); gt.style.height = (g * 640).toFixed(0) + 'px'; gt.style.top = (880 - g * 640).toFixed(0) + 'px';
+            const g = S.E.outCubic(S.seg(T, t170, t170 + 2.5)); gt.style.height = (g * 460).toFixed(0) + "px"; gt.style.top = (880 - g * 460).toFixed(0) + "px";
             n170.textContent = Math.round(170 * g) + 'M'; n170.style.opacity = g > 0 ? 1 : 0;
             ln.set({ face: T > t170 + 1 ? 'smile' : 'shocked', look: T > t170 ? [0.8, -0.9] : [-0.7, -0.9] }, T, lt);
             k0(T); l92(T); l170(T);
