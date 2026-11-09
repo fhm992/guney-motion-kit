@@ -19,7 +19,7 @@
           el(A, `<div class="fl-a" style="left:470px;top:620px;width:24px;height:150px;border-radius:12px;background:#ddd;transform:rotate(25deg)"></div>`);
           const hud = d.hud();
           const tBox = J.w('text box', t0).S, tGen = J.w('image generators', t0).S;
-          const k1 = key(hud, `A <span style="color:${G.y}">10-WORD</span> TEXT BOX`, 110, 870, 110, '#fff', tBox - 0.6, null);
+          const k1 = key(hud, `A <span style="color:${G.y}">10-WORD</span> TEXT BOX`, 110, 780, 110, '#fff', tBox - 0.6, null);
           ts.forEach((n, i) => sfx('pop', tGen + 0.4 + i * 0.22, 0.18, (i % 4) * 0.3 - 0.45));
           d.on((T2, lt) => {
             const nC = Math.floor(S.clamp((T2 - J.T(t0) - 0.5) / 0.06, 0, promptTxt.length)); pt.textContent = promptTxt.slice(0, nC);

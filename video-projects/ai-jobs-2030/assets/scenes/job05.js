@@ -24,7 +24,7 @@
           el(A, P.desk(20, 900, 1300));
           const hud = d.hud();
           const cnt = el(hud, `<div class="fl-t" style="left:110px;top:90px;font-size:130px;color:#fff"></div>`);
-          const k2 = key(hud, `AI TESTS <span style="color:${G.g}">OVERNIGHT</span>`, 1840, 870, 110, '#fff', tOv - 0.3, null, { align: 'right' });
+          const k2 = key(hud, `AI TESTS <span style="color:${G.g}">OVERNIGHT</span>`, 1840, 780, 110, '#fff', tOv - 0.3, null, { align: 'right' });
           for (let i = 0; i < 14; i++) sfx('click', J.T(t0) + 0.5 + i * 0.42, 0.3, 0.2);
           sfx('whoosh', tB, 0.5);
           d.on((T, lt) => {

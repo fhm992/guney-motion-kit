@@ -9,6 +9,7 @@
 <script src="assets/edit.js"></script>
 <script src="assets/vo-env.js"></script>
 <script src="assets/cues.js"></script>
+<script src="assets/beats.js"></script>
 <script src="assets/film.js"></script>
 <script src="assets/job.js"></script>
 <script src="assets/props.js"></script>

@@ -20,8 +20,8 @@
           const hud = d.hud();
           const tTix = [J.w('password resets', t0).S, J.w('shipping questions', t0).S, J.w('refund requests', t0).S];
           const t40 = J.w('40 languages', t0).S, t2 = J.w('2 in the morning', t0).S;
-          const k1 = key(hud, `<span style="color:${G.b}">40</span> LANGUAGES`, 1840, 870, 110, '#fff', t40, t2 - 0.1, { align: 'right' });
-          const k2 = key(hud, `<span style="color:${G.y}">2:00</span> AM`, 1840, 870, 120, '#fff', t2, null, { align: 'right' });
+          const k1 = key(hud, `<span style="color:${G.b}">40</span> LANGUAGES`, 1840, 780, 110, '#fff', t40, t2 - 0.1, { align: 'right' });
+          const k2 = key(hud, `<span style="color:${G.y}">2:00</span> AM`, 1840, 780, 120, '#fff', t2, null, { align: 'right' });
           tTix.forEach((t) => sfx('ping', t, 0.35));
           bubs.forEach((b, i) => sfx('pop', J.T(t0) + 0.6 + i * 0.35, 0.15, (i % 2) * 0.6 - 0.3));
           d.on((T, lt) => {

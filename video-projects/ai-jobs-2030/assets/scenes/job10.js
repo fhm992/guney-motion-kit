@@ -15,7 +15,7 @@
           el(A, `<div class="fl-a" style="left:80px;top:860px;width:300px;height:200px;background:#f6f4ef;border-radius:6px;transform:rotate(-6deg);padding:20px;box-sizing:border-box"><div style="font:900 26px Figtree;color:${G.r}">COLD SCRIPT</div>${[0, 1, 2, 3].map(() => '<div style="height:8px;background:#cfd3da;border-radius:4px;margin-top:14px"></div>').join('')}</div>`);
           const hud = d.hud();
           const tD = J.w('dial thousands', t0).S, tB = J.w('book calendar links', t0).S, tO = J.w('handle basic objections', t0).S;
-          const cnt = el(hud, `<div class="fl-t" style="left:1840px;top:870px;font-size:100px;color:#fff;transform:translateX(-100%)"></div>`);
+          const cnt = el(hud, `<div class="fl-t" style="left:1840px;top:780px;font-size:100px;color:#fff;transform:translateX(-100%)"></div>`);
           const k2 = key(hud, `<span style="color:${G.g}">AUTO-BOOKED</span>`, 110, 90, 110, '#fff', tB, null);
           for (let i = 0; i < 10; i++) sfx('ring', tD + i * 0.2, 0.08, (i % 2) * 0.8 - 0.4);
           sfx('ping', tB + 0.2, 0.4);

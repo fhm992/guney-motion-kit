@@ -34,6 +34,11 @@
   .fl-vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 78% 74% at 50% 50%,transparent 52%,rgba(0,0,0,.72) 100%)}
   .fl-flash{position:absolute;inset:0;pointer-events:none;background:#fff;opacity:0}
   .fl-bars{position:absolute;left:0;right:0;height:0;background:#000}
+  .fl-cap{position:absolute;left:0;right:0;top:952px;height:90px;display:flex;justify-content:center;align-items:center;pointer-events:none;z-index:50}
+  .fl-cap .ph{position:absolute;display:flex;gap:16px;white-space:nowrap;font:900 60px/1 Figtree;letter-spacing:-0.5px}
+  .fl-cap .wd{display:inline-block;color:rgba(255,255,255,.38);text-shadow:0 4px 18px rgba(0,0,0,.85),0 0 2px rgba(0,0,0,.9);transform-origin:50% 80%}
+  .fl-capband{position:absolute;left:0;right:0;top:880px;height:200px;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(0,0,0,.55));z-index:49}
+  .fl-pulse{position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;background:radial-gradient(ellipse 70% 60% at 50% 45%,#fff,transparent 70%);opacity:0;z-index:48}
   .fl-card{position:absolute;border-radius:28px;background:#1f1f1e;border:1px solid #3a3a38;box-shadow:0 50px 120px rgba(0,0,0,.6)}`;
   function css() { if (document.getElementById('fl-css')) return; const s = document.createElement('style'); s.id = 'fl-css'; s.textContent = CSS + (location.hash.includes('noblur') ? '.fl-L{filter:none!important}' : '') + (location.hash.includes('noblend') ? '.fl-grain,.fl-tint{display:none!important}' : '') + (location.hash.includes('nomote') ? '.mote{display:none!important}' : ''); document.head.appendChild(s); }
   const el = (parent, html) => { const t = document.createElement('div'); t.innerHTML = html.trim(); const n = t.firstElementChild; while (t.firstChild) parent.appendChild(t.firstChild); return n; };
@@ -57,6 +62,15 @@
     };
   }
 
+  // ---------- stressed-word bump, shared by actors: [strength 0..1, index of the word] ----------
+  const EMW = ((window.BEATS || {}).words || []).map((w, i) => (w.em ? [w.s, w.em, i] : null)).filter(Boolean);
+  function emBeat(T) {
+    let lo = 0, hi = EMW.length; while (lo < hi) { const m = (lo + hi) >> 1; if (EMW[m][0] < T) lo = m + 1; else hi = m; }
+    let best = 0, idx = 0;
+    for (let k = lo - 1; k >= 0 && T - EMW[k][0] < 1.2; k--) { const d = T - EMW[k][0], tau = 0.22, b = (d / tau) * Math.exp(1 - d / tau) * (EMW[k][1] > 1 ? 1 : 0.75); if (b > best) { best = b; idx = EMW[k][2]; } }
+    return [best, idx];
+  }
+
   // ---------- actors ----------
   function actor(parent, o) {
     const h = o.h || 700, w = h * 400 / 960;
@@ -70,6 +84,7 @@
         const ph = ((lt + seed) % per) / 0.14; q.blink = ph < 1 ? Math.sin(ph * Math.PI) : 0;
         if (q.talk) { const e = env(T); if (e > 0.06) { q.face = 'talk'; q.open = Math.min(1, e * 1.2); } }
         q.bob = (q.bob || 0) + Math.sin(lt * 2.1 + seed) * (q.breathe ?? 3);
+        if (q.beat !== false) { const [b, i] = emBeat(T); q.bob += b * 9; q.tilt = (q.tilt || 0) + b * (i % 2 ? 3 : -3); }
         const key = JSON.stringify(q);
         if (key !== last) { box.innerHTML = HERO.svg(q); last = key; }
         if (p && (p.x !== undefined || p.y !== undefined || p.s !== undefined || p.flip !== undefined)) {
@@ -172,10 +187,49 @@
     });
     const post = el(stage, `<div class="fl-a" style="inset:0;pointer-events:none"><div class="fl-grain"></div><div class="fl-flash"></div></div>`);
     const grain = post.querySelector('.fl-grain'), flash = post.querySelector('.fl-flash');
+    // ---- micro beats: word captions, camera pulses and light pulses on the rhythm of the voice ----
+    const B = window.BEATS || { words: [], phrases: [], excl: [] }, Tend = T0 + DUR;
+    const off = (T) => B.excl.some(([a, b]) => T >= a && T < b);
+    const PH = B.phrases.filter((p) => p.e > T0 - 0.5 && p.s < Tend + 0.5);
+    const capBand = el(stage, `<div class="fl-capband"></div>`), cap = el(stage, `<div class="fl-cap"></div>`), pulseEl = el(stage, `<div class="fl-pulse"></div>`);
+    const capPh = PH.map((p, k) => {
+      const n = el(cap, `<div class="ph"></div>`); const ws = [];
+      for (let i = p.a; i <= p.b; i++) { const w = B.words[i]; const sp = document.createElement('span'); sp.className = 'wd'; sp.textContent = w.w; n.appendChild(sp); ws.push([sp, w]); }
+      const next = PH[k + 1]; return { n, ws, p, until: next ? Math.min(next.s - 0.02, p.e + 0.9) : p.e + 0.9, hidden: off(p.s + 0.05) };
+    });
+    const emW = B.words.filter((w) => w.em && w.s > T0 - 2 && w.s < Tend);
+    const pulseAt = (T) => { // smooth bump d/tau*exp(1-d/tau): rises and settles, no shake
+      const bump = (d, tau) => (d <= 0 ? 0 : (d / tau) * Math.exp(1 - d / tau));
+      let z = 0, l = 0;
+      for (const p of PH) { const d = T - p.s; if (d > 0 && d < 3) z += 0.010 * bump(d, 0.35); }
+      for (const w of emW) { const d = T - w.s; if (d > 0 && d < 3) { const b = bump(d, 0.28); z += (w.em > 1 ? 0.02 : 0.013) * b; l = Math.max(l, (w.em > 1 ? 0.22 : 0.12) * b); } }
+      return [Math.min(z, 0.05), l];
+    };
+    let colorIdx = 0; const emColor = new Map(); emW.forEach((w) => emColor.set(w, GC[colorIdx++ % 4]));
+    function captions(T) {
+      let anyOn = 0;
+      for (const c of capPh) {
+        const on = !c.hidden && T >= c.p.s - 0.06 && T < c.until;
+        if (!on) { if (c.n.style.display !== 'none') c.n.style.display = 'none'; continue; }
+        anyOn = 1; c.n.style.display = 'flex';
+        const a = S.E.outCubic(S.seg(T, c.p.s - 0.06, c.p.s + 0.14)), b = S.seg(T, c.until - 0.12, c.until);
+        c.n.style.opacity = (a * (1 - b)).toFixed(3); c.n.style.transform = `translateY(${((1 - a) * 18 - b * 10).toFixed(1)}px)`;
+        for (const [sp, w] of c.ws) {
+          const said = T >= w.s - 0.03, k = S.seg(T, w.s - 0.03, w.s + 0.16);
+          const col = w.em ? emColor.get(w) || '#fff' : '#fff';
+          sp.style.color = said ? col : 'rgba(255,255,255,.38)';
+          const pop = said ? 1 + (w.em ? 0.16 : 0.07) * Math.sin(Math.PI * Math.min(1, k)) : 1;
+          sp.style.transform = `scale(${pop.toFixed(3)}) translateY(${(said ? -4 * Math.sin(Math.PI * Math.min(1, k)) : 0).toFixed(1)}px)`;
+        }
+      }
+      capBand.style.opacity = anyOn ? '1' : '0';
+    }
 
     function frame(t) {
       const T = T0 + t;
       let fl = 0;
+      const [pz, pl] = pulseAt(T);
+      captions(T); pulseEl.style.opacity = pl.toFixed(3);
       shots.forEach((d, i) => {
         const a = d.t0, b = d.t1, fin = d.fadeIn, nextIn = shots[i + 1] ? shots[i + 1].fadeIn : 0;
         const vis = t >= a - 1e-6 && t < b + nextIn;
@@ -187,7 +241,7 @@
         if (d.flash && t >= a && t < a + 0.5) fl = Math.max(fl, (1 - (t - a) / 0.5) * d.flash);
         const lt = t - a, u = (t - a) / (b - a);
         const c = d.camPath ? d.camPath(lt) : [0, 0, 1, 0];
-        const [cx, cy, cz, cr] = c;
+        const [cx, cy, cz0, cr] = c; const cz = cz0 * (1 + pz);
         d.cam.style.transform = `rotate(${cr}deg)`;
         for (const L of d.layers) { const k = 1 / L.__d; L.style.transform = `translate(${(-cx * k).toFixed(2)}px,${(-cy * k).toFixed(2)}px) scale(${(1 + (cz - 1) * k).toFixed(4)})`; }
         for (const m of d.motes) { const p = +m.dataset.p; m.style.transform = `translate(${(Math.sin(lt * 0.4 + p * 40) * 30).toFixed(1)}px,${(-((lt * (12 + p * 30)) % 300)).toFixed(1)}px)`; m.style.opacity = (0.4 + 0.6 * Math.abs(Math.sin(lt * 0.8 + p * 20))).toFixed(2); }

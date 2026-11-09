@@ -9,7 +9,7 @@ m = rd('assets/audio/music.wav')[:, :N]
 out = np.zeros((2, N), np.float32)
 vg = 0.5 / (np.percentile(np.abs(v), 99.9) + 1e-9)          # voice peaks around -6 dBFS before limiting
 out += v * vg
-out[:, :m.shape[1]] += m * 0.95
+out[:, :m.shape[1]] += m * 0.95 * 10 ** (-20 / 20)   # background music lowered by 20 dB
 cache = {}
 for c in json.load(open('plan/sfx-cues.json')):
     if c['g'] <= 0: continue
