@@ -115,7 +115,8 @@
     const bt = bodyEnd - tBody;
     const keys = [F(0, 560, 560, 1.0, -0.4), F(tOpen - t0, 700, 540, 1.04, -0.2), F(tBody - t0 - 0.2, 1180, 450, 1.32, 0.2), F(tBody - t0 + 2, 1220, 420, 1.42, 0.3),
       F(tBody - t0 + bt * 0.55, 1230, 470, 1.46, 0.1), F(bodyEnd - t0, 1220, 520, 1.44, -0.1)];
-    if (outroT) keys.push(F(dur, 900, 540, 1.02, -0.3)); else keys.push(F(dur, 1210, 540, 1.5, -0.2));
+    if (outroT) keys.push(F(dur, 900, 540, 1.02, -0.3)); else keys.push(F(Math.max(dur, keys[keys.length - 1][0] + 0.5), 1210, 540, 1.5, -0.2));
+    for (let i = 1; i < keys.length; i++) if (keys[i][0] <= keys[i - 1][0] + 0.05) keys[i][0] = keys[i - 1][0] + 0.05;
     return { t0, t1, fadeIn: 0.6,
       camPath: path(keys),
       build(d) {

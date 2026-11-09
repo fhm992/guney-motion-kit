@@ -75,6 +75,9 @@ PW = []
 for w in W:
     sg = seg_of(w['s'])
     if sg is None: continue
+    if sg['src1'] - w['s'] < 0.06:   # a word stamped at the very end of a piece is spoken after the cut
+        nx = [x for x in segs if abs(x['src0'] - sg['src1']) < 1e-6]
+        if nx: sg = nx[0]; w = dict(w, s=sg['src0'], e=max(w['e'], sg['src0'] + 0.3))
     a = sg['dst0'] + w['s'] - sg['src0']; b = sg['dst0'] + min(w['e'], sg['src1']) - sg['src0']
     PW.append({'w': w['w'], 's': round(a, 3), 'e': round(max(a + 0.05, b), 3)})
 # sections (program time): intro, j1..j10, finale. Each job starts with its music-only chapter card.
