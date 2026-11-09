@@ -35,7 +35,7 @@
   .fl-flash{position:absolute;inset:0;pointer-events:none;background:#fff;opacity:0}
   .fl-bars{position:absolute;left:0;right:0;height:0;background:#000}
   .fl-cap{position:absolute;left:0;right:0;top:952px;height:90px;display:flex;justify-content:center;align-items:center;pointer-events:none;z-index:50}
-  .fl-cap .ph{position:absolute;display:flex;gap:16px;white-space:nowrap;font:900 60px/1 Figtree;letter-spacing:-0.5px}
+  .fl-cap .ph{position:absolute;display:flex;gap:22px;white-space:nowrap;font:900 60px/1 Figtree;letter-spacing:-0.5px}
   .fl-cap .wd{display:inline-block;color:rgba(255,255,255,.38);text-shadow:0 4px 18px rgba(0,0,0,.85),0 0 2px rgba(0,0,0,.9);transform-origin:50% 80%}
   .fl-capband{position:absolute;left:0;right:0;top:880px;height:200px;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(0,0,0,.55));z-index:49}
   .fl-pulse{position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;background:radial-gradient(ellipse 70% 60% at 50% 45%,#fff,transparent 70%);opacity:0;z-index:48}
@@ -195,7 +195,7 @@
     const capPh = PH.map((p, k) => {
       const n = el(cap, `<div class="ph"></div>`); const ws = [];
       for (let i = p.a; i <= p.b; i++) { const w = B.words[i]; const sp = document.createElement('span'); sp.className = 'wd'; sp.textContent = w.w; n.appendChild(sp); ws.push([sp, w]); }
-      const next = PH[k + 1]; return { n, ws, p, until: next ? Math.min(next.s - 0.02, p.e + 0.9) : p.e + 0.9, hidden: off(p.s + 0.05) };
+      const next = PH[k + 1]; return { n, ws, p, until: next ? Math.min(next.s - 0.1, p.e + 0.9) : p.e + 0.9, hidden: off(p.s + 0.05) };
     });
     const emW = B.words.filter((w) => w.em && w.s > T0 - 2 && w.s < Tend);
     const pulseAt = (T) => { // smooth bump d/tau*exp(1-d/tau): rises and settles, no shake
@@ -212,21 +212,23 @@
         const on = !c.hidden && T >= c.p.s - 0.06 && T < c.until;
         if (!on) { if (c.n.style.display !== 'none') c.n.style.display = 'none'; continue; }
         anyOn = 1; c.n.style.display = 'flex';
-        const a = S.E.outCubic(S.seg(T, c.p.s - 0.06, c.p.s + 0.14)), b = S.seg(T, c.until - 0.12, c.until);
+        const a = S.E.outCubic(S.seg(T, c.p.s - 0.04, c.p.s + 0.14)), b = S.seg(T, c.until - 0.08, c.until);
         c.n.style.opacity = (a * (1 - b)).toFixed(3); c.n.style.transform = `translateY(${((1 - a) * 18 - b * 10).toFixed(1)}px)`;
         for (const [sp, w] of c.ws) {
           const said = T >= w.s - 0.03, k = S.seg(T, w.s - 0.03, w.s + 0.16);
           const col = w.em ? emColor.get(w) || '#fff' : '#fff';
           sp.style.color = said ? col : 'rgba(255,255,255,.38)';
-          const pop = said ? 1 + (w.em ? 0.16 : 0.07) * Math.sin(Math.PI * Math.min(1, k)) : 1;
+          const pop = said ? 1 + (w.em ? 0.1 : 0.05) * Math.sin(Math.PI * Math.min(1, k)) : 1;
           sp.style.transform = `scale(${pop.toFixed(3)}) translateY(${(said ? -4 * Math.sin(Math.PI * Math.min(1, k)) : 0).toFixed(1)}px)`;
         }
       }
       capBand.style.opacity = anyOn ? '1' : '0';
     }
 
+    const fillUpd = window.FILL ? FILL.build(stage, shots, T0, id, el, GC, S) : () => {};
     function frame(t) {
       const T = T0 + t;
+      fillUpd(T);
       let fl = 0;
       const [pz, pl] = pulseAt(T);
       captions(T); pulseEl.style.opacity = pl.toFixed(3);
@@ -254,6 +256,7 @@
       const fb = (id === 'intro' ? 1 - S.seg(t, 0, 1.2) : 0) + (id === 'finale' ? S.seg(t, DUR - 1.5, DUR) : 0);
       stage.style.filter = fb > 0.001 ? `brightness(${(1 - fb).toFixed(3)})` : 'none';
     }
+    window.__shots = shots.map((d, i) => ({ i, t0: d.t0, t1: d.t1 }));
     const tl = S.driver(DUR, frame);
     window.__timelines = window.__timelines || {}; window.__timelines[id] = tl;
     return { T0, DUR, word: (p, after) => { const w = word(p, after ?? T0); return { s: w.s - T0, e: w.e - T0, S: w.s, E: w.e }; } };

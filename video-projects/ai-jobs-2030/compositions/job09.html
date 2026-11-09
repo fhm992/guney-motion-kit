@@ -11,6 +11,8 @@
 <script src="assets/cues.js"></script>
 <script src="assets/beats.js"></script>
 <script src="assets/film.js"></script>
+<script src="assets/free.js"></script>
+<script src="assets/fill.js"></script>
 <script src="assets/job.js"></script>
 <script src="assets/props.js"></script>
 <link rel="stylesheet" href="assets/fonts.css">
