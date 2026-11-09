@@ -156,7 +156,7 @@ function person(o) {
   const hy = -Hh + r + drop;
   const head = `<g transform="translate(0,${f(hy)})">${L.hood && !zombie ? `<ellipse cx="0" cy="${r * 0.95}" rx="${r * 0.95}" ry="${r * 0.35}" fill="#d99c10"/>` : ''}<circle r="${r}" fill="${zombie ? 'url(#zHead)' : 'url(#headHi)'}"/>${o.back ? '' : face(r, o.mood || 'calm', o.look || 0, zombie)}${zombie ? (o.zhair ? hair(o.zhair, r, o.back, dir) : '') : hair(L.hair, r, o.back, dir)}</g>`;
   const tilt = o.tilt || (zombie ? 6 * dir : pose === 'run' ? 8 * dir : 0);
-  const shadow = `<ellipse cx="0" cy="${drop > 0 && pose === 'sit' ? 0 : 0}" rx="${0.22 * Hh}" ry="${0.03 * Hh}" fill="#000" opacity="0.45"/>`;
+  const shadow = o.noShadow ? '' : `<ellipse cx="0" cy="${drop > 0 && pose === 'sit' ? 0 : 0}" rx="${0.22 * Hh}" ry="${0.03 * Hh}" fill="#000" opacity="0.45"/>`;
   const front = o.back ? (legs + torso + head + arms) : (legs + arms.split('</g>')[0] + '</g>' + torso + head + arms.slice(arms.indexOf('</g>') + 4));
   return `<g transform="translate(${f(o.x)},${f(o.y)}) scale(${o.flip ? -1 : 1},1)" opacity="${o.op ?? 1}">${shadow}<g transform="rotate(${tilt})">${front}</g></g>`;
 }
@@ -337,4 +337,4 @@ function aerial(o) {
   return { svg: items.map((i) => i.s).join(''), proj };
 }
 
-module.exports = { W, H, BAR, rng, f, pts, poly, rect, frame, person, zombie, tinyZ, horde, sky, moon, skyline, fog, lampPost, car, shutter, aisle, storefront, aerial, LOOKS };
+module.exports = { defs, W, H, BAR, rng, f, pts, poly, rect, frame, person, zombie, tinyZ, horde, sky, moon, skyline, fog, lampPost, car, shutter, aisle, storefront, aerial, LOOKS };

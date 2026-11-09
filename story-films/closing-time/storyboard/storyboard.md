@@ -2,7 +2,7 @@
 
 35 shots · about 9 minutes · 2.39:1 widescreen · zombie survival
 
-The pictures are **storyboard sketches** that set framing, staging and camera. The final 3D art is made from the **image prompt** on each shot (every prompt ends with the style line below).
+The pictures set framing, staging and camera. 20 shots are rendered in real 3D with three.js (2D characters inside 3D sets); the close-up inserts are flat drawings. The final 3D art is made from the **image prompt** on each shot (every prompt ends with the style line below).
 
 **Style line (add to every prompt):** Cinematic 3D animated film still, stylised cartoon characters with solid black skin, big round white eyes and simple bold clothes (match the character references), detailed realistic 3D environment, volumetric fog, moody cinematic lighting, anamorphic 2.39:1 frame, shallow depth of field, subtle film grain, no text, no logos.
 
