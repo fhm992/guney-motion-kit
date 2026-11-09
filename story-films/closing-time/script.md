@@ -1,325 +1,320 @@
-# CLOSING TIME — screenplay (draft 2)
+# CLOSING TIME — screenplay (draft 3)
 
-**Runtime:** about 9 minutes · **Format:** 16:9 for YouTube
-**Genre:** zombie outbreak, survival
-**Look:** cinematic 3D / 2.5D world with the stylised cartoon characters from the reference picture (black faces, big
-white eyes, bold simple clothes). Zombies: green heads, glowing yellow eyes, torn dark clothes. The main location is
-a big 24-hour supermarket at night: flickering strip lights, long aisles, a metal shutter over the glass front,
-a stockroom, a walk-in freezer, a loading dock.
+**YouTube title idea:** *Zombie Outbreak: I Was Locked In A Supermarket On The Night Shift*
+**Runtime:** about 9 minutes · **Format:** 16:9 · **Genre:** zombie outbreak, survival
+**Look:** cinematic 3D / 2.5D supermarket and city at night, stylised cartoon characters from the reference picture
+(black faces, big white eyes, bold clothes). Zombies: green heads, glowing yellow eyes. They hunt by **sound**.
 
-**The idea in one line:** a night-shift shelf stacker with headphones on misses the end of the world, locks himself
-inside the supermarket and has to survive. At first he's alone. Then others knock on the shutter.
+**How it is told** (the format, not the story, follows the reference video):
+- A narrator talks to the viewer as **"you"**, in the present tense, in short punchy sentences. "You" are Sami.
+- Exact times and small details ("11:52 p.m., register 2, $3.49").
+- Every day brings **one survival problem + one real-world fact + one consequence**.
+- Rules written on the store's **chalkboard of specials**, one added after each mistake.
+- Days jump (1, 2, 4, 6, 8...) and each jump ends on a small cliffhanger.
+- Open mysteries carried for minutes before they pay off.
+- Unlike the reference, the other characters speak in their own voices, and a few moments have no words at all.
 
----
+**Cast:** SAMI (red T-shirt, 18, night-shift shelf stacker, "you") · MAYA (yellow hoodie, nursing student) · ZOE (blonde
+bob, denim jacket, tough) · THEO (curly hair, loud, scared, never without his Bluetooth speaker) · RICO (cap, green
+flannel, calm big brother) · MR. DAVIS (store manager) · MUM (voice only) · THE MAN WITH THE ICE · RADIO VOICE ·
+NARRATOR (calm, dry, close to the mic).
 
-## Cast
-
-| Name | Look (reference picture) | Who they are |
-|---|---|---|
-| **SAMI** (lead, narrator) | Red T-shirt, jeans | 18, night-shift shelf stacker. Quiet, organised, lonely. Waiting for his mum to come and get him. **Narrates through whispered voice notes on his phone.** |
-| **MAYA** | Yellow hoodie, ponytail | Nursing student. Calm in a crisis, gentle, stubborn. |
-| **ZOE** | Blonde bob, denim jacket | Tough, sarcastic, doesn't trust anyone. Good with tools. |
-| **THEO** | Curly hair, dark T-shirt | Loud, funny, scared, makes mistakes. Carries a little Bluetooth speaker everywhere. |
-| **RICO** | Backwards cap, green flannel | Oldest of the group, steady, protective. The "big brother". |
-| **MR. DAVIS** | Store manager's shirt and tie | Sami's boss. Bitten on night one. |
-| **MUM** (voice only) | — | Sami's mum, heard on voicemails. |
-
-**The zombies:** fast, hunt by **sound**, turn a person in about **ten seconds** after a bite to the neck, slower
-from a bite to an arm or a hand.
-
-**Sami's rules** (written in marker on cardboard and taped to the stockroom wall, one added each time something goes
-wrong):
-1. Never make a sound.
-2. Never open the shutter.
-3. Never open the freezer.
-4. Never eat alone. *(added after Theo's mistake)*
-
----
+**Real facts used** (checked; keep the wording careful when recording):
+- An adult needs roughly 2,000 calories a day; a 16 oz jar of peanut butter holds about 2,800–3,000.
+- When the taps stop: melted bagged ice and the liquid in canned fruit and vegetables are safe to drink.
+- Clean a cut with clean running water and soap. First-aid guidance says not to pour hydrogen peroxide on it: it harms
+  healthy tissue and slows healing.
+- Carbon monoxide has no colour and no smell. Early signs: headache, dizziness, weakness, nausea, confusion, often
+  everyone in a room at once. Never run a generator indoors, even with a door open. Portable generators kill close to a
+  hundred people a year in the US.
 
 ## Retention map
 
 | Time | Hook |
 |---|---|
-| 0:00 | Day 11. A can rolls across the floor in the dark, and a thousand hands hit the glass. |
-| 0:25 | *"Eleven days ago I was alone in here. Now there are five of us, and food for one."* |
-| 0:50 | The audience sees the outbreak through the windows behind Sami while he stacks shelves with his headphones on. |
-| 1:45 | His bitten manager. The shutter slams down. |
-| 2:40 | Mum's voicemail: *"Stay where you are. I'm coming."* |
-| 3:30 | Knocking on the shutter. Human voices. Rule 2. |
-| 4:50 | Theo's mistake. Rule 4. |
-| 5:30 | The power dies. The freezer door unlocks itself. |
-| 6:20 | Mum's car outside. Empty. |
-| 7:00 | The plan: the van keys are in the freezer, in Mr. Davis's pocket. |
-| 8:00 | Rico's choice at the loading dock. |
-| 8:40 | One bar of signal, one new voicemail. |
-
-Day cards (**DAY 1**, **DAY 3**...) appear on screen like Sami's cardboard sign, so viewers always know how far into
-the story they are. Three planned `[NO WORDS]` moments where only music and sound play.
+| 0:00 | "The last thing you ever sell is a bag of ice." The customer is hiding something under his sleeve. |
+| 0:45 | The man with the ice turns in the car park. The shutter comes down. |
+| 1:30 | Your manager is bitten. You lock him in the freezer. Mum: "I'm coming." |
+| 2:45 | The taps stop. |
+| 3:15 | Something moves on the roof camera. |
+| 3:50 | A knock on the shutter. |
+| 5:00 | The generator: everyone gets a headache at once. |
+| 5:45 | Lock battery dies. The freezer opens. Rico is bitten. |
+| 6:40 | Mum's car on the security camera. |
+| 7:10 | The radio: helicopters at noon. |
+| 8:00 | Rico at the loading dock. |
+| 8:40 | One bar of signal. One voicemail. |
 
 ## How to read this script
 
-- `SAMI (V.O.)` = narration: Sami whispering voice notes into his phone. Close, quiet, real.
-- `NAME:` = dialogue in the scene.
-- `[tags]` = performance directions for ElevenLabs (e.g. `[whispering]`, `[panting]`).
-- **SFX** = sound effects · **MUSIC** = score · **SHOT** = camera.
-- Times are a plan. The recorded voice sets the final timing.
+- `NARRATOR:` = the voice that talks to "you". Most of the film.
+- `NAME:` = a character speaking in the scene.
+- `[tags]` = performance directions for ElevenLabs.
+- **SFX** = sound · **MUSIC** = score · **SHOT** = picture.
+- Times are a plan; the recorded voice sets the final timing.
 
 ---
 
-# COLD OPEN
+# DAY 1
 
-### 1. INT. SUPERMARKET — NIGHT — 0:00–0:25
-**Card:** DAY 11 *(black marker on cardboard)*
-**SHOT:** Pitch dark aisle, one emergency light flickering. Sami creeps along it with a shopping basket, barefoot to
-stay quiet. He reaches for the last tin on a nearly empty shelf. It slips. Close-up: the tin hits the floor and rolls...
-and rolls... the whole length of the aisle.
-**SFX:** Total silence, then the tin: *clank... rrrrrrrr...* It taps against the front glass. Silence.
-Then a **thousand hands slam the shutter** at once. Howls.
-**SHOT:** Wide on the front of the store: the metal shutter shaking, green fingers poking through the gaps.
+### 1. INT. SUPERMARKET, REGISTER 2 — NIGHT — 0:00–0:45
+**SHOT:** Close on a till screen: *ICE 10LB — $3.49*. Pull back: Sami in a red shirt and name badge. The store is bright,
+empty, humming. A man in a wet jacket puts a bag of ice on the belt. He keeps his right sleeve pulled down over his
+hand. His fingers shake.
+**MUSIC:** Bland store muzak.
 
-### 2. INT. SUPERMARKET — CONTINUOUS — 0:25–0:40
-**SHOT:** Sami pressed against the shelves, eyes huge, phone to his mouth.
+> NARRATOR: The last thing you ever sell is a bag of ice.
+> Three forty-nine. Register two. Eleven fifty-two p.m.
+> He pays in cash, with his left hand. He doesn't wait for his change.
+> You notice the sleeve. You notice he's sweating in October.
+> You don't say anything. It's not your job to say anything. Your job is to stack shelves until six a.m.
 
-> SAMI (V.O.): [whispering, shaking] Day eleven.
-> Eleven days ago, I was alone in here.
-> [beat] Now there are five of us. And there's food for one.
+**SHOT:** Through the front windows: the man walks into the car park. Halfway to his car he drops the ice. Falls to his
+knees.
 
-### 3. TITLE — 0:40–0:46
-**SHOT:** A flickering supermarket sign. The letters short out one by one until only these stay lit: **CLOSING TIME**.
-**SFX:** Electric buzz, a pop, a single howl.
+> NARRATOR: You count without meaning to.
 
----
+**SHOT:** Sami's face, reflected in the glass. Behind the reflection the man jerks... and **stands up wrong**.
+**SFX:** Through the glass, faint: a howl. From the city, a dozen answer it.
 
-# ACT ONE — ALONE
+### 2. INT. SUPERMARKET — CONTINUOUS — 0:45–1:30
+**SHOT:** Mr. Davis bursts out of the staff door holding his neck, blood on his tie.
 
-### 4. INT. SUPERMARKET — NIGHT — 0:46–1:20
-**Card:** DAY 1
-**SHOT:** The store bright and normal. Muzak. Sami in a red shirt and a name badge, big headphones on, nodding to
-music, stacking tins in Aisle 9.
-**SFX:** We hear his music, tinny, through his headphones. The store hum.
-**SHOT:** Behind him, through the big front windows, the city goes wrong — **and he doesn't see it**. Police cars race
-past. People run. A man is dragged down under a street light. Sami, back to the window, stacks a perfect pyramid of
-beans.
+> MR. DAVIS: [gasping] Shutter! **Sami, the shutter!** The red button!
+> NARRATOR: Mr. Davis went out the back for a smoke at eleven forty.
+> He came back with a bite on his neck.
 
-> SAMI (V.O.): [whispering, wry] Best part of night shift? Nobody talks to you.
-> [beat] Turns out that's also the worst part.
+**SHOT:** Sami slams the red button. The steel shutter roars down. Outside, shapes are running at the store.
+Fast. The first one hits the shutter as it touches the floor.
+**SFX:** A deafening metal crash. Then hands. Hundreds of hands.
 
-### 5. INT. SUPERMARKET — NIGHT — 1:20–1:50
-**SHOT:** The automatic doors slide open. Mr. Davis stumbles in, holding his neck, blood on his tie.
-Sami pulls one earbud out.
+> NARRATOR: Plan A was a normal night shift. A sandwich at three. The bus home at six.
+> Plan A just hit the floor.
 
-> SAMI: Mr. Davis? You okay?
-> MR. DAVIS: [gasping] Shutters. **Pull the shutters.** Lock everything. Don't let anyone in. *Anyone.*
-> SAMI: What's going on out there?
-> MR. DAVIS: [stumbling toward the back] Do it, Sami!
+### 3. INT. STOCKROOM — CONTINUOUS — 1:30–2:05
+**SHOT:** Red light. Mr. Davis slumped against the walk-in freezer. His head jerks up. Yellow eyes.
+**SHOT:** A fast chase through the stockroom. Sami runs through the freezer and out of its second door, slams it. The
+electronic lock clicks: green light. Davis hammers the door from inside.
 
-**SHOT:** Through the windows, figures running at the store. Not people. **Fast.**
-**SHOT:** Sami yanks the shutter chain. The metal comes down. The first zombie hits it just as it locks.
-**SFX:** A deafening metal crash. Howls. Then hands hammering the shutter.
+> NARRATOR: Ten seconds. That's how long it takes, from a bite on the neck.
+> You lean on the freezer door and listen to your manager try to get through it.
+> The lock is electric. You don't think about that yet. You will.
 
-### 6. INT. STOCKROOM — NIGHT — 1:50–2:30
-**SHOT:** Red light. Sami finds Mr. Davis slumped against the walk-in freezer.
+### 4. INT. STOCKROOM — NIGHT — 2:05–2:30
+**SHOT:** Sami's phone. One bar. A call from **MUM**.
 
-> SAMI: [panicking] Mr. Davis, I locked it, I— they're—
+> MUM: [scared, trying to sound calm] Sami? Sami, listen to me. Are you inside? Lock everything. **Stay where you are.**
+> I'm coming to get you, okay? I'm coming. I love y—
+> *[call drops]*
+> NARRATOR: No bars. You try her forty times. It doesn't go through once.
 
-**SHOT:** Mr. Davis's head jerks up. Yellow eyes. A howl.
-**SHOT:** The chase between shelves of boxes, fast cuts. Sami knocks over a tower of toilet rolls. Mr. Davis tears
-through them. Sami dives into the walk-in freezer... and out the other side through the second door, slamming it.
-Mr. Davis is trapped inside. The electronic lock clicks: green light.
-**SFX:** Fists on the freezer door. Muffled howls. The fridge motor humming.
-Sami slides down the wall.
+### 5. INT. SUPERMARKET FRONT — NIGHT — 2:30–2:50
+**SHOT:** Sami at the chalkboard by the entrance, the one that says *TODAY'S SPECIALS*. He wipes it and writes.
 
-> SAMI (V.O.): [shaky] Rule three. Never open the freezer.
+> NARRATOR: Okay. Think. You're one guy locked in forty thousand square feet of food.
+> An adult needs about two thousand calories a day. One jar of peanut butter is nearly three thousand.
+> Aisle six has two hundred jars.
+> Food is not what kills you in here.
+> [beat] Noise is.
 
-### 7. INT. STOCKROOM — NIGHT — 2:30–2:55
-**SHOT:** Sami's phone. *No service.* One voicemail from **MUM**. He plays it.
-
-> MUM (voicemail): [frightened, trying to be calm] Sami, baby, it's Mum. Don't go outside. Do you hear me? **Stay where
-> you are.** I'm coming to get you. I'm coming. I love you—
-> *[message cuts out]*
-
-**SHOT:** Sami holds the phone to his chest.
-
-> SAMI (V.O.): So I stayed where I was.
-
-### 8. MONTAGE — DAYS 2 TO 4 — 2:55–3:30  `[NO WORDS]`
-**MUSIC:** Lonely, ticking, almost hopeful.
-Cards flip: **DAY 2**... **DAY 3**... **DAY 4**...
-- Sami writes RULES on cardboard and tapes it to the wall: 1. NEVER MAKE A SOUND. 2. NEVER OPEN THE SHUTTER. 3. NEVER
-  OPEN THE FREEZER.
-- He counts tins and water bottles, writes numbers on his arm.
-- He builds a bed out of dog-food bags in the stockroom.
-- He eats cold beans, sitting next to a cardboard cut-out of the store's smiling mascot. He has given it a name tag:
-  **"STEVE"**.
-- At night he lies awake listening to Mr. Davis scratch at the freezer door.
-- Each morning he checks his phone. No new messages.
-- Through a gap in the shutter: the street, full of zombies standing still, heads tilted, listening.
+**SHOT:** The chalkboard: **1. NO NOISE. 2. NEVER OPEN THE SHUTTER. 3. NEVER OPEN THE FREEZER.**
+**SHOT:** Sami pulls the plug on the muzak. Rips the wire out of the door chime. The store goes dead quiet, except for
+the hum of the freezers... and the thumping inside the walk-in.
 
 ---
 
-# ACT TWO — FIVE
+# DAY 2 – 6
 
-### 9. INT. SUPERMARKET FRONT — NIGHT — 3:30–4:10
-**Card:** DAY 5
-**SFX:** *Knock knock knock.* Rhythmic. **Human.**
-**SHOT:** Sami freezes in the aisle.
+### 6. INT. SUPERMARKET — DAY — 2:50–3:15
+**Card:** DAY 2... DAY 4
+**SHOT:** Sami at the staff sink. He turns the tap. It coughs. Spits. Stops.
 
-> MAYA (O.S., behind the shutter): [desperate whisper] Is anyone in there? Please. **Please.** We saw the light.
-> RICO (O.S.): [low] They're coming. Maya, they're coming—
+> NARRATOR: Day four. The taps stop. No warning. Somewhere out there, nobody's running the pumps anymore.
+> But a supermarket has water hiding everywhere.
+> The ice chest by the door: forty bags, slowly melting. That's clean water.
+> And the juice in a can of peaches, or the water in a can of green beans? You can drink that too.
+> You stop throwing it down the sink. You start drinking it out of the can like it's champagne.
 
-**SHOT:** Through the gap: four teenagers pressed against the shutter. Down the street, the horde turns their way.
-**SHOT:** Sami's face. The cardboard sign behind him: NEVER OPEN THE SHUTTER.
+### 7. MONTAGE — DAYS 4–6 — 3:15–3:35  `[NO WORDS]`
+**MUSIC:** Lonely, ticking piano.
+- Sami sleeps on the top shelf of Aisle 12, between boxes of paper towels, as far from the floor as he can get.
+- He eats cold beans next to the cardboard mascot by the door. He's given it a name tag: **STEVE**.
+- He marks the day number on his arm in Sharpie.
+- At night he lies awake listening to the freezer.
 
-> SAMI (V.O.): [whispering] Rule two.
+### 8. INT. SECURITY OFFICE — NIGHT — 3:35–3:55
+**Card:** DAY 6
+**SHOT:** A wall of small black-and-white monitors. Car park: hundreds of figures standing still, heads tilted.
+Loading dock: empty. Roof: empty... then a **shadow crosses the roof camera**. Quick. Upright. Gone.
 
-**MUSIC:** Heartbeat. Then Sami grabs the chain.
-**SHOT:** The shutter lifts two feet. The four roll under it one by one. A zombie dives after the last one, Zoe. Its
-arm and head get through. Sami lets the shutter drop. Zoe stamps the arm away. Crash. Lock.
-**SFX:** The shutter slams. Five people breathing in the dark. Howls outside, then slowly quiet.
+> NARRATOR: Day six. You find the security office. Eight cameras, all still working.
+> At 2:13 a.m., something walks across the roof.
+> Not the way they walk.
+> [beat] Like it's trying not to make a sound.
+
+---
+
+# DAY 8
+
+### 9. INT. SUPERMARKET FRONT — NIGHT — 3:55–4:35
+**Card:** DAY 8
+**SFX:** *Tap. Tap-tap. Tap.* On the shutter. A pattern. **Human.**
+
+> MAYA (O.S.): [desperate whisper] Hello? Please. We've been on the roof next door for a week. We saw your light.
+> RICO (O.S.): [low] Maya. They heard us. They're coming.
+> NARRATOR: Rule two. Never open the shutter.
+> You wrote it yourself. In chalk. In big letters.
+
+**SHOT:** Through the gap: four teenagers. Down the street, the horde turns their way like one animal.
+**MUSIC:** Heartbeat.
+**SHOT:** Sami lifts the shutter two feet. Four bodies roll under. Zoe is last; a hand grabs her ankle, she kicks free
+and her arm scrapes along the bottom edge of the steel. Shutter down. Crash. Lock.
 
 > ZOE: [panting] Who *are* you?
 > SAMI: [points at his badge] ...Can I help you find anything?
-> THEO: [breathless laugh] Oh, I like him.
+> THEO: [breathless laugh] Oh, I love him.
 
-### 10. INT. STOCKROOM — NIGHT — 4:10–4:50
-**SHOT:** Candles, five people around a box of crackers. Sami points at the rules on the wall.
+### 10. INT. STOCKROOM — NIGHT — 4:35–5:00
+**SHOT:** Maya kneels by Zoe with a first-aid box from the pharmacy aisle. Zoe grabs the brown bottle of hydrogen
+peroxide. Maya takes it off her.
 
-> SAMI: Three rules. No noise. Nobody opens the shutter. And nobody opens the freezer.
-> RICO: What's in the freezer?
-> *[A thump from the freezer door. Everyone jumps.]*
-> SAMI: My manager.
-> ZOE: [flat] Cool. Love that.
-> MAYA: [gently] How long have you been in here by yourself?
-> SAMI: [beat] Five days. My mum's coming for me.
-
-**SHOT:** Maya and Rico look at each other. Nobody says anything.
-
-### 11. INT. SUPERMARKET — DAYS 6 TO 8 — 4:50–5:25
-**Cards:** DAY 6... DAY 7...
-**SHOT:** Short scenes of five people living together: Zoe makes spears from mop handles and kitchen knives. Maya
-re-bandages Rico's hands. Theo teaches Sami a card game. For a minute it almost feels okay.
-**MUSIC:** Warm, a little hope.
-**Card:** DAY 8
-**SHOT:** Night. Sami counts the food. He counts again. Close-up: the numbers on his arm don't match the shelf.
-**SHOT:** In the dark of Aisle 3, Theo is crouched, eating a chocolate bar from the hidden box.
-
-> SAMI: [hissing] That's **two days** of food for one person.
-> THEO: [ashamed, defensive] I was hungry! We're all hungry!
-> RICO: [quiet, firm] Then we're hungry *together*.
-
-**SHOT:** Sami adds a fourth line to the cardboard: **4. NEVER EAT ALONE.**
-
-### 12. INT. SUPERMARKET — NIGHT — 5:25–6:05
-**Card:** DAY 9
-**SHOT:** The strip lights stutter. Fridges whine down. **Blackout.** Only emergency lights.
-
-> ZOE: [whispering] Generator's dead.
-> SAMI: [whispering, horrified] The freezer lock is electric.
-
-**SFX:** From the stockroom: a **click**. Then a long, slow creak.
-**SHOT:** The freezer door swings open into darkness. Cold mist rolls out across the floor.
-`[NO WORDS — 8 seconds]`
-**SHOT:** Mist. Nothing. Then Mr. Davis comes out of it, frosted, blue-green, eyes glowing — and he **howls**.
-**SHOT:** Chaos in the dark: torch beams, falling shelves. Mr. Davis lunges at Maya. Rico throws himself between them.
-Zoe drives a mop spear down. Silence.
-**SHOT:** Rico on the floor, holding his hand. A bite on the back of it.
-
-> MAYA: [shaking] Rico. Let me see. *Let me see.*
-> RICO: [calm, too calm] It's a hand. Hands are slow, right? That's what the radio said.
-
-**SHOT:** Outside, howls start up and come closer. The noise has been heard.
-
-### 13. INT. SUPERMARKET FRONT — DAWN — 6:05–6:40
-**Card:** DAY 10
-**SHOT:** Sami at the shutter gap, looking out at grey morning light. Among the wrecked cars: a small blue hatchback,
-driver's door open. A pink scarf caught in the door.
-**MUSIC:** Drops away.
-
-> SAMI: [barely a breath] ...Mum.
-
-**SHOT:** The car is empty. Zombies all around it.
-`[NO WORDS — 6 seconds]`
-**SHOT:** Sami slides down the shutter to the floor. Maya sits beside him. She doesn't say anything. She just stays.
-
-> SAMI (V.O.): [whispering, broken] She came. She said she would, and she came.
-> [beat] I just don't know where she went.
+> MAYA: Not that. It fizzes because it's killing your healthy skin too. Clean water, soap, and a lot of it.
+> ZOE: [dry] Is she always like this?
+> RICO: [smiling] Nursing school. Year one. Yeah.
+> NARRATOR: Now there are five of you. Five people. One rule about noise.
+> And Theo has brought a speaker.
+> THEO: [defensive] It's *off*!
 
 ---
 
-# ACT THREE — THE LOADING DOCK
+# DAY 9 – 11
 
-### 14. INT. STOCKROOM — DAY — 6:40–7:15
-**Card:** DAY 11 *(we are now back where the film began)*
-**SHOT:** The group around a map of the city on a cereal box. A crackling radio.
+### 11. INT. STOCKROOM — NIGHT — 5:00–5:30
+**Card:** DAY 9
+**SHOT:** The lights die. Emergency red. The freezer hum stops... but the freezer's lock stays green. A small display
+beside it blinks: *BATTERY BACKUP 48:00:00*... *47:59:59*...
 
-> RADIO VOICE: [crackling] ...evacuation from the **Harlow Stadium** roof. Helicopters leave at noon, day **twelve**.
-> Repeat, noon, day twelve...
-> ZOE: That's tomorrow. That's three miles.
-> RICO: [pale, sweating, hand wrapped] There's a delivery van at the loading dock.
-> THEO: Keys?
-> SAMI: [beat] Mr. Davis kept them on his belt.
+> NARRATOR: Day nine. The power goes. The whole city, this time.
+> The freezer lock switches to a backup battery. Forty-eight hours.
+> Then the door opens, and Mr. Davis comes out to say hello.
 
-**SHOT:** Everyone turns to look at the freezer. Mr. Davis's body was dragged back in there. The door is wedged shut
-with a trolley.
+**SHOT:** Rico rolls a petrol generator out of the garden aisle. Zoe siphons fuel from the delivery van in the dock.
+They set it up in the stockroom and plug in the lock. It roars to life.
 
-> ZOE: Oh, you've *got* to be kidding.
+> RICO: Outside's not an option. They'll hear it from a mile away.
+> NARRATOR: So you run it inside. With the dock door shut. Because of the noise.
+> It's the most reasonable mistake you've ever made.
 
-### 15. INT. WALK-IN FREEZER — NIGHT — 7:15–7:40
-**SHOT:** Sami and Zoe step into the freezer, breath smoking, torch beam shaking. Mr. Davis lies face down in the
-frost. Keys glinting on his belt. Sami kneels and reaches for them, slowly... slowly...
-**SFX:** Only breathing and the tiny jingle of the keys.
-**SHOT:** Sami has the keys. He stands. Behind him, Mr. Davis's frozen fingers **twitch**.
-**SHOT:** They back out. Slam the door. Wedge the trolley. Fall against each other, laughing without sound.
+### 12. INT. STOCKROOM — DAY — 5:30–6:05
+**Card:** DAY 10
+**SHOT:** Morning. Everyone moving slowly. Theo rubbing his head. Zoe bent over, nauseous. Sami can't read the numbers
+on his own arm.
+
+> NARRATOR: Day ten. Everyone has a headache. Everyone. At the same time.
+> MAYA: [slurring slightly, then sharp] Wait. Wait. All of us? It's not the food. It's the **air**.
+> NARRATOR: Carbon monoxide. No colour. No smell. Headache, dizziness, nausea, confusion.
+> It comes out of every engine, and in a closed room it builds up fast.
+> Portable generators kill close to a hundred people a year in the US. Never indoors. Not even with the door open.
+
+**SHOT:** Theo collapses. Rico kills the generator. Sami drags Theo to the gap under the dock door and holds his face to
+the crack of fresh air.
+`[NO WORDS — 5 seconds]`: only Theo's breathing, slow, then stronger.
+
+> THEO: [weak] ...Did I miss anything?
+> SAMI: [shaky laugh] Yeah. Rule four.
+
+**SHOT:** Chalkboard: **4. ENGINES LIVE OUTSIDE.**
+**SHOT:** Close on the lock display, back on battery: *00:41:12*... *00:41:11*...
+
+### 13. INT. STOCKROOM — NIGHT — 6:05–6:40
+**Card:** DAY 11
+**SHOT:** All five standing in front of the freezer with mop-handle spears, watching the display.
+*00:00:03... 00:00:02... 00:00:01...*
+**SFX:** A **click**. Silence. A long, slow creak.
+**SHOT:** The door swings open. Cold mist pours out across the floor. `[NO WORDS — 6 seconds]`
+Then Mr. Davis comes out of the mist, frosted blue-green, and **howls**.
+**SHOT:** Chaos in the red light. Shelves fall. Davis goes for Maya. Rico throws himself between them. Zoe brings the
+spear down. Silence.
+**SHOT:** Rico sitting on the floor, holding his hand. A bite across the back of it.
+
+> MAYA: [shaking] Let me see. Rico, *let me see it*.
+> RICO: [calm, too calm] It's a hand. Hands are slow, right? Hours, not seconds.
+> NARRATOR: Hours, not seconds. That's the good news.
+> There isn't any other news.
+
+---
+
+# DAY 12 – 14
+
+### 14. INT. SECURITY OFFICE — DAWN — 6:40–7:10
+**Card:** DAY 12
+**SHOT:** Sami scrolling back through the car-park camera recordings. Day 3. Day 2. He stops.
+**SHOT:** On the grainy monitor: a small blue car pulls into the car park. The driver's door opens. A woman gets out
+and runs toward the store. Off screen. The car door stays open.
+**SHOT:** Live camera: the same blue car, door still open, a pink scarf caught in it, zombies standing all around it.
+
+> NARRATOR: Day two. 4:17 a.m. She came. She said she would, and she came.
+> You watch the recording eleven times.
+> She runs out of frame. And she never runs back into it.
+
+**SHOT:** Sami slides down the wall. Maya sits next to him and doesn't say anything. She just stays.
+
+### 15. INT. STOCKROOM — DAY — 7:10–7:40
+**Card:** DAY 13
+**SHOT:** A battery radio crackles. Rico is grey now; green veins past his elbow.
+
+> RADIO VOICE: [crackling] ...final evacuation from the **Harlow Stadium** roof. Helicopters leave at noon, day
+> **fourteen**. Repeat, noon...
+> ZOE: Three miles. The van's got a quarter tank. We used the rest on the generator.
+> SAMI: A quarter tank does three miles.
+> THEO: And the eight hundred of them sitting out back?
+> RICO: [quiet] They go where the noise is. So we give them noise. Somewhere else.
+
+---
+
+# DAY 14
 
 ### 16. INT. LOADING DOCK — DAWN — 7:40–8:20
-**Card:** DAY 12
-**SHOT:** The delivery van in the dark dock. A big roll-up door with a hand chain. Outside it: the horde, waiting.
-Rico is grey now, green veins up to his elbow.
+**Card:** DAY 14
+**SHOT:** The van in the dark dock. The roll-up door with its hand chain. Outside, the horde.
 
-> RICO: [weak but steady] Someone has to pull the chain. And someone has to pull it back down after you're out, or
-> they follow you all the way to the stadium.
-> MAYA: [already crying] No. We'll find a way—
-> RICO: Maya. I've got maybe an hour. [small smile] Let me be useful for it.
+> RICO: Someone pulls the chain up. Someone pulls it back down after you're out, or they follow you all the way there.
+> MAYA: [already crying] No. No, we'll find another—
+> RICO: Maya. I've got an hour, maybe. [small smile] Let me be useful for it.
+> THEO: [holding up his speaker, voice shaking] Front of the store. Loudest song I've got.
+> RICO: [grins] Look at you. Breaking rule one on purpose.
 
-**SHOT:** Theo steps up and holds out his little Bluetooth speaker.
-
-> THEO: [voice shaking] They go for noise, right? Out front. Loudest song I've got. They'll all go round to the front.
-> RICO: [smiles] Look at you. Making noise on purpose.
-
-**SHOT:** Theo props the speaker in the front shutter gap and presses play. Loud, cheerful pop music blasts into the
-street. Every zombie turns away from the dock and floods toward the front of the store.
+**SHOT:** Theo props the speaker in the gap of the front shutter and presses play. Cheerful pop music blasts into the
+street. On the monitors, every zombie at the back turns and floods round to the front.
 **SHOT:** Rico hauls the chain. The dock door rises. Dawn light pours in.
 
 > RICO: [straining] Go. **Go!**
 
-**SHOT:** The van screams out of the dock. In the mirror: Rico pulling the chain back down, the door closing on him,
-his hand raised in a goodbye. The door shuts.
+**SHOT:** The van screams out. In the mirror: Rico pulling the chain back down, hand raised. The door closes.
+**MUSIC:** Rico's goodbye: slow, broken piano.
 
-### 17. EXT. CITY ROADS — MORNING — 8:20–8:40  `[NO WORDS]`
-**SHOT:** High wide: the little van weaving through an empty, burning city. Ahead, on the stadium roof, a helicopter
-sits with its blades turning. 
+### 17. EXT. CITY — MORNING — 8:20–8:40  `[NO WORDS]`
+**SHOT:** High wide: a little van weaving through an empty, smoking city. Ahead, on the stadium roof, a helicopter with
+its blades turning.
 **MUSIC:** The full theme, big, sad and hopeful.
 
-### 18. INT. VAN — MORNING — 8:40–9:00
-**SHOT:** Inside the van: Maya, Zoe and Theo in silence. Sami driving, eyes red. His phone, on the dashboard, buzzes.
-**One bar** of signal. A new voicemail arrives — from **MUM**, sent three days ago.
-He plays it.
+### 18. INT. VAN — MORNING — 8:40–9:05
+**SHOT:** Sami driving, eyes red. His phone on the dashboard buzzes. **One bar.** A voicemail, sent eleven days ago,
+arriving now.
 
-> MUM (voicemail): [breathless, alive] Sami — I tried to reach you. The street was full of them, I had to leave the
-> car. I'm at the stadium. **I'm safe.** They're taking people out at noon. Come to me, baby. Please come to me.
+> MUM (voicemail): [breathless, alive] Sami — the car park was full of them, I couldn't get to the door. They pulled me
+> into an army truck. I'm at the stadium. **I'm safe.** Come to me, baby. Please come to me.
 
-**SHOT:** Sami's face. He laughs and cries at the same time. He puts his foot down.
+**SHOT:** Sami laughs and cries at the same time. Puts his foot down.
 
-> SAMI (V.O.): [whispering, then just a little stronger] Day twelve.
-> Rule five.
-> [beat] Never stop running.
+> NARRATOR: Day fourteen. Eleven fifty-two a.m.
+> You have eight minutes, a quarter tank, and somebody waiting for you.
+> [beat] Plan B.
 
-**SHOT:** The van races toward the stadium and the helicopter in the sunrise.
-
-### 19. END CARD — 9:00
-**SHOT:** The cardboard sign on the stockroom wall, empty store, dust in the light. A fifth line has been added in
-someone else's handwriting: **5. THANK YOU. — R.**
-**SFX:** Far away, Theo's pop song still playing from the front of the store.
+### 19. END CARD — 9:05
+**SHOT:** Back in the empty store. The chalkboard of specials, dust in the light. A fifth line has been added in
+someone else's handwriting: **5. LOOK AFTER EACH OTHER. — R.**
+**SFX:** Far away, Theo's pop song still playing at the front of the store.
 Cut to black.
 
 ---
@@ -328,28 +323,17 @@ Cut to black.
 
 | Sound | Where | Notes |
 |---|---|---|
-| The rolling tin | Cold open | The film's signature: one small sound, a huge reaction. |
-| Shutter crash + hands hammering | Scenes 1, 5, 9 | Same sound each time. The audience learns to fear it. |
-| Freezer hum + scratching | Act 1 to 3 | Always there in the stockroom, quietly. Stops in the blackout. |
-| Store muzak | Day 1 only | Cheerful music over the chaos outside the window. |
-| Mum's voicemails | Scenes 7, 18 | Phone-filtered, slightly distorted. |
-| Blackout | Scene 12 | All the hum dies at once. The silence after is the scariest moment. |
-| Theo's pop song | Scenes 16, 19 | Cheerful = sad. Bookends the ending. |
-| Breathing, footsteps, keys | Every hiding scene | Music fully out. |
+| Till beep + $3.49 | Opening | The last normal sound. |
+| Shutter crash + hands | Scenes 2, 9 | Same sound each time. |
+| Freezer hum + thumping | Days 1–9 | Constant in the stockroom. Stops in the blackout. |
+| Generator roar | Day 9 | Muffled, droning, wrong. Cuts dead when Rico kills it. |
+| Lock beeping down | Days 9–11 | A small digital tick, the film's countdown. |
+| Mum's voice | Scenes 4, 18 | Phone-filtered. |
+| Theo's pop song | Scenes 16, 19 | Cheerful = sad. |
 
-**Music:** a small, lonely theme for Sami alone (piano, ticking) → warmer when the group bonds → gone completely in the
-hiding scenes → full and hopeful for the escape. Chase scenes: low drums and hits.
-**Mix rule:** voices always on top.
+**Music:** bland muzak (Day 1) → lonely ticking piano (alone) → warmer (the five) → nothing in hiding scenes → full
+theme for the escape. **Mix rule:** the narrator and dialogue always sit on top.
 
 ## Voices needed
-
-| Voice | Notes |
-|---|---|
-| Sami — narration + dialogue | One voice. Narration is whispered and close, like voice notes. |
-| Maya | Gentle, steady |
-| Zoe | Dry, sharp |
-| Theo | Fast, nervous, funny |
-| Rico | Deep, calm, warm |
-| Mr. Davis | Older man, panicked (2 lines) |
-| Mum | Warm, frightened, then relieved (2 voicemails) |
-| Radio voice | Official, crackling (1 line) |
+NARRATOR (calm, dry, intimate; the main voice) · SAMI · MAYA · ZOE · THEO · RICO · MR. DAVIS (1 line) · MUM
+(2 messages) · RADIO VOICE (1 line). The man with the ice has no lines.
