@@ -1,0 +1,146 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../assets/fonts.css">
+<script src="../../assets/stage.js"></script><script src="../../assets/hero.js"></script>
+<style>
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
+#cam{position:absolute;inset:0;overflow:hidden;perspective:1400px}
+.L{position:absolute;inset:0}
+.abs{position:absolute}
+.t{position:absolute;font-family:Figtree;font-weight:900;color:#fff;white-space:nowrap;letter-spacing:-1px}
+.mono{font-family:'JetBrains Mono';font-weight:700}
+.grain{position:absolute;inset:0;opacity:.09;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2' seed='3'/></filter><rect width='300' height='300' filter='url(%23n)'/></svg>")}
+.vig{position:absolute;inset:0;background:radial-gradient(ellipse 80% 75% at 50% 50%,transparent 50%,rgba(0,0,0,.7) 100%)}
+.bars:before,.bars:after{content:'';position:absolute;left:0;right:0;height:0;background:#000}
+.hero{position:absolute}
+.card{position:absolute;border-radius:28px;background:rgba(20,24,34,.88);border:2px solid rgba(255,255,255,.12);box-shadow:0 40px 80px rgba(0,0,0,.5);backdrop-filter:blur(6px)}
+.glow{position:absolute;border-radius:50%;filter:blur(60px)}
+.ray{position:absolute;transform-origin:0 0;filter:blur(18px)}
+</style></head><body><div id="cam"></div>
+<script>
+const G={b:'#4285F4',r:'#EA4335',y:'#FBBC05',g:'#34A853'};
+const cam=document.getElementById('cam');const R=STAGE.mulberry32(11);
+const add=(h)=>cam.insertAdjacentHTML('beforeend',h);
+const hero=(x,y,h,o)=>`<div class="hero" style="left:${x-h*400/960/2}px;top:${y-h}px;width:${h*400/960}px;height:${h}px;${o.css||''}">${HERO.svg(o)}</div>`;
+const fx=(tint)=>add(`<div class="L" style="background:${tint};mix-blend-mode:soft-light"></div><div class="vig"></div><div class="grain"></div>`);
+const skyline=(seed,base,col,win,n,minH,maxH,blur,winCol)=>{const r=STAGE.mulberry32(seed);let s='',x=-40;while(x<1960){const w=60+r()*120,h=minH+r()*(maxH-minH);s+=`<rect x="${x}" y="${base-h}" width="${w}" height="${h+400}" fill="${col}"/>`;
+ if(win)for(let yy=base-h+20;yy<base-10;yy+=26)for(let xx=x+10;xx<x+w-14;xx+=22)if(r()<win)s+=`<rect x="${xx}" y="${yy}" width="10" height="13" fill="${winCol||'#ffcf7a'}" opacity="${.4+r()*.6}"/>`;x+=w+4+r()*10}
+ return `<svg class="L" viewBox="0 0 1920 1080" style="filter:blur(${blur}px)">${s}</svg>`};
+const title=(txt,x,y,size,col,extra='')=>`<div class="t" style="left:${x}px;top:${y}px;font-size:${size}px;color:${col};${extra}">${txt}</div>`;
+const chip=(n,label,col,x,y)=>`<div class="abs" style="left:${x}px;top:${y}px;display:flex;align-items:center;gap:22px"><div class="t" style="position:relative;font-family:'Archivo Black';font-size:64px;color:${col}">${n}</div><div style="width:4px;height:70px;background:${col}"></div><div class="t" style="position:relative;font-size:46px">${label}</div></div>`;
+
+const SC={
+// S01 cold open: dawn city
+s01(){add(`<div class="L" style="background:linear-gradient(180deg,#0b1430 0%,#2a2a5a 38%,#c0627a 62%,#ffb36b 74%,#ffd9a0 80%)"></div>
+ <div class="glow" style="left:760px;top:600px;width:520px;height:300px;background:#ffe2a8;opacity:.9"></div>
+ ${skyline(3,860,'#6a4a73',0,0,90,240,4)}${skyline(5,930,'#3a2a4a',.18,0,80,300,1.5)}
+ <div class="L" style="background:linear-gradient(180deg,transparent 55%,rgba(255,190,140,.35) 75%,transparent 90%)"></div>
+ ${skyline(9,1080,'#120e1a',.10,0,120,330,0)}
+ <div class="abs" style="left:1010px;top:850px;width:26px;height:32px;background:#ffd27a;box-shadow:0 0 40px 10px rgba(255,200,110,.7)"></div>
+ ${title('2030',560,210,300,'rgba(255,255,255,.18)',"font-family:'Archivo Black';letter-spacing:20px;filter:blur(1px)")}`);fx('linear-gradient(0deg,#ffb070,#6a5aaa)')},
+// S02 hook: phone glow bedroom
+s02(){add(`<div class="L" style="background:radial-gradient(ellipse 60% 70% at 62% 45%,#13213f,#05070d 70%)"></div>
+ <div class="abs" style="left:1240px;top:120px;width:420px;height:520px;background:linear-gradient(160deg,#1c2a4a,#0b1222);border:10px solid #10182b;filter:blur(3px)"><div style="position:absolute;inset:0;background:radial-gradient(circle at 70% 25%,#dfe8ff 0 30px,transparent 32px)"></div></div>
+ <div class="abs" style="left:160px;top:760px;width:1700px;height:260px;background:linear-gradient(180deg,#1b2440,#0a0f1c);border-radius:40px 40px 0 0"></div>
+ <div class="glow" style="left:820px;top:380px;width:420px;height:420px;background:#4285F4;opacity:.45"></div>
+ ${hero(980,1140,860,{pose:'phone',face:'shocked',look:[0.5,0.5],rim:'#8ab4f8',rim2:'#8ab4f8',id:'a'})}
+ <div class="abs" style="left:150px;top:150px;width:620px;height:760px;transform:rotateY(24deg) rotateX(4deg);transform-origin:100% 50%">
+   <div class="card" style="inset:0;background:linear-gradient(180deg,#f8fafd,#e8eef8);border:none;box-shadow:0 0 120px rgba(66,133,244,.55)">
+     <div style="height:90px;background:#fff;border-radius:28px 28px 0 0;display:flex;align-items:center;padding:0 30px;gap:16px"><div style="width:52px;height:52px;border-radius:10px;background:${G.b}"></div><div style="height:22px;width:300px;background:#e1e6ef;border-radius:11px"></div></div>
+     <div style="margin:26px;padding:30px;background:#fff;border-radius:20px;box-shadow:0 6px 20px rgba(0,0,0,.08)">
+       <div style="display:flex;gap:16px;align-items:center"><div style="width:64px;height:64px;border-radius:50%;background:#c9d3e3"></div><div style="font:800 26px Figtree;color:#5f6368">Industry News<br><span style="font-weight:700;font-size:20px;color:#9aa0a6">2h</span></div></div>
+       <div style="font:900 50px/1.08 Figtree;color:#202124;margin-top:26px">Company replaces<br><span style="color:${G.r}">300 workers</span><br>with a software update</div>
+       <div style="height:200px;margin-top:26px;border-radius:14px;background:linear-gradient(135deg,#d2e3fc,#fce8e6)"></div></div></div></div>`);
+ fx('linear-gradient(90deg,#4285F4,#0a0f1c)')},
+// S03 boss spreadsheet wall
+s03(){let rows='';for(let i=0;i<11;i++){rows+=`<div style="display:flex;gap:6px;margin-bottom:6px">`;for(let j=0;j<7;j++){const on=i<7;rows+=`<div style="width:${j?210:90}px;height:58px;background:${on?(j?'rgba(66,133,244,.16)':'rgba(66,133,244,.35)'):'rgba(255,255,255,.04)'};border:1px solid rgba(138,180,248,.35)">${on&&j?`<div style="margin:22px 14px;height:14px;width:${60+R()*110}px;background:rgba(232,240,254,.8);border-radius:7px"></div>`:''}</div>`}rows+='</div>'}
+ add(`<div class="L" style="background:linear-gradient(180deg,#0a0e18,#111a2c 60%,#070a12)"></div>
+ <div class="abs" style="left:-60px;top:-40px;width:1600px;height:900px;transform:rotateY(-28deg) translateZ(-200px);transform-origin:0 50%;padding:40px;box-shadow:0 0 160px rgba(66,133,244,.35);background:#0c1424">${rows}</div>
+ <div class="glow" style="left:200px;top:300px;width:900px;height:500px;background:#4285F4;opacity:.25"></div>
+ <div class="abs" style="left:0;right:0;top:860px;bottom:0;background:linear-gradient(180deg,#0b1222,#04060b)"></div>
+ ${hero(1300,1000,470,{cast:'maya',pose:'idle',face:'worried',look:[-0.8,-0.4],rim:'#8ab4f8',id:'c1',css:'filter:brightness(.55) blur(2px)'})}${hero(1480,980,440,{cast:'omar',pose:'idle',face:'sad',look:[-0.8,-0.4],rim:'#8ab4f8',id:'c2',css:'filter:brightness(.45) blur(3px)'})}${hero(1680,1010,480,{cast:'kofi',headset:false,pose:'folded',face:'worried',look:[-0.8,-0.4],rim:'#8ab4f8',id:'c3',css:'filter:brightness(.4) blur(4px)'})}
+ ${hero(1700,1090,640,{cast:'boss',pose:'point',face:'stern',look:[-0.9,-0.2],rim:'#8ab4f8',rim2:'#4285F4',id:'c4',css:'transform:scaleX(-1)'})}
+ ${hero(860,1060,560,{pose:'worried',face:'worried',look:[-0.6,-0.3],rim:'#8ab4f8',rim2:'#4285F4',id:'d'})}
+ ${title('EVERY TASK.',1130,110,120,'#fff','text-shadow:0 10px 40px #000')}${title('DOCUMENTED.',1030,240,120,G.b,'text-shadow:0 10px 40px #000')}`);fx('linear-gradient(180deg,#1a3a7a,#000)')},
+// S04 title world: monolith road
+s04(){let m='';for(let i=0;i<10;i++){const k=i%2?1:-1,sc=1/(1+i*0.42),c=[G.b,G.r,G.y,G.g][i%4],w=130*sc,h=430*sc,yb=660+330*sc,xo=70+560*sc,x=k>0?960+xo:960-xo-w;
+ m=`<div class="abs" style="left:${x}px;top:${yb-h}px;width:${w}px;height:${h}px;background:linear-gradient(180deg,${c},#0a0a12 130%);box-shadow:0 0 ${70*sc}px ${c};filter:blur(${i*.25}px);border-radius:${8*sc}px"><div class="t" style="font-family:'Archivo Black';font-size:${62*sc}px;left:0;right:0;text-align:center;top:${18*sc}px;color:#fff">${String(i+1).padStart(2,'0')}</div></div>`+m}
+ add(`<div class="L" style="background:linear-gradient(180deg,#05060c 0%,#141a35 45%,#3b2b55 60%,#0b0b14 61%,#06070b)"></div>
+ <div class="glow" style="left:660px;top:540px;width:600px;height:200px;background:#c9a6ff;opacity:.6"></div>
+ <svg class="L" viewBox="0 0 1920 1080"><path d="M940 660 L980 660 L1500 1080 L420 1080Z" fill="#141826"/><path d="M958 662 L962 662 L975 1080 L945 1080Z" fill="${G.y}" opacity=".85"/></svg>
+ ${m}${hero(960,1010,300,{pose:'idle',face:'focused',rim:'#c9a6ff',rim2:'#4285F4',id:'e',css:'filter:brightness(.9)'})}
+ ${title('<span style="color:'+G.b+'">10</span> JOBS AI WILL <span style="color:'+G.r+'">ERASE</span>',360,110,110,'#fff')}${title('BY <span style="color:'+G.y+'">2030</span>',800,240,90,'#fff')}`);fx('linear-gradient(180deg,#3a2a7a,#000)')},
+// S05 chapter card 01
+s05(){add(`<div class="L" style="background:#06070b"></div>
+ <div class="ray" style="left:1300px;top:-200px;width:260px;height:1600px;background:linear-gradient(180deg,rgba(66,133,244,.55),transparent);transform:rotate(28deg)"></div>
+ <div class="ray" style="left:1500px;top:-200px;width:120px;height:1600px;background:linear-gradient(180deg,rgba(66,133,244,.35),transparent);transform:rotate(28deg)"></div>
+ ${title('01',90,90,560,'transparent',"font-family:'Archivo Black';-webkit-text-stroke:4px "+G.b+";opacity:.9")}
+ ${title('DATA ENTRY',140,690,150,'#fff')}${title('CLERK',140,840,150,G.b)}
+ <div class="abs" style="left:1180px;top:520px;width:520px;height:220px;background:#11141d;border-top:6px solid #2a3040"></div>
+ ${hero(1440,880,520,{cast:'priya',glasses:false,top:'shirt',topColor:'#C9B8A0',pose:'type',face:'sad',look:[0,0.4],rim:'#4285F4',rim2:'#4285F4',id:'f',css:'filter:brightness(.35)'})}
+ <div class="abs" style="left:1100px;top:650px;width:700px;height:300px;background:#0b0d14"></div>`);fx('linear-gradient(90deg,#000,#1a3a8a)')},
+// S06 data clerk at 4 PM
+s06(){let blinds='';for(let i=0;i<14;i++)blinds+=`<div style="height:22px;margin-bottom:12px;background:rgba(255,190,100,.85)"></div>`;let paper='';for(let s=0;s<4;s++){const x=[250,420,1360,1530][s],h=[380,520,460,300][s];for(let i=0;i<h;i+=14)paper+=`<div class="abs" style="left:${x+(STAGE.hash(s*99+i)*14-7)}px;top:${800-i}px;width:150px;height:12px;background:${i%28?'#f1ece2':'#e3dccf'};border-radius:2px;box-shadow:0 2px 0 rgba(0,0,0,.25)"></div>`}
+ add(`<div class="L" style="background:linear-gradient(180deg,#3a2418,#5a3420 50%,#2a1a12)"></div>
+ <div class="abs" style="left:1080px;top:60px;width:640px;height:470px;padding:20px;filter:blur(2px);background:#2a1a10">${blinds}</div>
+ <div class="ray" style="left:1150px;top:300px;width:1300px;height:520px;background:repeating-linear-gradient(0deg,rgba(255,180,90,.35) 0 22px,transparent 22px 34px);transform:rotate(152deg) skewX(-20deg);filter:blur(6px)"></div>
+ <div class="abs" style="left:560px;top:250px;width:380px;height:300px;transform:perspective(900px) rotateY(18deg)"><div style="position:absolute;inset:0;background:#141820;border-radius:16px;border:10px solid #22262f;overflow:hidden">${Array.from({length:12},(_,i)=>`<div style="display:flex;gap:4px;margin:6px">${Array.from({length:5},()=>`<div style="flex:1;height:12px;background:#2c6b3f"></div>`).join('')}</div>`).join('')}</div></div>
+ ${hero(960,1250,1000,{cast:'priya',glasses:false,top:'shirt',topColor:'#C9B8A0',pose:'worried',face:'worried',look:[-0.7,-0.6],rim:'#ffb060',rim2:'#ffb060',id:'g'})}
+ <div class="abs" style="left:0;right:0;top:800px;bottom:0;background:linear-gradient(180deg,#4a2c1a,#1b100a)"></div>${paper}
+ <div class="abs" style="left:-80px;top:700px;width:420px;height:420px;border-radius:50%;background:#100a06;filter:blur(30px)"></div>
+ ${title('4:00 PM',1300,50,64,G.y,"font-family:'JetBrains Mono'")}
+ ${title('500 ROWS',120,90,140,'#fff')}`);fx('linear-gradient(135deg,#ffa040,#3a1a0a)')},
+// S07 pivot: data quality analyst
+s07(){let grid='';for(let i=0;i<8;i++){for(let j=0;j<8;j++){const bad=(i==3&&j==5),ok=(i+j)%7==2;grid+=`<div class="abs" style="left:${j*112}px;top:${i*70}px;width:104px;height:62px;border-radius:8px;background:${bad?'rgba(234,67,53,.85)':ok?'rgba(52,168,83,.55)':'rgba(66,133,244,.18)'};border:1px solid ${bad?'#ff8a80':'rgba(138,180,248,.45)'};box-shadow:${bad?'0 0 40px #EA4335':'none'}"></div>`}}
+ add(`<div class="L" style="background:radial-gradient(ellipse 70% 70% at 55% 40%,#0f2a33,#04080c 75%)"></div>
+ <div class="abs" style="left:640px;top:120px;width:900px;height:560px;transform:rotateX(52deg) rotateZ(-14deg);transform-origin:50% 100%">${grid}</div>
+ <div class="glow" style="left:900px;top:300px;width:600px;height:300px;background:#34A853;opacity:.25"></div>
+ ${hero(470,1080,780,{cast:'priya',pose:'point',face:'determined',look:[0.8,-0.2],rim:'#34A853',rim2:'#4285F4',id:'h'})}
+ <div class="abs" style="left:1040px;top:370px;width:200px;height:200px;border-radius:50%;border:16px solid #e8eaed;box-shadow:0 0 40px rgba(255,255,255,.4),inset 0 0 50px rgba(234,67,53,.6)"></div><div class="abs" style="left:1200px;top:550px;width:40px;height:150px;background:#3c4043;border-radius:20px;transform:rotate(-40deg)"></div>
+ ${title('DATA QUALITY',1000,800,120,'#fff')}${title('ANALYST',1000,930,120,G.g)}`);fx('linear-gradient(180deg,#0a4a3a,#000)')},
+// S08 prompt beat
+s08(){add(`<div class="L" style="background:radial-gradient(ellipse 60% 60% at 60% 40%,#1b1f3a,#05060c 80%)"></div>
+ ${Array.from({length:40},(_,i)=>`<div class="abs" style="left:${STAGE.hash(i)*1920}px;top:${STAGE.hash(i+50)*1080}px;width:${2+STAGE.hash(i+9)*5}px;height:${2+STAGE.hash(i+9)*5}px;border-radius:50%;background:${[G.b,G.r,G.y,G.g][i%4]};opacity:.6;filter:blur(1px)"></div>`).join('')}
+ <div class="abs" style="left:700px;top:110px;width:1080px;height:700px;transform:rotateY(-16deg) rotateX(6deg)">
+  <div class="card" style="inset:0;background:#1f1f1e;border:1px solid #3a3a38">
+   <div style="height:64px;border-bottom:1px solid #333;display:flex;align-items:center;padding-left:26px;gap:12px"><i style="width:16px;height:16px;border-radius:50%;background:#ff5f57"></i><i style="width:16px;height:16px;border-radius:50%;background:#febc2e"></i><i style="width:16px;height:16px;border-radius:50%;background:#28c840"></i></div>
+   <div style="margin:50px 60px;padding:34px 40px;background:#2d2d2b;border-radius:22px;font:600 38px/1.4 Figtree;color:#f1f0ec">Act as a <span style="color:${G.y}">senior data analyst</span>. Give me a sample table of <span style="color:${G.b}">20 messy customer records</span> with missing values, duplicate rows and formatting errors.<span style="display:inline-block;width:4px;height:40px;background:#fff;vertical-align:middle;margin-left:6px"></span></div>
+   <div style="margin:0 60px;height:96px;border-radius:24px;border:1px solid #444;background:#262624"></div></div></div>
+ ${hero(420,1200,820,{pose:'type',face:'focused',look:[0.7,-0.3],rim:'#8ab4f8',rim2:'#c58af9',id:'i'})}<div class="glow" style="left:250px;top:330px;width:360px;height:260px;background:#8ab4f8;opacity:.35"></div><div class="abs" style="left:250px;top:735px;width:340px;height:215px;border-radius:16px 16px 4px 4px;background:linear-gradient(160deg,#c9ced8,#7a808c 60%,#4a4f5a);box-shadow:0 30px 60px rgba(0,0,0,.6)"><div style="position:absolute;left:150px;top:90px;width:40px;height:40px;border-radius:50%;background:#e8eaed;opacity:.8"></div></div><div class="abs" style="left:120px;top:940px;width:640px;height:40px;border-radius:6px;background:#2a2f45"></div>
+ <div class="abs" style="left:0;top:975px;width:1920px;height:120px;background:#0d0f1a"></div>`);fx('linear-gradient(90deg,#3a2a8a,#000)')},
+// S09 support at 2 AM + stat
+s09(){const langs=['Hola!','Bonjour','こんにちは','مرحبا','Hallo','Olá','你好','Ciao','नमस्ते','Привет','Merhaba','안녕하세요'];
+ add(`<div class="L" style="background:linear-gradient(180deg,#05081a,#0c1433 60%,#05060c)"></div>
+ <div class="abs" style="left:120px;top:90px;width:340px;height:420px;background:linear-gradient(180deg,#0e1840,#1a2a5a);border:12px solid #070b18;filter:blur(1.5px)"><div style="position:absolute;left:180px;top:50px;width:90px;height:90px;border-radius:50%;background:#f1f3f4;box-shadow:0 0 70px 20px rgba(220,230,255,.5)"></div></div>
+ ${langs.map((l,i)=>{const x=560+(i%4)*320+(Math.floor(i/4)%2)*110,y=70+Math.floor(i/4)*120,c=[G.b,G.g,G.y,G.r][i%4];return `<div class="abs" style="left:${x}px;top:${y}px;padding:20px 30px;border-radius:30px 30px 30px 6px;background:${c};font:800 36px Figtree;color:#fff;box-shadow:0 0 40px ${c}88;opacity:${.95-Math.floor(i/4)*.2}">${l}</div>`}).join('')}
+ <div class="abs" style="left:0;right:0;top:780px;bottom:0;background:#0a0e1e"></div>
+ ${hero(330,1080,560,{cast:'lena',pose:'idle',face:'sad',look:[0.8,-0.5],rim:'#8ab4f8',rim2:'#8ab4f8',id:'j'})}
+ <div class="abs" style="left:1080px;top:640px;width:150px;height:140px;background:linear-gradient(180deg,${G.r},transparent);opacity:.7"></div><div class="abs" style="left:1360px;top:500px;width:150px;height:280px;background:linear-gradient(180deg,${G.g},#0d3a1e);box-shadow:0 0 60px ${G.g}"></div>
+ ${title('92M',1065,540,80,G.r)}${title('170M',1330,400,80,G.g)}${title('2 AM',640,880,100,'#fff')}${title('40 LANGUAGES',920,880,100,G.b)}`);fx('linear-gradient(180deg,#1a2a7a,#000)')},
+// S10 cashier: night supermarket
+s10(){let k='';for(let i=0;i<5;i++){const s=1-i*.16,x=1180+i*150*s*1.2,y=760-i*44;k=`<div class="abs" style="left:${x}px;top:${y-330*s}px;width:${150*s}px;height:${330*s}px;background:linear-gradient(180deg,#e8eaed,#9aa0a6);border-radius:10px;filter:blur(${i*.6}px)"><div style="margin:${14*s}px;height:${110*s}px;border-radius:6px;background:${G.b};box-shadow:0 0 ${50*s}px ${G.b}"></div><div style="margin:0 ${14*s}px;height:${30*s}px;background:${G.g};border-radius:4px"></div></div>`+k}
+ add(`<div class="L" style="background:linear-gradient(180deg,#0b0d12,#151a22 60%,#0a0c10)"></div>
+ ${Array.from({length:6},(_,i)=>`<div class="abs" style="left:${200+i*280}px;top:60px;width:200px;height:16px;background:#e8f0ff;box-shadow:0 0 50px 14px rgba(200,220,255,.5);opacity:${.9-i*.1}"></div>`).join('')}
+ <div class="abs" style="left:0;right:0;top:760px;bottom:0;background:linear-gradient(180deg,#2a2f38,#0d0f13)"></div>
+ <svg class="L" viewBox="0 0 1920 1080" style="filter:blur(2px)"><path d="M0 200 L700 360 L700 760 L0 900Z" fill="#1c222c"/>${Array.from({length:5},(_,i)=>`<path d="M0 ${280+i*120} L700 ${400+i*75}" stroke="#2c3440" stroke-width="10"/>`).join('')}</svg>
+ ${k}
+ ${hero(680,1000,640,{cast:'omar',top:'apron',topColor:'#34A853',inner:'#F4F2EF',tie:null,glasses:false,pose:'idle',face:'sad',look:[0.9,0],rim:'#cfe0ff',rim2:'#4285F4',id:'k'})}
+ <div class="abs" style="left:420px;top:780px;width:560px;height:200px;background:linear-gradient(180deg,#2e333c,#16191f);border-radius:8px"></div>
+ ${title('SELF-CHECKOUT',1090,880,96,'#fff')}${title('09',110,860,110,G.y,"font-family:'Archivo Black'")}`);fx('linear-gradient(90deg,#000,#2a4a8a)')},
+// S11 finale rooftop sunrise
+s11(){add(`<div class="L" style="background:linear-gradient(180deg,#1a2a6a 0%,#5a4a9a 30%,#f08a6a 58%,#ffd27a 70%,#fff0c0 76%)"></div>
+ <div class="glow" style="left:1080px;top:470px;width:600px;height:420px;background:#fff3c4;opacity:1"></div>
+ ${Array.from({length:7},(_,i)=>`<div class="ray" style="left:1360px;top:690px;width:2000px;height:${50+i*8}px;background:linear-gradient(90deg,rgba(255,240,190,.55),transparent);transform:rotate(${150+i*9}deg)"></div>`).join('')}
+ ${skyline(21,800,'#8a5a7a',0,0,60,200,5)}${skyline(23,860,'#4a3050',.12,0,50,240,2,'#ffe0a0')}
+ <div class="abs" style="left:0;right:0;top:840px;bottom:0;background:linear-gradient(180deg,#2a1830,#120a16)"></div>
+ ${hero(1330,960,640,{pose:'cheer',face:'happy',look:[0.5,-0.4],rim:'#ffd27a',rim2:'#ff9a7a',id:'l'})}
+ ${title('YOU RUN',110,140,150,'#fff')}${title('THE <span style="color:'+G.b+'">U</span><span style="color:'+G.r+'">P</span><span style="color:'+G.y+'">D</span><span style="color:'+G.g+'">A</span><span style="color:'+G.b+'">T</span><span style="color:'+G.r+'">E</span>',110,300,150,'#fff')}`);fx('linear-gradient(180deg,#5a3a9a,#ffb060)')},
+// S12 end card
+s12(){add(`<div class="L" style="background:radial-gradient(ellipse 70% 70% at 40% 50%,#202536,#07080d 80%)"></div>
+ <div class="glow" style="left:380px;top:300px;width:600px;height:600px;background:#EA4335;opacity:.25"></div>
+ ${hero(640,1040,820,{pose:'wave',face:'happy',look:[0.4,-0.1],rim:'#FBBC05',rim2:'#4285F4',id:'m'})}
+ ${title('COMMENT',1040,280,110,'#fff')}
+ <div class="abs" style="left:1040px;top:420px;padding:30px 50px;border-radius:30px;background:#fff;box-shadow:0 30px 80px rgba(0,0,0,.5)"><span class="t" style="position:relative;font-size:150px;letter-spacing:-3px"><span style="color:${G.b}">A</span><span style="color:${G.r}">I</span> <span style="color:${G.y}">J</span><span style="color:${G.b}">O</span><span style="color:${G.g}">B</span><span style="color:${G.r}">S</span></span></div>
+ ${title('Get the full prompt list free',1050,690,52,'#c9d1e0',"font-weight:800")}`);fx('linear-gradient(90deg,#4285F4,#EA4335)')},
+};
+(SC[location.hash.slice(1)]||SC.s01)();
+</script></body></html>

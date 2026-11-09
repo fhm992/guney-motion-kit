@@ -1,0 +1,15 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../assets/fonts.css"><script src="../../assets/hero.js"></script>
+<style>body{margin:0;width:1920px;height:1080px;background:radial-gradient(ellipse at 50% 40%,#2a2f3d,#0d0f15);font-family:Figtree;color:#fff;overflow:hidden}
+h1{position:absolute;left:70px;top:40px;margin:0;font-size:64px;font-weight:900}h1 span{color:#FBBC05}
+.sub{position:absolute;left:72px;top:118px;font-size:26px;color:#9aa3b5;font-weight:700}
+.c{position:absolute;width:200px;height:480px}.lab{position:absolute;width:240px;text-align:center;font-size:24px;font-weight:800}
+.f{position:absolute;width:190px;height:170px;overflow:hidden;border-radius:24px;background:#1b1f2a}
+.f>div{width:340px;height:816px;margin-left:-75px;margin-top:-100px}</style></head><body>
+<h1>Character sheet: <span>"Fahim"</span></h1><div class="sub">2D vector rig - red hoodie, navy jeans, red sneakers - rim-lit for dark cinematic scenes</div>
+<div id="r"></div>
+<script>
+const r=document.getElementById('r');const poses=[['idle','smile'],['wave','happy'],['think','focused'],['worried','worried'],['point','talk'],['type','focused'],['phone','shocked'],['cheer','happy']];
+poses.forEach(([p,f],i)=>{const x=70+i*225;r.insertAdjacentHTML('beforeend',`<div class="c" style="left:${x}px;top:190px">${HERO.svg({pose:p,face:f,id:'p'+i,look:p==='phone'?[0,0.6]:[0.2,0]})}</div><div class="lab" style="left:${x-20}px;top:680px;color:${['#4285F4','#EA4335','#FBBC05','#34A853'][i%4]}">${p}</div>`)});
+const faces=['smile','happy','talk','worried','shocked','focused','determined','sad'];
+faces.forEach((f,i)=>{const x=80+i*225;r.insertAdjacentHTML('beforeend',`<div class="f" style="left:${x}px;top:740px"><div>${HERO.svg({face:f,id:'f'+i})}</div></div><div class="lab" style="left:${x-45}px;top:910px;font-size:22px;color:#c9d1e0">${f}</div>`)});
+</script></body></html>
