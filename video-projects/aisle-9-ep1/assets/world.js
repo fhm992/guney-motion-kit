@@ -118,14 +118,14 @@
   // freezer case: glass doors with lit products, along Z at x = X facing dir
   W.freezers = function (X, dir, z0, z1, o = {}) {
     const r = S.mulberry32(o.seed || 3), top = 2.2, back = X - dir * 0.8;
-    this.quad([[back, 0, z0], [back, 0, z1], [back, top, z1], [back, top, z0]], '#E6F6FD');
+    this.quad([[back, 0, z0], [back, 0, z1], [back, top, z1], [back, top, z0]], '#E6F6FD', { shelfBack: true });
     for (let z = z0; z < z1 - 0.2; z += 1.0) {
       for (let l = 0; l < 4; l++) for (let k = 0; k < 4; k++) { const y0 = 0.35 + l * 0.45, zz = z + 0.08 + k * 0.22; this.quad([[X - dir * 0.3, y0, zz], [X - dir * 0.3, y0, zz + 0.18], [X - dir * 0.3, y0 + 0.32, zz + 0.18], [X - dir * 0.3, y0 + 0.32, zz]], PAL.freezer[Math.floor(r() * 6)], { product: 'box', dir, seed: r(), label: '#fff', frosty: true }); }
       this.quad([[X, 0.2, z + 0.02], [X, 0.2, z + 0.96], [X, 2.05, z + 0.96], [X, 2.05, z + 0.02]], 'rgba(225,245,255,0.42)', { glass: true, dir });
       this.quad([[X, 0.2, z], [X, 0.2, z + 0.04], [X, 2.05, z + 0.04], [X, 2.05, z]], '#F4FBFF');
       this.quad([[X - dir * 0.02, 1.0, z + 0.88], [X - dir * 0.02, 1.0, z + 0.91], [X - dir * 0.02, 1.35, z + 0.91], [X - dir * 0.02, 1.35, z + 0.88]], '#C9D2DA');
     }
-    this.quad([[X, 2.05, z0], [X, 2.05, z1], [X, top + 0.25, z1], [X, top + 0.25, z0]], '#2F7BE8', { header: o.headerText || 'FROZEN', dir });
+    for (let z = z0; z < z1 - 0.01; z += 2.5) { const ze = Math.min(z1, z + 2.5); this.quad([[X, 2.05, z], [X, 2.05, ze], [X, top + 0.25, ze], [X, top + 0.25, z]], '#2F7BE8', { header: o.headerText || 'FROZEN', dir }); }
     return this;
   };
   // stockroom: pallet racks with cartons, along Z at x = X facing dir
@@ -133,8 +133,9 @@
     const r = S.mulberry32(o.seed || 9), top = 3.2, back = X - dir * 1.0, levels = [0.1, 1.1, 2.1];
     for (let z = z0; z <= z1 + 0.01; z += 2.4) { this.box(Math.min(X, back), 0, z - 0.05, Math.max(X, back), top, z + 0.05, '#C7652B'); }
     levels.forEach((ly) => {
-      this.quad([[X, ly + 0.08, z0], [X, ly + 0.08, z1], [X, ly + 0.16, z1], [X, ly + 0.16, z0]], '#2F5FA8');
-      this.quad([[X, ly + 0.16, z0], [X, ly + 0.16, z1], [back, ly + 0.16, z1], [back, ly + 0.16, z0]], shade('#2F5FA8', -0.3));
+      for (let za = z0; za < z1 - 0.01; za += 1.2) { const zb = Math.min(z1, za + 1.2);
+        this.quad([[X, ly + 0.08, za], [X, ly + 0.08, zb], [X, ly + 0.16, zb], [X, ly + 0.16, za]], '#2F5FA8');
+        this.quad([[X, ly + 0.16, za], [X, ly + 0.16, zb], [back, ly + 0.16, zb], [back, ly + 0.16, za]], shade('#2F5FA8', -0.3)); }
       let z = z0 + 0.1; while (z < z1 - 0.3) { const w = 0.4 + r() * 0.5, hh = 0.35 + r() * 0.5, col = ['#B98A5A', '#A57A4B', '#C99A66', '#8E6A44'][Math.floor(r() * 4)], x = X - dir * 0.05;
         this.quad([[x, ly + 0.16, z], [x, ly + 0.16, z + w], [x, ly + 0.16 + hh, z + w], [x, ly + 0.16 + hh, z]], col, { product: 'carton', dir, seed: r(), label: '#E9DCC4' }); z += w + 0.04; }
     });

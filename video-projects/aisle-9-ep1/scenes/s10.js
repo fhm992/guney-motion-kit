@@ -1,0 +1,90 @@
+// @scene s10 54 Beat 10 - The freezer, Rule 3
+(() => {
+  const S = STAGE, E = S.E, K = SH.k;
+  const ZK = ['zPajama', 'zBasketW', 'zShopper', 'zHalloran'];
+  const FXG = { dust: 50, beamK: 0.5, beamMax: 9 }, FXI = { dust: 90, dustK: 1.4, beamK: 0.8, haze: '220,245,255', hazeK: 0.2 };
+  const run = (t, sp = 1.25) => ({ phase: t * sp, stride: 230, kind: 'run' });
+  const frost = (el, k) => { el.style.filter = k > 0 ? `saturate(${1 - 0.5 * k}) brightness(${1 + 0.18 * k}) drop-shadow(0 0 ${10 * k}px rgba(200,240,255,${0.8 * k}))` : ''; };
+  // three small rule cards for the recap
+  const recap = (O) => {
+    const rules = [['1', 'SILENCE IS SURVIVAL', '#FFF6E0'], ['2', 'NEVER USE THE PA SYSTEM', '#FFF6E0'], ['3', 'THE FREEZER SLOWS THEM DOWN', '#DDF6FF']];
+    const cards = rules.map(([n, txt, bg], i) => SH.div(O, `left:${150 + i * 560}px;top:330px;width:500px;height:360px;border-radius:22px;background:${bg};box-shadow:0 24px 60px rgba(0,0,0,.6);opacity:0`,
+      `<div style="position:absolute;left:0;right:0;top:36px;text-align:center;font:700 34px/1 'JetBrains Mono';letter-spacing:.3em;color:#7a1010">RULE #${n}</div><div style="position:absolute;left:30px;right:30px;top:100px;text-align:center;font:400 66px/1.02 'Anton';color:#1b1b1b">${txt}</div>`));
+    return (lt, at, out) => cards.forEach((c, i) => { const d = lt - at - i * 0.9, a = S.seg(d, 0, 0.3) * (1 - S.seg(lt, out, out + 0.5)); c.style.opacity = a; c.style.transform = `translateY(${(1 - E.outBack(S.seg(d, 0, 0.45), 1.6)) * 80}px) rotate(${(i - 1) * 2}deg) scale(${1 + 0.15 * Math.exp(-Math.max(0, d) * 10) * (d > 0 ? 1 : 0)})`; });
+  };
+  SH.run('s10', 's10', 54, [
+    { // A1: "Run. Left." - he tears along the front of the aisles; a shopper lurches out ahead. "Not that way."
+      t0: 0, setup(W) { const world = SETS.store('gray', { seed: 2, front: false }); const R = SH.stage(W, world, { fx: FXG }); return { R, bob: R.actor('bob'), z: R.actor('zBasketW', { seed: 140 }), z2: R.actor('zShopper', { seed: 141 }) }; },
+      draw(lt, st, t) {
+        const R = st.R, skid = 2.3, bx = lt < skid ? K(lt, [[0, 4.5], [skid, -1.8]], E.lin) : K(lt, [[skid, -1.8], [2.8, -2.0], [4.6, 1.4]]);
+        R.frame(t, SH.cam3(lt, [[0, 3.0, 1.1, 2.4, -0.25, -0.02, 950], [skid, -0.6, 1.1, 2.6, -0.45, -0.02, 950], [4.6, 0.4, 1.1, 2.6, 0.2, -0.02, 950]], { hand: 3 }));
+        R.at(st.bob, bx, 4.6, Object.assign({}, EXPR.terror, { face: lt < skid + 0.3 ? -Math.PI / 2 : Math.PI / 2, headFace: lt > skid && lt < skid + 0.6 ? -Math.PI / 2 : null, gait: lt < skid || lt > 2.8 ? run(lt) : null, lean: lt < skid ? 12 : lt < 2.8 ? -14 : 12 }));
+        R.at(st.z, K(lt, [[1.2, -6.5], [3.2, -4.0]]), 5.1, Object.assign({}, EXPR.zombieShriek, { face: Math.PI / 2, gait: { phase: lt * 0.9, stride: 90, kind: 'shamble' }, armL: [100, -10], armR: [110, -10], lean: 10 }));
+        R.at(st.z2, K(lt, [[0, 8.0], [4.6, 5.4]]), 5.6, Object.assign({}, EXPR.zombie, { face: -Math.PI / 2, gait: { phase: lt * 0.7, stride: 60, kind: 'shamble' }, armL: [90, -10], armR: [90, -10] }));
+      } },
+    { // A2: "Anywhere but there." - he sprints straight at us into the freezer aisle; shoppers pile in behind
+      t0: 4.6, setup(W) { const R = SH.stage(W, SETS.freezer('ice', { seed: 4 }), { fx: FXI }); return { R, bob: R.actor('bob'), zs: [0, 1, 2].map((i) => R.actor(ZK[i], { seed: 150 + i })) }; },
+      draw(lt, st, t) {
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, 0.2, 1.1, 8.6, Math.PI, -0.02, 900], [4.9, 0.1, 1.15, 11.6, Math.PI, -0.03, 900]], { hand: 3 }));
+        const bz = K(lt, [[0, -2.5], [4.9, 9.4]], E.lin);
+        R.at(st.bob, 0.1, bz, Object.assign({}, EXPR.terror, { face: Math.PI, headFace: Math.sin(lt * 2.2) > 0.7 ? 0 : Math.PI, gait: run(lt, 1.35), lean: 12 }));
+        st.zs.forEach((z, i) => R.at(z, -0.6 + i * 0.6, K(lt, [[0.8 + i * 0.4, -3.5], [4.9, 2.6 - i * 0.7]], E.lin), Object.assign({}, EXPR.zombieShriek, { face: Math.PI, gait: { phase: lt * 1.1 + i, stride: 140, kind: 'run' }, armL: [100, -10], armR: [110, -10], lean: 10 })));
+      } },
+    { // B1: he slams into the back wall. Dead end. "Dead end. Nothing here but frosted glass and ice cream."
+      t0: 9.5, setup(W) { const R = SH.stage(W, SETS.freezer('ice', { seed: 4 }), { fx: FXI }); return { R, bob: R.actor('bob') }; },
+      draw(lt, st, t) {
+        const R = st.R, hit = lt - 0.5; R.frame(t, SH.cam3(lt, [[0, -0.6, 0.9, 7.6, 0.08, 0.02, 1000], [5, -0.3, 1.0, 9.6, 0.04, 0.0, 1150]], { hand: hit > 0 && hit < 0.4 ? 7 : 0.6, ease: E.outCubic }));
+        const bz = K(lt, [[0, 11.4], [0.5, 13.55]], E.lin);
+        R.at(st.bob, 0.1, bz, Object.assign({}, lt < 0.5 ? EXPR.terror : EXPR.scared, { face: lt < 1.1 ? Math.PI : 0, headFace: lt > 1.1 && lt < 3.2 ? Math.PI / 2 * Math.sin(lt * 2.4) : null, gait: lt < 0.5 ? run(lt) : null, lean: lt < 0.5 ? 12 : -4, squash: hit > 0 && hit < 0.3 ? 0.12 : 0,
+          look: [Math.sin(lt * 2.4) * 0.6, 0], armL: [-30, -20], armR: [-30, -20] }));
+      } },
+    { // B2: reverse - from behind him, the shoppers fill the mouth of the aisle
+      t0: 14.5, setup(W) { const R = SH.stage(W, SETS.freezer('ice', { seed: 4 }), { fx: FXI }); return { R, bob: R.actor('bob'), zs: [0, 1, 2, 3].map((i) => R.actor(ZK[i], { seed: 160 + i })) }; },
+      draw(lt, st, t) {
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, 0.75, 1.5, 13.9, Math.PI - 0.08, -0.05, 1000], [4.9, 0.5, 1.35, 13.4, Math.PI - 0.05, -0.04, 1100]], { hand: 0.6 }));
+        R.at(st.bob, 0.15, 13.4, Object.assign({}, EXPR.scared, { face: 0, crouch: 0.15, armL: [-30, -20], armR: [-30, -20] }), { bias: 0.5 });
+        st.zs.forEach((z, i) => R.at(z, -1.0 + i * 0.65, K(lt, [[0, 1.0 + (i % 2) * 0.8], [4.9, 4.4 + (i % 2) * 0.8]], E.lin), Object.assign({}, EXPR.zombie, { face: Math.PI + (i - 1.5) * 0.15, gait: { phase: lt * 0.7 + i, stride: 60, kind: 'shamble' }, armL: [90, -10], armR: [95, -10], lean: 6 })));
+      } },
+    { // C: close - frost breath, eyes shut. "Please be slow. Please be slow."
+      t0: 19.2, setup(W) { const R = SH.stage(W, SETS.freezer('ice', { seed: 4 }), { fx: FXI, dof: 1.6 }); return { R, bob: R.actor('bob'), puff: SH.div(R.A, 'left:0;top:0;width:180px;height:120px;border-radius:50%;background:radial-gradient(ellipse,rgba(255,255,255,.55),rgba(255,255,255,0) 70%);z-index:3000;opacity:0') }; },
+      draw(lt, st, t) {
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, 0.45, 1.0, 11.9, 0.22, 0.02, 1300], [4.8, 0.3, 1.0, 12.2, 0.18, 0.02, 1500]], { ease: E.inOutSine, hand: 0.5 }));
+        const P = R.at(st.bob, 0.15, 13.4, Object.assign({}, EXPR.scared, { face: Math.PI + 0.3, headFace: Math.PI + 0.45, lid: 0.95, brow: 0.9, browUp: 0.9, crouch: 0.15, armL: [40, -110], armR: [40, -110], headTilt: -6,
+          mouth: SH.mouth(['b14'], { open: 0.05, smile: -0.6, wide: 0.5 }, { smile: -0.5, amp: 0.45, wide: 0.55 }), bob: Math.sin(lt * 9) * 1.5 }), { bias: 0.5 });
+        const ph = (lt % 1.6) / 1.6; st.puff.style.opacity = SH.speaking('b14') ? 0 : 0.7 * Math.sin(ph * Math.PI);
+        st.puff.style.transform = `translate(${P.x - 60 + ph * 70}px,${P.y - P.k * 640 - ph * 40}px) scale(${0.5 + ph})`;
+      } },
+    { // D: slow motion - an arm swings for him; he ducks under it and slides along the freezers
+      t0: 24.0, setup(W) { const R = SH.stage(W, SETS.freezer('ice', { seed: 4 }), { fx: FXI }); return { R, bob: R.actor('bob'), z: R.actor('zHalloran', { seed: 170 }), z2: R.actor('zPajama', { seed: 171 }) }; },
+      draw(lt, st, t) {
+        const R = st.R, sl = lt * 0.32;  // slow-motion clock
+        R.frame(t, SH.cam3(lt, [[0, 1.15, 1.0, 9.6, -0.55, 0.0, 1000], [8, 1.1, 0.9, 7.0, -0.6, 0.02, 1000]], { ease: E.inOutSine }));
+        const duck = E.inOutSine(S.seg(lt, 1.4, 3.6)) * (1 - E.inOutSine(S.seg(lt, 5.0, 6.6)));
+        R.at(st.bob, K(lt, [[0, 0.3], [3.6, 0.55], [8, 0.6]]), K(lt, [[0, 12.6], [2.6, 11.4], [8, 8.2]], E.inOutSine), Object.assign({}, EXPR.terror, { face: Math.PI - 0.2, headFace: lt < 4 ? -0.6 : null, crouch: 0.15 + duck * 0.45, lean: 10 + duck * 18, gait: { phase: sl * 1.2, stride: 200, kind: 'run' } }));
+        R.at(st.z, -0.45, K(lt, [[0, 10.4], [8, 11.6]]), Object.assign({}, EXPR.zombieShriek, { face: Math.PI - 0.3 + sl * 0.4, armR: [K(lt, [[0, 40], [2.6, 120], [5, 150]]), -10], armL: [90, -10], lean: 10 + duck * 6, headTilt: Math.sin(sl * 3) * 6, gait: { phase: sl * 0.6, stride: 40, kind: 'shamble' } }), { bias: 0.8 });
+        R.at(st.z2, -0.55, 8.8, Object.assign({}, EXPR.zombie, { face: 0.6, gait: { phase: sl * 0.5, stride: 30, kind: 'shamble' }, armL: [80, -10], armR: [85, -10] }), { bias: 0.8 });
+        frost(st.z.svg, S.seg(lt, 2, 8) * 0.6); frost(st.z2.svg, S.seg(lt, 2, 8) * 0.6);
+        R.F.style.filter = `contrast(1.05) saturate(${0.75})`;
+      } },
+    { // E: they're frosting over, sluggish; Bob creeps past toward the mouth of the aisle. "And somehow, impossibly, he is..."
+      t0: 32.0, setup(W) { const R = SH.stage(W, SETS.freezer('ice', { seed: 4 }), { fx: FXI }); return { R, bob: R.actor('bob'), zs: [0, 1, 2, 3].map((i) => R.actor(ZK[i], { seed: 180 + i })) }; },
+      draw(lt, st, t) {
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, 0.0, 2.6, 0.6, 0.0, -0.22, 900], [7.6, 0.2, 2.4, 2.0, 0.0, -0.2, 950]], { ease: E.inOutSine }));
+        [[-0.8, 7.0], [0.4, 8.2], [0.9, 6.0], [-0.2, 9.4]].forEach(([x, z], i) => { const zz = st.zs[i]; R.at(zz, x, z, Object.assign({}, EXPR.zombie, { face: Math.PI + (i % 2 ? 0.4 : -0.4), lid: 0.5, headTilt: (i % 2 ? 1 : -1) * 14, gait: { phase: lt * 0.12 + i, stride: 15, kind: 'shamble' }, armL: [40, -10], armR: [45, -10] })); frost(zz.svg, 0.6 + 0.4 * S.seg(lt, 0, 5)); });
+        R.at(st.bob, K(lt, [[0, 1.05], [7.6, 0.2]]), K(lt, [[0, 10.6], [7.6, 3.6]], E.lin), Object.assign({}, EXPR.whisper, { face: Math.PI, headFace: Math.PI + Math.sin(lt * 0.8) * 1.1, gait: { phase: lt * 0.75, stride: 120, kind: 'sneak' }, crouch: 0.28, lean: 14, armL: [20, -40], armR: [20, -40] }));
+      } },
+    { // F: RULE #3 over the frozen aisle
+      t0: 39.4, setup(W, O) { const R = SH.stage(W, SETS.freezer('ice', { seed: 4 }), { fx: FXI }); return { R, card: SH.ruleCard(O, 3, 'THE FREEZER<br>SLOWS THEM DOWN', true) }; },
+      draw(lt, st, t) { st.R.frame(t, SH.cam3(lt, [[0, 0.1, 1.3, -1.0, 0, 0.0, 1000], [5.6, 0.1, 1.3, 0.2, 0, 0.0, 1050]])); st.card(lt, 0.2, 5.0); } },
+    { // G: recap - three days, three rules. Bob walks out of the freezer aisle into the dark store. "Three days. Three rules..."
+      t0: 45.0, setup(W, O) { const R = SH.stage(W, SETS.store('night', { seed: 2, front: false }), { fx: { dust: 50, beamK: 0.6 } }); SH.div(O, 'inset:0;background:rgba(0,0,0,.35)'); return { R, bob: R.actor('bob'), rc: recap(O) }; },
+      draw(lt, st, t) {
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, 0.4, 1.5, -0.4, 0.05, 0.0, 950], [9, 0.0, 1.6, -1.4, 0.0, -0.01, 900]], { ease: E.inOutSine }));
+        R.at(st.bob, K(lt, [[0, 1.6], [9, -0.2]]), K(lt, [[0, 2.2], [9, 5.4]], E.lin), Object.assign({}, EXPR.exhausted, { face: Math.PI + 0.25, gait: { phase: lt * 0.8, stride: 110, kind: 'walk' } }));
+        st.rc(lt, 0.6, 8.0);
+      } },
+  ], { fades: [[53.2, 54, 0, 1]], gfx: [
+    { type: 'note', text: 'THE FREEZER AISLE · DEAD END', icon: '!', at: 10.4, dur: 3.4 },
+    { type: 'note', text: 'COLD MAKES THEM SLOW', icon: '!', at: 34.4, dur: 4.4 },
+  ] });
+})();
