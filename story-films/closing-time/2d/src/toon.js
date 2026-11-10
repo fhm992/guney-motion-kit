@@ -46,7 +46,7 @@
   }
   // Builds a rig. Units: character is ~400 tall at s=1, feet at (0,0).
   function char(parent, o) {
-    const L = Object.assign({}, LOOK[o.who] || LOOK.sami, o.look || {});
+    const L = Object.assign({}, LOOK[o.who] || LOOK.sami, o.zombie && o.who && o.who !== 'zombie' ? { shoes: LOOK[o.who].shoes } : {}, o.look || {});
     const z = !!L.zombie || !!o.zombie; const skin = z ? '#5e9636' : SKIN; const hand = z ? '#5e9636' : SKIN;
     const root = el('g', {}, parent); const bob = el('g', {}, root);
     const back = !!o.back;
@@ -59,12 +59,15 @@
       return { hip, knee, shoe };
     };
     const legs = [mk(-1), mk(1)];
+    let armIdx = 0;
     const armMk = () => {
+      const idx = armIdx++;
       const sh = el('g', {}, bob);
       const up = capsule(sh, 0, 0, 0, 62, 24, sl || L.sleeve === 'short' ? L.top : skin);
       const el2 = el('g', { transform: 'translate(0,62)' }, sh);
       capsule(el2, 0, 0, 0, 56, 21, sl ? L.top : skin);
       if (L.sleeve === 'torn') el('path', { d: 'M-13,40 l6,10 l5,-8 l6,9 l5,-10 l4,6', stroke: INK, 'stroke-width': 4, fill: 'none' }, el2);
+      if (o.stain && idx === 1) { el('path', { d: 'M-11,26 Q0,20 11,28 L11,58 Q0,64 -11,58Z', fill: '#5a0c10', opacity: 0.9 }, el2); el('circle', { cx: 4, cy: 66, r: 4, fill: '#5a0c10' }, el2); }
       const hd = el('g', { transform: 'translate(0,60)' }, el2);
       el('ellipse', { cx: 0, cy: 6, rx: 15, ry: 17, fill: hand, stroke: INK, 'stroke-width': 5 }, hd);
       if (z) el('path', { d: 'M-10,18 l-3,12 M0,22 l0,13 M10,18 l3,12', stroke: INK, 'stroke-width': 5, 'stroke-linecap': 'round' }, hd);
@@ -86,6 +89,7 @@
     if (L.lanyard && !back) { el('path', { d: `M-26,${ty} Q-8,${ty + 50} 22,${ty}`, stroke: '#3a6bd6', 'stroke-width': 4, fill: 'none' }, det); el('rect', { x: -12, y: ty + 40, width: 20, height: 26, fill: '#f4f4f4', stroke: INK, 'stroke-width': 3 }, det); }
     if (L.badge && !back) { el('rect', { x: 16, y: ty + 26, width: 28, height: 13, rx: 3, fill: '#f6f6f6', stroke: INK, 'stroke-width': 3 }, det); }
     if (L.sleeve === 'torn') { el('path', { d: `M${-tw / 2},${ty + th - 6} l12,14 l10,-12 l12,16 l12,-14 l12,12 l12,-14 l12,14 l12,-12`, fill: 'none', stroke: INK, 'stroke-width': 4 }, det); el('circle', { cx: 18, cy: ty + 40, r: 9, fill: '#141414' }, det); el('path', { d: `M-30,${ty + 30} l10,22`, stroke: '#3d6a22', 'stroke-width': 7 }, det); }
+    if (o.bite && !back) { el('path', { d: `M-46,${ty + 2} q14,-6 22,4 q-2,14 -14,16 q-10,-2 -8,-20Z`, fill: '#7a0c12', stroke: INK, 'stroke-width': 3 }, torso); el('path', { d: `M-40,${ty + 18} q4,30 -2,52`, stroke: '#7a0c12', 'stroke-width': 8, fill: 'none', 'stroke-linecap': 'round', opacity: 0.9 }, torso); }
     if (L.skirt) el('path', { d: `M${-tw / 2 - 4},${ty + th - 10} L${tw / 2 + 4},${ty + th - 10} L${tw / 2 + 22},${ty + th + 36} Q0,${ty + th + 44} ${-tw / 2 - 22},${ty + th + 36}Z`, fill: L.skirt, stroke: INK, 'stroke-width': 6, 'stroke-linejoin': 'round' }, torso);
     // head
     const headG = el('g', {}, bob); const hr = 78; const hcy = -232 - 70;
@@ -226,6 +230,16 @@
 <circle cx="-130" cy="-18" r="40" fill="#141414" stroke="${INK}" stroke-width="6"/><circle cx="-130" cy="-18" r="17" fill="#6a6f76"/><circle cx="132" cy="-18" r="40" fill="#141414" stroke="${INK}" stroke-width="6"/><circle cx="132" cy="-18" r="17" fill="#6a6f76"/>
 <rect x="200" y="-70" width="18" height="14" rx="4" fill="${o.wreck ? '#444' : '#ffe9a8'}" stroke="${INK}" stroke-width="4"/>${o.wreck ? `<path d="M-60,-136 L-30,-110 L-56,-98 M30,-120 l20,10" stroke="#9aa" stroke-width="4" fill="none"/>` : ''}</g>`;
   }
+  function carFront(x, y, s, col, o = {}) {
+    const dk = shade(col, -0.35);
+    return `<g transform="translate(${x},${y}) scale(${s})"><ellipse cx="0" cy="2" rx="210" ry="16" fill="#000" opacity="0.4"/>
+<path d="M-196,-20 L-200,-92 Q-196,-118 -160,-124 L-120,-196 Q-110,-212 -86,-212 L86,-212 Q110,-212 120,-196 L160,-124 Q196,-118 200,-92 L196,-20Z" fill="${col}" stroke="${INK}" stroke-width="7" stroke-linejoin="round"/>
+<path d="M-112,-190 L-150,-128 L150,-128 L112,-190Z" fill="${o.lit ? '#2f4058' : '#18202c'}" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/><path d="M-90,-180 L-122,-136" stroke="#5a6a80" stroke-width="7" opacity="0.6"/>
+<rect x="-200" y="-92" width="400" height="40" fill="${dk}"/><rect x="-70" y="-84" width="140" height="34" rx="6" fill="#1a1d22" stroke="${INK}" stroke-width="5"/>
+<rect x="-188" y="-100" width="56" height="26" rx="8" fill="${o.lights ? '#fff3c8' : '#d8d8c8'}" stroke="${INK}" stroke-width="5"/><rect x="132" y="-100" width="56" height="26" rx="8" fill="${o.lights ? '#fff3c8' : '#d8d8c8'}" stroke="${INK}" stroke-width="5"/>
+<rect x="-206" y="-40" width="412" height="24" rx="8" fill="#2a2d33" stroke="${INK}" stroke-width="5"/>
+<rect x="-186" y="-24" width="50" height="28" rx="6" fill="#111" stroke="${INK}" stroke-width="5"/><rect x="136" y="-24" width="50" height="28" rx="6" fill="#111" stroke="${INK}" stroke-width="5"/>${o.door ? `<path d="M200,-120 L300,-150 L300,-40 L196,-30Z" fill="${col}" stroke="${INK}" stroke-width="6"/>` : ''}</g>`;
+  }
   function shutter(x, y, w, h, o = {}) {
     let s = `<linearGradient id="sh${o.id || 0}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${o.c1 || '#a8afb6'}"/><stop offset="1" stop-color="${o.c2 || '#6b737b'}"/></linearGradient><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#sh${o.id || 0})" stroke="${INK}" stroke-width="6"/>`;
     for (let yy = y + 14; yy < y + h; yy += 22) s += `<line x1="${x}" y1="${yy}" x2="${x + w}" y2="${yy}" stroke="${INK}" stroke-opacity="0.55" stroke-width="3"/><line x1="${x}" y1="${yy + 4}" x2="${x + w}" y2="${yy + 4}" stroke="#d6dce2" stroke-opacity="0.5" stroke-width="2"/>`;
@@ -233,5 +247,5 @@
   }
   function vignette() { return `<rect width="1920" height="1080" fill="url(#vig)"/><rect width="1920" height="1080" filter="url(#grain)" opacity="0.18"/>`; }
 
-  window.TOON = { INK, el, defs, char, gait, ZOMBIE_ARMS, aisle, nightSky, skyline, lamp, car, shutter, vignette, shade, R, f };
+  window.TOON = { INK, el, defs, char, gait, ZOMBIE_ARMS, aisle, nightSky, skyline, lamp, car, carFront, shutter, vignette, shade, R, f };
 })();
