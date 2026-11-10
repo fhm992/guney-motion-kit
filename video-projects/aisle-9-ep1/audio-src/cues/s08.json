@@ -1,0 +1,10 @@
+{"length": 44, "cues": [
+ {"f": "assets/audio/sfx9/whoosh.wav", "at": 0.0, "db": -4, "lp": 900},
+ {"f": "assets/audio/sfx9/heartbeat_loop.wav", "at": 0.3, "db": 0, "len": 10, "fo": 2.0},
+ {"f": "assets/audio/sfx9/moans_layered.wav", "at": 1.0, "db": -6, "len": 10, "lp": 500, "fi": 0.5, "fo": 3.0},
+ {"f": "assets/audio/bgm/warm_pads.wav", "bus": "music", "at": 0.5, "db": -1, "len": 43.5, "fi": 3.0, "fo": 5.0},
+ {"f": "assets/audio/vo/n17.mp3", "bus": "vo", "at": 6.0},
+ {"f": "assets/audio/vo/n18.mp3", "bus": "vo", "at": 12.6},
+ {"f": "assets/audio/vo/n19.mp3", "bus": "vo", "at": 22.0},
+ {"f": "assets/audio/vo/b12.mp3", "bus": "vo", "at": 31.5}
+], "duck": [[6.0, 11.0, -4], [12.6, 20.5, -4], [22.0, 29.1, -4], [31.5, 35.2, -4]]}

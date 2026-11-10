@@ -1,0 +1,56 @@
+// @scene s10 48 Beat 10 - The Frozen Aisle, Rule 3
+(() => {
+  const S = STAGE, E = S.E, K = SH.k;
+  const ZK = ['zPajama', 'zBasketW', 'zShopper', 'zHalloran'];
+  const freezer = (W, seed, o = {}) => SH.aisle(W, Object.assign({ seed, mood: 'ice', kind: 'freezer', sign: 'FROZEN', signColor: '#2F7BE8', signZ: 6.5, vignette: 0.3, depth: 7 }, o));
+  const mist = (W) => { const m = [0, 1, 2, 3, 4].map((i) => SH.div(W, `left:0;top:0;width:900px;height:260px;border-radius:50%;background:radial-gradient(ellipse,rgba(240,252,255,.55),rgba(240,252,255,0) 70%)`)); return (lt) => m.forEach((d, i) => { d.style.transform = `translate(${-300 + ((lt * (30 + i * 12) + i * 400) % 2400)}px, ${820 + (i % 3) * 70}px)`; }); };
+  const frost = (z, k) => { z.svg.style.filter = `drop-shadow(0 -4px 0 rgba(255,255,255,${0.9 * k})) saturate(${1 - 0.5 * k}) brightness(${1 + 0.25 * k})`; };
+  SH.run('s10', 's10', 48, [
+    { // A: run. Left. Not that way. Anywhere but there.
+      t0: 0, setup(W) { SH.aisle(W, { seed: 31, mood: 'gray', kind: 'mixed' }); const zs = [0, 1, 2].map((i) => SH.actor(W, ZK[i], { seed: 90 + i })); const bob = SH.actor(W, 'bob'); return { zs, bob, W }; },
+      draw(lt, st) {
+        const whip = lt > 1.5 && lt < 1.8 ? (lt - 1.5) / 0.3 : lt > 3.0 && lt < 3.3 ? -(lt - 3.0) / 0.3 : 0;
+        SH.cam(st.W, lt, [[0, 960, 560, 1.1], [9.4, 960, 560, 1.18]], 7);
+        st.W.style.filter = whip ? `blur(${Math.abs(whip) * 12}px)` : 'none';
+        const wk = SH.walk(lt, 1.3, 1, true);
+        st.bob.set(Object.assign({}, wk, { x: 960 + Math.sin(lt * 1.2) * 120, y: 1240, scale: 1.1, look: [Math.sin(lt * 3) * 0.9, 0], eyeScale: 1.15, pupil: 0.5, browUp: 1, brow: 0.8, mouth: { open: 0.3 + Math.abs(Math.sin(lt * 7)) * 0.2, smile: -0.7, wide: 0.6 }, lean: 0 }));
+        st.zs.forEach((z, i) => { const r = SH.walk(lt + i * 0.5, 1.2, 0.9, true); z.set(Object.assign({}, r, { x: 640 + i * 320, y: 900 + Math.sin(lt + i) * 30, scale: 0.6, mouth: { open: 0.7, smile: -0.6 }, armL: [100, -10], armR: [110, -10], lean: 0 })); });
+      } },
+    { // B: dead end. Frosted glass and ice cream.
+      t0: 9.4, setup(W) { freezer(W, 32); const bob = SH.actor(W, 'bob'); const m = mist(W); return { bob, m, W }; },
+      draw(lt, st) {
+        SH.cam(st.W, lt, [[0, 960, 560, 1.0], [8.2, 960, 500, 1.2]]); st.m(lt);
+        const stumble = E.outCubic(S.seg(lt, 0, 1.6));
+        st.bob.set(Object.assign({}, lt < 1.6 ? SH.walk(lt, 0.9, 0.8, true) : SH.idle(lt), { x: 960, y: S.lerp(1500, 1180, stumble), scale: S.lerp(1.3, 1.0, stumble), look: [Math.sin(lt * 1.5) * 0.8, -0.1], eyeScale: 1.1, browUp: 1, brow: 0.6,
+          mouth: { open: 0.2 + Math.abs(Math.sin(lt * 4)) * 0.1, smile: -0.6, wide: 0.6 }, armL: [20, -30], armR: [20, -30] }));
+      } },
+    { // C: they come in; frost on their shoulders; every move drags. "Please be slow."
+      t0: 17.6, setup(W) { freezer(W, 33); const zs = [0, 1].map((i) => SH.actor(W, ZK[i + 1], { seed: 95 + i })); const bob = SH.actor(W, 'bob'); const m = mist(W); return { zs, bob, m, W }; },
+      draw(lt, st) {
+        SH.cam(st.W, lt, [[0, 960, 560, 1.0], [5.4, 1000, 540, 1.1]]); st.m(lt);
+        st.zs.forEach((z, i) => { const k = S.seg(lt, 0.5, 4.5), sh = SH.shamble(lt, i * 3, 0.35);
+          z.set(Object.assign({}, sh, { x: i ? 1500 : 520, y: S.lerp(760, 960, S.seg(lt, 0, 5.4)), scale: S.lerp(0.4, 0.68, S.seg(lt, 0, 5.4)), flip: i === 1, mouth: { open: 0.3, smile: -0.5 }, armL: [70, -20], armR: [80, -20] })); frost(z, k); });
+        st.bob.set({ x: 960, y: 1180, scale: 1.0, look: [Math.sin(lt * 2) * 0.8, 0], eyeScale: 1.15, pupil: 0.5, browUp: 1, brow: 0.8, lean: -4,
+          mouth: SH.mouth(['b14'], { open: 0.05, smile: -0.7, wide: 0.5 }, { smile: -0.5, amp: 0.45, wide: 0.6 }), armL: [30, -10], armR: [30, -10] });
+      } },
+    { // D: slow motion - a frosted hand reaches for his face, inches away... he ducks under the arm
+      t0: 23.0, setup(W) { freezer(W, 34); const z = SH.actor(W, 'zShopper'); const bob = SH.actor(W, 'bob'); const m = mist(W); return { z, bob, m, W }; },
+      draw(lt, st) {
+        SH.cam(st.W, lt, [[0, 1000, 520, 1.35], [5.0, 980, 540, 1.3], [8.5, 960, 560, 1.05]]); st.m(lt * 0.4);
+        const reach = E.inOutSine(S.seg(lt, 0, 5.0)), duck = E.inOutCubic(S.seg(lt, 4.8, 6.6));
+        st.z.set({ x: 1400 - duck * 80, y: 1120, scale: 0.98, flip: true, lean: -6 - reach * 6, headTilt: -10, look: [-0.5, 0], mouth: { open: 0.5, smile: -0.5 }, armL: [80 + reach * 30, -10], armR: [60 + reach * 40, -10] }); frost(st.z, 1);
+        st.bob.set({ x: S.lerp(800, 1500, duck), y: 1180 + Math.sin(duck * Math.PI) * 220, scale: 1.0, lean: Math.sin(duck * Math.PI) * 28, look: [0.9, 0], eyeScale: 1.2, pupil: 0.45, browUp: 1, brow: 0.9,
+          mouth: { open: 0.25, smile: -0.8, wide: 0.5 }, armL: [30, -20], armR: [30, -20] });
+      } },
+    { // E: "...and somehow, impossibly, he is." The cold is doing something to them.
+      t0: 31.5, setup(W) { freezer(W, 35); const zs = [0, 1, 2].map((i) => SH.actor(W, ZK[i], { seed: 99 + i })); const bob = SH.actor(W, 'bob'); const m = mist(W); return { zs, bob, m, W }; },
+      draw(lt, st) {
+        SH.cam(st.W, lt, [[0, 960, 560, 1.0], [8.2, 960, 520, 1.12]]); st.m(lt * 0.4);
+        st.zs.forEach((z, i) => { const sh = SH.shamble(lt, i * 2, 0.18); z.set(Object.assign({}, sh, { x: 520 + i * 380, y: 980 + (i % 2) * 60, scale: 0.7, flip: i === 2, mouth: { open: 0.3, smile: -0.5 }, armL: [60, -20], armR: [70, -20] })); frost(z, 1); });
+        st.bob.set({ x: 1680, y: 1200, scale: 1.0, flip: true, look: [-0.8, 0], eyeScale: 1.1, browUp: 1, brow: -0.2, mouth: { open: 0.15, smile: 0.1, wide: 0.6 }, armL: [16, -20], armR: [16, -20], blink: TOON.blinkAt(lt, 3) });
+      } },
+    { // F: RULE #3 (ice)
+      t0: 39.4, setup(W, O) { freezer(W, 35); return { card: SH.ruleCard(O, 3, 'THE FREEZER<br>SLOWS THEM DOWN', true), W }; },
+      draw(lt, st) { SH.cam(st.W, lt, [[0, 960, 520, 1.12], [8.6, 960, 520, 1.18]]); st.card(lt, 0.2, 7.9); } },
+  ], { fades: [[47.4, 48, 0, 1]] });
+})();

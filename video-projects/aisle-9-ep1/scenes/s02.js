@@ -1,0 +1,95 @@
+// @scene s02 40 Beat 2 - The Normal Night
+(() => {
+  const S = STAGE, E = S.E, K = SH.k;
+  const BOBREST = { open: 0, smile: 0.05, wide: 0.9 };
+  SH.run('s02', 's02', 40, [
+    { // A: establishing - bright FreshMart aisle, 11:48 PM
+      t0: 0, setup(W, O) {
+        SH.aisle(W, { seed: 21, mood: 'day', kind: 'mixed', sign: 'AISLE 4\nSNACKS', backSign: 'FRESHMART', lip: '#F2B134' });
+        const cart = PROPS.cart(W, 0.55); const lbl = SH.label(O, '11:48 PM', 'font-size:72px;opacity:0');
+        return { cart, lbl };
+      },
+      draw(lt, st) {
+        SH.cam(st.cart.parentNode, lt, [[0, 960, 560, 1.0], [3.4, 960, 540, 1.12]]);
+        st.cart.set(1180, 830, 0.55); st.lbl.style.opacity = S.seg(lt, 0.4, 0.8);
+        st.lbl.textContent = '11:48 PM'.slice(0, Math.floor(S.seg(lt, 0.4, 1.2) * 8));
+      } },
+    { // B: Bob, deadpan at register 3, scanning
+      t0: 3.4, setup(W) {
+        SH.bokeh(W, { seed: 11, mood: 'day' });
+        const ctr = PROPS.counter(W, 380, 690, 1300);
+        const bob = SH.actor(W, 'bob');
+        const item = SH.div(W, 'left:0;top:0;width:110px;height:80px;border-radius:10px;background:linear-gradient(90deg,#E8382F,#FF8A3D);box-shadow:0 6px 0 rgba(0,0,0,.25)');
+        const front = PROPS.counterFront(W, 380, 760, 1300);
+        return { bob, item, W };
+      },
+      draw(lt, st) {
+        SH.cam(st.W, lt, [[0, 960, 540, 1.0], [8.6, 900, 500, 1.18]]);
+        const sc = (lt % 3.0) / 3.0, sweep = Math.sin(sc * Math.PI);
+        st.bob.set({ x: 820, y: 1190, scale: 1.12, lid: 0.42, brow: -0.2, look: [0.35 * sweep, 0.25], mouth: BOBREST,
+          armR: [30 + 50 * sweep, -60], armL: [20, -50], headTilt: 2 + Math.sin(lt * 0.6) * 2, blink: TOON.blinkAt(lt, 3.1), bob: Math.sin(lt * 1.5) * 2 });
+        st.item.style.transform = `translate(${S.lerp(560, 1180, S.seg(sc, 0.1, 0.9))}px, 690px)`;
+      } },
+    { // C: Tyler pushes the squeaky cart past register 3; Bob answers
+      t0: 12.0, setup(W) {
+        SH.bokeh(W, { seed: 12, mood: 'day' });
+        const ctr = PROPS.counter(W, 120, 660, 1100);
+        const bob = SH.actor(W, 'bob');
+        PROPS.counterFront(W, 120, 730, 1100);
+        const ty = SH.actor(W, 'tyler'); const cart = PROPS.cart(W, 0.95);
+        return { bob, ty, cart, W };
+      },
+      draw(lt, st, t) {
+        SH.cam(st.W, lt, [[0, 960, 540, 1.0], [10.6, 1000, 560, 1.06]]);
+        // Tyler enters from the right, stops to talk, then rolls on out to the left
+        const x = K(lt, [[0, 2300], [1.6, 1500, E.outCubic], [5.4, 1440], [8.2, 1440], [10.6, 500, E.inCubic]]);
+        const moving = lt < 1.6 || lt > 8.2;
+        const wk = moving ? SH.walk(lt, 1) : { legL: 0, legR: 0, armL: [10, -10], armR: [10, -10], bob: 0, lean: 0 };
+        st.cart.set(x - 560, 640, 0.95, false);
+        st.ty.set(Object.assign({}, wk, { x: x + 120, y: 1100, scale: 0.92, flip: true, armL: [60, -40], armR: [64, -44], look: [-0.7, 0],
+          mouth: SH.mouth(['t01'], { open: 0.1, smile: 0.7 }, { smile: 0.6 }), browUp: 0.5, blink: TOON.blinkAt(lt, 2.7, 1) }));
+        const lookT = S.clamp((1500 - x) / -800 + 0.6, -1, 1);
+        st.bob.set({ x: 560, y: 1150, scale: 1.05, lid: 0.4, brow: -0.25, look: [lookT, 0.1], headTilt: 4,
+          mouth: SH.mouth(['b01'], BOBREST, { smile: 0.0, amp: 0.6 }), armL: [16, -40], armR: [16, -40], blink: TOON.blinkAt(lt, 3.4, 2) });
+      } },
+    { // D: a customer fights the self-checkout and slaps the screen
+      t0: 22.6, setup(W) {
+        SH.aisle(W, { seed: 33, mood: 'day', kind: 'cereal', vx: 0.7, vignette: 0.35 });
+        const k = PROPS.kiosk(W, 980, 330);
+        const c = SH.actor(W, 'customer');
+        return { k, c, W };
+      },
+      draw(lt, st, t) {
+        SH.cam(st.W, lt, [[0, 1000, 560, 1.1], [5.2, 1060, 520, 1.22]], lt > 3.7 && lt < 4.6 ? 10 : 0);
+        const slap = lt > 3.7 && lt < 3.9 || lt > 4.2 && lt < 4.4;
+        st.k.flash(Math.floor(lt * 4) % 2 === 0);
+        st.c.set({ x: 760, y: 1110, scale: 0.98, look: [0.8, -0.1], brow: 0.8, browUp: 0.3,
+          mouth: lt > 3 ? { open: 0.35, smile: -0.6, wide: 0.8 } : { open: 0, smile: -0.5 },
+          armR: slap ? [115, -20] : [60 + Math.sin(lt * 6) * 10, -50], armL: [24, -60], lean: slap ? 6 : 2, blink: TOON.blinkAt(lt, 2.2) });
+      } },
+    { // E: slow pan to the customer service desk: the PA mic and the GARY ONLY note
+      t0: 27.8, setup(W) {
+        SH.bokeh(W, { seed: 44, mood: 'day' });
+        const d = PROPS.desk(W, 520, 560); PROPS.speaker(W, 1500, 40, 1.2);
+        return { W };
+      },
+      draw(lt, st) { SH.cam(st.W, lt, [[0, 760, 640, 1.0], [3.2, 1000, 680, 1.25], [7.0, 1300, 680, 2.1]]); } },
+    { // F: door chime; Mr. Halloran shuffles in with cat food and a lottery ticket
+      t0: 34.8, setup(W) {
+        SH.bokeh(W, { seed: 55, mood: 'day' });
+        const dr = PROPS.doors(W, 300, 130, 1300, 900);
+        const lot = SH.canvas(W, 1240, 860, 330, 150); PROPS.lot(lot, { seed: 3 }); W.insertBefore(lot, dr);
+        const h = SH.actor(W, 'halloran');
+        const can = PROPS.can(W, 'MEOW', '#F06EA9', 0.45);
+        const tk = SH.div(W, "left:0;top:0;width:90px;height:56px;border-radius:6px;background:linear-gradient(135deg,#FFE14D,#F2B134);font:900 16px/56px Inter;text-align:center;color:#7a1010", 'LOTTO');
+        return { h, can, tk, W };
+      },
+      draw(lt, st) {
+        SH.cam(st.W, lt, [[0, 960, 560, 1.0], [5.2, 900, 600, 1.12]]);
+        const x = K(lt, [[0, 960], [5.2, 640]], E.lin), wk = SH.walk(lt, 0.55, 0.45);
+        st.h.set(Object.assign({}, wk, { x, y: 1120, scale: 0.98, flip: true, lean: 6, armL: [30, -60], armR: [30, -70], headTilt: -4,
+          mouth: { open: 0, smile: 0.5 }, look: [-0.5, 0.1], blink: TOON.blinkAt(lt, 2.8), browUp: 0.3 }));
+        st.can.set(x + 70 + wk.bob * 0.2, 750 + wk.bob, 0.45); st.tk.style.transform = `translate(${x - 170}px, ${720 + wk.bob}px) rotate(-12deg)`;
+      } },
+  ], { fades: [[0, 0.3, 1, 0]] });
+})();

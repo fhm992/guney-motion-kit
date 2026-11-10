@@ -1,0 +1,14 @@
+{"length": 40, "cues": [
+ {"f": "assets/audio/sfx9/sub_hit.wav", "at": 0.3, "db": 6},
+ {"f": "assets/audio/bgm/warm_pads.wav", "bus": "music", "at": 3.4, "db": -4, "from": 8, "len": 15.6, "fi": 1.5, "fo": 0.05},
+ {"f": "assets/audio/vo/n20.mp3", "bus": "vo", "at": 4.0},
+ {"f": "assets/audio/vo/n21.mp3", "bus": "vo", "at": 12.5},
+ {"f": "assets/audio/sfx9/pop_top.wav", "at": 19.2, "db": 8},
+ {"f": "assets/audio/sfx9/heartbeat_loop.wav", "at": 20.2, "db": -4, "len": 9, "fo": 1.0},
+ {"f": "assets/audio/sfx9/moan.wav", "at": 22.4, "db": -2, "pan": -0.4},
+ {"f": "assets/audio/sfx9/moan.wav", "at": 24.4, "db": -4, "pan": 0.4},
+ {"f": "assets/audio/vo/b13.mp3", "bus": "vo", "at": 26.6},
+ {"f": "assets/audio/bgm/chase.wav", "bus": "music", "at": 29.4, "db": 0, "len": 10.6, "fi": 0.3, "fo": 0.05},
+ {"f": "assets/audio/vo/n22.mp3", "bus": "vo", "at": 31.0},
+ {"f": "assets/audio/sfx9/whoosh.wav", "at": 36.6, "db": 0}
+], "duck": [[4.0, 11.4, -4], [12.5, 18.3, -4], [31.0, 34.0, -6]]}

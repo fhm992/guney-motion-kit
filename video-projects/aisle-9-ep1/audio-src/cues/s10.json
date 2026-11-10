@@ -1,0 +1,19 @@
+{"length": 48, "cues": [
+ {"f": "assets/audio/bgm/chase.wav", "bus": "music", "at": 0.0, "db": 0, "from": 10.6, "len": 9.6, "fi": 0.05, "fo": 0.4},
+ {"f": "assets/audio/sfx9/stampede.wav", "at": 0.0, "db": -4, "len": 9.4, "fo": 1.0},
+ {"f": "assets/audio/vo/n23.mp3", "bus": "vo", "at": 0.6},
+ {"f": "assets/audio/sfx9/crash.wav", "at": 5.2, "db": -4},
+ {"f": "assets/audio/bgm/icy.wav", "bus": "music", "at": 9.5, "db": -1, "len": 38.5, "fi": 0.6, "fo": 2.0},
+ {"f": "assets/audio/sfx9/fridge_hum.wav", "at": 9.5, "db": -2, "len": 6, "fo": 1},
+ {"f": "assets/audio/sfx9/fridge_hum.wav", "at": 15.0, "db": -2, "len": 6, "fi": 1, "fo": 1},
+ {"f": "assets/audio/sfx9/mist_hiss.wav", "at": 9.6, "db": 0},
+ {"f": "assets/audio/sfx9/mist_hiss.wav", "at": 22.0, "db": -2},
+ {"f": "assets/audio/vo/n24.mp3", "bus": "vo", "at": 11.0},
+ {"f": "assets/audio/sfx9/moans_layered.wav", "at": 16.0, "db": -6, "len": 8, "fo": 2},
+ {"f": "assets/audio/vo/b14.mp3", "bus": "vo", "at": 19.4},
+ {"f": "assets/audio/sfx9/moan.wav", "at": 24.0, "db": 0, "lp": 700},
+ {"f": "assets/audio/sfx9/moan.wav", "at": 26.6, "db": -2, "lp": 600},
+ {"f": "assets/audio/sfx9/whoosh.wav", "at": 27.8, "db": -4, "lp": 1200},
+ {"f": "assets/audio/vo/n25.mp3", "bus": "vo", "at": 32.0},
+ {"f": "assets/audio/sfx9/stamp_ice.wav", "at": 39.6, "db": 2}
+], "duck": [[0.6, 4.2, -6], [11.0, 15.4, -4], [19.4, 22.6, -4], [32.0, 38.2, -4]]}

@@ -1,0 +1,84 @@
+// @scene s06 56 Beat 6 - Day 2, The Bad Idea
+(() => {
+  const S = STAGE, E = S.E, K = SH.k;
+  const grayAisle = (W, seed, o = {}) => SH.aisle(W, Object.assign({ seed, mood: 'gray', kind: 'mixed' }, o));
+  SH.run('s06', 's06', 56, [
+    { t0: 0, setup(W, O) { return { card: SH.dayCard(O, 'DAY 2') }; }, draw(lt, st) { st.card(lt, 0.3); } },
+    { // B: hollow-eyed, lips cracked, staring at an empty water bottle
+      t0: 3.6, setup(W) {
+        const c = SH.canvas(W); PROPS.stockroom(c, { seed: 15 });
+        const bob = SH.actor(W, 'bob');
+        const bottle = SH.div(W, 'left:0;top:0;width:90px;height:220px', `<svg viewBox="0 0 90 220" width="90" height="220"><rect x="30" y="0" width="30" height="24" rx="6" fill="#2F7BE8"/><path d="M 22 30 Q 45 18 68 30 L 80 60 L 80 210 Q 45 224 10 210 L 10 60 Z" fill="rgba(200,230,255,.35)" stroke="rgba(255,255,255,.7)" stroke-width="4"/><rect x="10" y="100" width="70" height="50" fill="#5FA8FF" opacity=".8"/></svg>`);
+        const tint = SH.div(W, 'left:-200px;top:-200px;width:2400px;height:1500px;background:#5a6a80;mix-blend-mode:multiply;opacity:.45');
+        return { bob, bottle, W };
+      },
+      draw(lt, st) {
+        SH.cam(st.W, lt, [[0, 960, 600, 1.0], [11.6, 960, 470, 1.5]]);
+        const tilt = Math.sin(lt * 0.8) * 10;
+        st.bob.set({ x: 960, y: 1260, scale: 1.0, lid: 0.55, look: [0.2, 0.6], browUp: 0.2, brow: 0.3, mouth: { open: 0, smile: -0.5, wide: 0.6 }, armR: [-10, -150], armL: [10, -20], headTilt: -4, blink: TOON.blinkAt(lt, 4.5) });
+        st.bottle.style.transform = `translate(1000px, 560px) rotate(${150 + tilt}deg)`;
+      } },
+    { // C: crouch-walk through the dim aisles toward customer service
+      t0: 15.2, setup(W) { grayAisle(W, 91, { vx: 0.6 }); const bob = SH.actor(W, 'bob'); const z = SH.actor(W, 'zShopper'); return { bob, z, W }; },
+      draw(lt, st) {
+        const x = K(lt, [[0, 300], [5.8, 1500]], E.lin);
+        SH.cam(st.W, lt, [[0, 600, 560, 1.0], [5.8, 1200, 560, 1.0]]);
+        const wk = SH.walk(lt, 0.6, 0.5);
+        st.bob.set(Object.assign({}, wk, { x, y: 1180, scale: 0.9, lean: 16, look: [0.9, 0], browUp: 0.7, brow: 0.6, mouth: { open: 0, smile: -0.6, wide: 0.6 }, armL: [40, -40], armR: [40, -40] }));
+        const z = SH.shamble(lt, 2, 0.4); st.z.set(Object.assign({}, z, { x: 1700, y: 960, scale: 0.6, flip: true, mouth: { open: 0.3, smile: -0.5 } })); st.z.svg.style.filter = 'blur(2px) brightness(.7)';
+      } },
+    { // D: at the desk. GARY ONLY. "Okay. Rational thinking..." / "Quiet. On a PA system." / "...I'll make it fast."
+      t0: 21.0, setup(W) {
+        SH.bokeh(W, { seed: 92, mood: 'gray' }); const d = PROPS.desk(W, 620, 560); const bob = SH.actor(W, 'bob');
+        return { bob, d, W };
+      },
+      draw(lt, st, t) {
+        SH.cam(st.W, lt, [[0, 1000, 560, 1.05], [4.4, 1200, 620, 1.35], [7.6, 1000, 560, 1.15]]);
+        const atCam = SH.speaking('b09') || (t > 27.6 && t < 30.4);
+        st.bob.set({ x: 640, y: 1180, scale: 1.0, look: atCam ? [0, 0] : [0.8, 0.3], lid: SH.speaking('n14') ? 0.35 : 0.2, browUp: SH.speaking('n14') ? 0 : 0.8, brow: SH.speaking('n14') ? -0.4 : 0.4,
+          mouth: SH.mouth(['b08', 'b09'], { open: 0, smile: -0.3, wide: 0.7 }, { smile: -0.1, amp: 0.45, wide: 0.75 }), armR: [50, -40], armL: [20, -40], headTilt: atCam ? -8 : 4, blink: TOON.blinkAt(lt, 3.0) });
+      } },
+    { // E: his finger hovers over the button... and presses
+      t0: 30.4, setup(W) {
+        SH.bokeh(W, { seed: 93, mood: 'gray' }); const d = PROPS.desk(W, 120, 400);
+        const hand = SH.div(W, 'left:0;top:0;width:160px;height:200px', `<svg viewBox="0 0 160 200" width="160" height="200" style="overflow:visible"><defs><radialGradient id="fh" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#555"/><stop offset=".6" stop-color="#161616"/><stop offset="1" stop-color="#000"/></radialGradient></defs>
+          <rect x="30" y="-420" width="100" height="440" rx="44" fill="#E8382F"/><rect x="26" y="-10" width="108" height="34" rx="14" fill="#c42a22"/><ellipse cx="80" cy="60" rx="58" ry="56" fill="url(#fh)"/><rect x="66" y="80" width="28" height="100" rx="14" fill="url(#fh)"/><rect x="118" y="30" width="26" height="60" rx="13" fill="url(#fh)" transform="rotate(30 130 60)"/><ellipse cx="62" cy="40" rx="16" ry="9" fill="#fff" opacity=".15"/></svg>`);
+        return { d, hand, W };
+      },
+      draw(lt, st) {
+        SH.cam(st.W, lt, [[0, 720, 400, 1.5], [3.9, 720, 420, 1.65]]);
+        const press = S.seg(lt, 3.3, 3.45), hover = Math.sin(lt * 7) * 4 * (1 - press);
+        st.hand.style.transform = `translate(${645 + hover}px, ${S.lerp(290, 392, press) + Math.sin(lt * 3) * 6 * (1 - press)}px)`;
+        st.d.press(lt > 3.4);
+      } },
+    { // F: in the dark aisles, every shopper's head slowly rises
+      t0: 34.3, setup(W) {
+        grayAisle(W, 94, { mood: 'night' });
+        const zs = ['zPajama', 'zBasketW', 'zShopper', 'zHalloran'].map((k) => SH.actor(W, k)); PROPS.speaker(W, 880, 30, 1.0);
+        return { zs, W };
+      },
+      draw(lt, st) {
+        SH.cam(st.W, lt, [[0, 960, 600, 1.0], [6, 960, 520, 1.12]]);
+        const pos = [[520, 1080, 0.86], [1420, 1060, 0.8], [880, 930, 0.58], [1180, 900, 0.5]];
+        st.zs.forEach((z, i) => { const [x, y, s] = pos[i]; const rise = E.inOutCubic(S.seg(lt, 0.6 + i * 0.6, 3.0 + i * 0.6));
+          z.set({ x, y, scale: s, flip: i % 2 === 1, headTilt: S.lerp(i % 2 ? 26 : -26, 0, rise), headY: S.lerp(30, 0, rise), look: [0, S.lerp(0.6, -0.9, rise)], mouth: { open: 0.3, smile: -0.5 }, lean: 3, armL: [16, -10], armR: [16, -10] }); });
+      } },
+    { // G: Bob at the mic, shaky - then his voice booms back through every speaker
+      t0: 40.3, setup(W, O) {
+        SH.bokeh(W, { seed: 95, mood: 'gray' }); const d = PROPS.desk(W, 620, 560); const bob = SH.actor(W, 'bob');
+        const sp = SH.div(O, 'inset:0;background:#0b0d14;opacity:0'); const spk = [[300, 200], [960, 140], [1620, 220]].map(([x, y]) => PROPS.speaker(sp, x - 80, y, 1.4));
+        const rings = SH.rings(sp, '#7FD3FF'); const rings2 = SH.rings(sp, '#7FD3FF'); const rings3 = SH.rings(sp, '#7FD3FF');
+        const txt = SH.div(sp, "left:0;right:0;top:640px;text-align:center;font:900 120px/1 'Basement Grotesque';color:#7FD3FF;letter-spacing:.06em;opacity:0", '...HELP...');
+        return { bob, sp, rings, rings2, rings3, txt, W };
+      },
+      draw(lt, st, t) {
+        SH.cam(st.W, lt, [[0, 900, 520, 1.25], [7.4, 820, 470, 1.55]], lt < 7.4 ? 3 : 0);
+        st.bob.set({ x: 640, y: 1180, scale: 1.0, look: [0.7, 0.2], browUp: 1, brow: 0.6, eyeScale: 1.05, mouth: SH.mouth(['b10'], { open: 0, smile: -0.5, wide: 0.6 }, { smile: -0.3, amp: 0.7 }),
+          armR: [70, -60], armL: [20, -40], headTilt: 6, bob: Math.sin(lt * 18) * 2 });
+        const e = lt - 7.3; st.sp.style.opacity = e > 0 ? 1 : 0;
+        st.rings(lt, 7.3, 300, 300, 1200, 1.1, 2.0); st.rings2(lt, 7.35, 960, 240, 1400, 1.1, 2.0); st.rings3(lt, 7.4, 1620, 320, 1200, 1.1, 2.0);
+        st.txt.style.opacity = e > 0 ? Math.max(0, 1 - ((e % 1.1) / 1.1)) * Math.max(0, 1 - e / 6) : 0;
+        st.txt.style.transform = `scale(${1 + (e % 1.1) * 0.3})`;
+      } },
+  ], { fades: [[55.2, 56, 0, 1]] });
+})();

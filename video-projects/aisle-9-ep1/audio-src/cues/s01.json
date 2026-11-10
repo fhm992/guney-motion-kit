@@ -1,0 +1,8 @@
+{"length": 10, "cues": [
+ {"f": "assets/audio/sfx9/fridge_hum.wav", "at": 0.0, "db": -10, "len": 8.25, "fi": 0.6, "fo": 0.02},
+ {"f": "assets/audio/bgm/drone.wav", "bus": "music", "at": 2.0, "db": -6, "len": 6.25, "fi": 1.5, "fo": 0.02},
+ {"f": "assets/audio/sfx9/breath_wet.wav", "at": 2.1, "db": -9, "len": 6.15, "fi": 0.3, "fo": 0.02},
+ {"f": "assets/audio/sfx9/moan.wav", "at": 5.6, "db": -20, "pan": 0.5, "fo": 0.3},
+ {"f": "assets/audio/vo/n01.mp3", "bus": "vo", "at": 2.6, "db": 0},
+ {"f": "assets/audio/sfx9/sub_hit.wav", "at": 8.27, "db": -1}
+], "duck": [[2.6, 8.2, -5]]}

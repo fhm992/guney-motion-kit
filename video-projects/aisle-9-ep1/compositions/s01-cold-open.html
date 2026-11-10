@@ -1,0 +1,75 @@
+<!doctype html>
+<!-- BEAT 1: COLD OPEN (0:00-0:10). Black + fridge hum -> extreme close-up of Bob's wide eye -> pull back: Bob frozen
+     mid-aisle, hand on a shelf, a Shopper swaying six feet away under flickering emergency light -> smash to black, DAY 1. -->
+<html lang="en"><head><meta charset="utf-8"><title>Cold open</title>
+<script src="assets/gsap.min.js"></script><script src="assets/stage.js"></script>
+<script src="assets/env.js"></script><script src="assets/toon.js"></script><script src="assets/cast.js"></script>
+<link rel="stylesheet" href="assets/fonts.css">
+<style>
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
+#world{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+#bg{position:absolute;left:-160px;top:-90px;width:2240px;height:1260px}
+#flick{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,40,30,.25),rgba(30,0,0,.6) 80%);pointer-events:none}
+.drop{position:absolute;width:22px;height:30px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
+ background:radial-gradient(circle at 35% 35%,#fff 0 18%,rgba(200,230,255,.85) 30%,rgba(120,170,220,.5) 70%,rgba(80,120,170,.2));transform-origin:50% 0}
+#black{position:absolute;inset:0;background:#000}
+#day{position:absolute;left:0;right:0;top:420px;text-align:center;font:900 220px/1 'Basement Grotesque';color:#fff;letter-spacing:.04em;opacity:0}
+#grain{position:absolute;inset:0;opacity:.06;background-image:repeating-radial-gradient(circle at 17% 32%,#fff 0 1px,transparent 1px 3px);mix-blend-mode:overlay}
+</style></head><body>
+<div id="root" data-composition-id="s01" data-start="0" data-duration="10" data-width="1920" data-height="1080">
+ <div id="world" class="clip" data-start="0" data-duration="10" data-track-index="0">
+  <canvas id="bg" width="2240" height="1260"></canvas>
+  <div id="actors"></div>
+  <div id="sweat"></div>
+ </div>
+ <div id="flick" class="clip" data-start="0" data-duration="10" data-track-index="1"></div>
+ <div id="grain" class="clip" data-start="0" data-duration="10" data-track-index="2"></div>
+ <div id="black" class="clip" data-start="0" data-duration="10" data-track-index="3"></div>
+ <div id="day" class="clip" data-start="0" data-duration="10" data-track-index="4">DAY 1</div>
+</div>
+<script>
+(() => {
+  const S = STAGE, E = S.E, $ = (id) => document.getElementById(id);
+  ENV.aisle($('bg'), { seed: 14, mood: 'red', kind: 'mixed', sign: 'AISLE 4\nSNACKS', signColor: '#6a0e0e', vx: 0.55 });
+  const zed = TOON.make($('actors'), CAST.zShopper);
+  const bob = TOON.make($('actors'), CAST.bob);
+  const BX = 600, BY = 1110, BS = 0.95;               // Bob's feet and scale
+  const EYE = [BX + 66 * BS, BY + (170 - 880) * BS];  // her right eye on screen (wide shot)
+  // sweat drops near her temple, in world space
+  const drops = [[BX + 150 * BS, BY + (120 - 880) * BS, 0.0], [BX - 140 * BS, BY + (150 - 880) * BS, 1.3], [BX + 120 * BS, BY + (60 - 880) * BS, 2.6]].map(([x, y, ph]) => {
+    const d = document.createElement('div'); d.className = 'drop'; d.style.left = x + 'px'; d.style.top = y + 'px'; $('sweat').appendChild(d); return { d, x, y, ph };
+  });
+  const CUT = 8.25;
+  const tl = S.driver(10, (t) => {
+    // ---- camera: hold an extreme close-up on the eye, then pull back to the wide shot
+    const u = E.inOutCubic(S.seg(t, 3.6, 7.6));
+    const zoom = S.lerp(6.2, 1, u) * (1 + 0.004 * Math.sin(t * 1.7));
+    const fx = S.lerp(EYE[0], 960, u), fy = S.lerp(EYE[1], 560, u);
+    const shake = 2 * Math.sin(t * 23) * S.seg(t, 2, 3.6) * (1 - u);
+    $('world').style.transform = `translate(${960 - fx * zoom + shake}px, ${540 - fy * zoom}px) scale(${zoom})`;
+    $('bg').style.filter = `blur(${S.lerp(14, 2.5, u)}px)`;
+    // ---- Bob: frozen, wide sweaty eye, tiny pupils, darting only a fraction toward the Shopper
+    const dart = t > 4.8 && t < 5.3 ? 0.15 : 0;
+    bob.set({ x: BX, y: BY, scale: BS, lean: -2, look: [0.75 + dart, -0.05 + 0.02 * Math.sin(t * 40)], pupil: 0.55, eyeScale: 1.12, browUp: 1, brow: 0.3,
+      mouth: { open: 0, smile: -0.9, wide: 0.5 }, armL: [72, 18], armR: [12, -28], headTilt: 2, bob: 0.6 * Math.sin(t * 9) });
+    // ---- the Shopper six feet away: slow sway, head lolling, not looking at anything
+    const sw = Math.sin(t * 1.1), sw2 = Math.sin(t * 0.7 + 1);
+    zed.set({ x: 1340, y: 1080, scale: 0.92, flip: true, lean: -3 + sw * 4, headTilt: -16 + sw2 * 8, headX: sw * 6, look: [0, 0.2],
+      mouth: { open: 0.35 + 0.1 * Math.sin(t * 2.3), smile: -0.6 }, armL: [14 + sw * 5, -18], armR: [10 - sw * 5, -10], shadow: 0.5 });
+    // ---- sweat slides down
+    drops.forEach(({ d, x, y, ph }) => { const k = ((t + ph) % 3.9) / 3.9; d.style.transform = `translate(0, ${k * 46}px) scale(${0.7 + k * 0.3})`; d.style.opacity = Math.sin(k * Math.PI); });
+    // ---- emergency light flicker (deterministic): mostly steady, stutters now and then
+    const fl = S.hash(Math.floor(t * 14)), stutter = fl > 0.86 ? 0.55 : fl > 0.8 ? 0.8 : 1;
+    $('flick').style.opacity = 0.95 - 0.35 * stutter;
+    $('actors').style.filter = `brightness(${0.75 + 0.35 * stutter}) saturate(.9)`;
+    // ---- black: hold 0-2 (fridge hum), fade up from black, smash cut to black at CUT
+    $('black').style.opacity = t < 2 ? 1 : t < CUT ? 1 - E.outCubic(S.seg(t, 2, 2.7)) : 1;
+    // ---- DAY 1 slams in
+    const d = t - CUT - 0.05;
+    $('day').style.opacity = d > 0 ? 1 : 0;
+    const sc = d > 0 ? 1 + 0.5 * Math.exp(-d * 18) : 1.5, jit = d > 0 && d < 0.25 ? (S.hash(Math.floor(t * 60)) - 0.5) * 14 : 0;
+    $('day').style.transform = `translate(${jit}px, 0) scale(${sc})`;
+  });
+  window.__timelines = window.__timelines || {}; window.__timelines['s01'] = tl;
+})();
+</script></body></html>

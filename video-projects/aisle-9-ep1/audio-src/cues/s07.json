@@ -1,0 +1,21 @@
+{"length": 52, "cues": [
+ {"f": "assets/audio/sfx9/shriek.wav", "at": 1.4, "db": 6},
+ {"f": "assets/audio/sfx9/stampede.wav", "at": 2.4, "db": 2},
+ {"f": "assets/audio/sfx9/stampede.wav", "at": 12.2, "db": 0},
+ {"f": "assets/audio/bgm/chase.wav", "bus": "music", "at": 3.0, "db": 0, "len": 25.0, "fi": 0.05, "fo": 0.6},
+ {"f": "assets/audio/vo/b11.mp3", "bus": "vo", "at": 6.2},
+ {"f": "assets/audio/sfx9/whoosh.wav", "at": 8.6, "db": 0},
+ {"f": "assets/audio/sfx9/crash.wav", "at": 9.2, "db": 0},
+ {"f": "assets/audio/sfx9/whoosh.wav", "at": 10.6, "db": -2},
+ {"f": "assets/audio/sfx9/crash2.wav", "at": 14.6, "db": 2},
+ {"f": "assets/audio/sfx9/breath_wet.wav", "at": 17.0, "db": -6, "len": 6, "fo": 1.0},
+ {"f": "assets/audio/vo/n15.mp3", "bus": "vo", "at": 18.0},
+ {"f": "assets/audio/sfx9/crash.wav", "at": 24.0, "db": -2},
+ {"f": "assets/audio/sfx9/help_echo.wav", "bus": "vo", "at": 28.0, "db": -4},
+ {"f": "assets/audio/bgm/drone.wav", "bus": "music", "at": 28.0, "db": -4, "len": 16, "fi": 0.5, "fo": 1.0},
+ {"f": "assets/audio/vo/n16.mp3", "bus": "vo", "at": 29.6},
+ {"f": "assets/audio/sfx9/help_echo.wav", "bus": "vo", "at": 34.4, "db": -12},
+ {"f": "assets/audio/sfx9/heartbeat_loop.wav", "at": 36.0, "db": -8, "len": 6.6, "fo": 0.5},
+ {"f": "assets/audio/sfx9/whoosh.wav", "at": 42.4, "db": 0},
+ {"f": "assets/audio/sfx9/stamp.wav", "at": 43.6, "db": 2}
+], "duck": [[6.2, 8.6, -5], [18.0, 22.8, -6], [29.6, 34.0, -4]]}
