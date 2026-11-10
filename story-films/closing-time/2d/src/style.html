@@ -1,0 +1,42 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../assets/fonts.css">
+<style>html,body{margin:0;background:#000}svg{display:block}</style><script src="../assets/toon.js"></script></head>
+<body><svg id="s" width="1920" height="1080" viewBox="0 0 1920 1080"></svg>
+<script>
+const T = TOON, svg = document.getElementById('s'); T.defs(svg);
+const g = (html) => { const e = T.el('g', {}, svg); e.innerHTML = html; return e; };
+const n = +new URLSearchParams(location.search).get('f');
+if (n === 1) { // the till: Sami behind register 2, man's shoulder in foreground
+  g(`<g transform="translate(960,560) scale(1.12) translate(-960,-560)">${T.aisle({ light: 'bright', vx: 1180, vy: 430, seed: 4 })}</g>`);
+  g(`<rect width="1920" height="1080" fill="#fff6e0" opacity="0.12"/>`);
+  const sami = T.char(svg, { who: 'sami', s: 1.55, x: 1180, y: 1060 }); sami.pose({ mood: 'calm', look: [-0.5, 0.2], arms: [[24, -70], [-24, 70]] });
+  g(`<path d="M640,1080 L690,900 L1730,900 L1780,1080Z" fill="#3a434e" stroke="${T.INK}" stroke-width="8"/><path d="M690,900 L1730,900 L1738,930 L682,930Z" fill="#5a6672" stroke="${T.INK}" stroke-width="6"/><rect x="760" y="930" width="700" height="40" fill="#1c1f24"/>
+  <g transform="translate(1540,790) rotate(-8)"><rect x="-90" y="-80" width="180" height="120" rx="10" fill="#262b31" stroke="${T.INK}" stroke-width="7"/><rect x="-76" y="-66" width="152" height="92" rx="6" fill="#06200f"/><text x="0" y="-26" font-family="JetBrains Mono" font-weight="700" font-size="26" fill="#7dff9e" text-anchor="middle" filter="url(#glow)">ICE 10LB</text><text x="0" y="14" font-family="JetBrains Mono" font-weight="700" font-size="34" fill="#7dff9e" text-anchor="middle" filter="url(#glow)">$3.49</text><rect x="-14" y="40" width="28" height="70" fill="#262b31" stroke="${T.INK}" stroke-width="6"/></g>
+  <g transform="translate(860,872)"><path d="M0,30 C-8,-40 30,-70 110,-72 C190,-70 230,-40 222,30Z" fill="#dff1ff" stroke="${T.INK}" stroke-width="7"/><path d="M30,-30 q80,-40 160,0" stroke="#fff" stroke-width="10" fill="none" opacity="0.8"/><text x="111" y="8" font-family="Anton" font-size="46" fill="#3d7ad6" text-anchor="middle">ICE</text></g>
+  <g filter="url(#soft6)"><path d="M-40,1080 L-40,560 C80,470 330,470 470,600 L600,1080Z" fill="#232a24" stroke="${T.INK}" stroke-width="10"/><circle cx="220" cy="410" r="210" fill="#1a1a1e" stroke="${T.INK}" stroke-width="10"/><path d="M60,330 L120,220 L170,300 L230,200 L280,300 L340,230 L380,340" fill="#2a241e" stroke="${T.INK}" stroke-width="10"/></g>`);
+}
+if (n === 2) { // through the window: man kneeling under the lamp, Sami in the foreground
+  g(T.nightSky({ h: 760, moon: [1480, 170], seed: 3 }) + T.skyline(560, { seed: 7, lit: 0.1, hMax: 260 }) + `<rect y="560" width="1920" height="520" fill="#1e232b"/>` + `<g opacity="0.5">${[0, 1, 2, 3, 4, 5, 6].map((i) => `<line x1="${200 + i * 250}" y1="720" x2="${-200 + i * 330}" y2="1080" stroke="#d8d4c0" stroke-width="5"/>`).join('')}</g>` + T.lamp(1080, 780, 420) + T.car(440, 760, 0.62, '#3e4a5c') + T.car(1660, 790, 0.7, '#7a2a2a', { flip: true }));
+  const man = T.char(svg, { who: 'man', s: 0.5, x: 1150, y: 790, back: true }); man.pose({ crouch: 1, lean: 6, arms: [[30, -40], [-30, 40]] });
+  g(`<g transform="translate(1250,782)"><path d="M0,10 C-2,-14 10,-24 30,-24 C50,-24 62,-14 60,10Z" fill="#dff1ff" stroke="${T.INK}" stroke-width="4"/></g>`);
+  g(`<rect width="1920" height="1080" fill="#a8d0ff" opacity="0.05"/>` + [0, 1, 2, 3, 4, 5, 6].map((i) => `<rect x="${i * 320 - 14}" y="0" width="28" height="1080" fill="#2a2f37" stroke="${T.INK}" stroke-width="6"/>`).join('') + `<rect x="0" y="240" width="1920" height="22" fill="#2a2f37" stroke="${T.INK}" stroke-width="6"/><path d="M0,930 L1920,930 L1920,1080 L0,1080Z" fill="#d6dade" stroke="${T.INK}" stroke-width="6"/><ellipse cx="560" cy="1000" rx="500" ry="40" fill="#ffffff" opacity="0.4"/>`);
+  const sami = T.char(svg, { who: 'sami', s: 1.25, x: 560, y: 1180, back: true }); sami.pose({ arms: [[10, -6], [-10, 6]] });
+  g(`<rect x="0" y="0" width="1920" height="1080" fill="url(#vig)" opacity="0.6"/>`);
+}
+if (n === 3) { // the horde at the shutter
+  g(T.nightSky({ h: 760, moon: [300, 150], seed: 9, clouds: 7 }) + T.skyline(420, { seed: 3, lit: 0.04, hMax: 200 }) + `<rect y="410" width="1920" height="670" fill="#1b2027"/>`);
+  g(`<rect x="300" y="190" width="1320" height="420" fill="#454b55" stroke="${T.INK}" stroke-width="8"/><rect x="290" y="170" width="1340" height="34" fill="#2c3038" stroke="${T.INK}" stroke-width="7"/><rect x="660" y="214" width="600" height="96" rx="10" fill="#1d2026" stroke="${T.INK}" stroke-width="7"/><text x="960" y="288" font-family="Anton" font-size="74" fill="#ff5a3a" text-anchor="middle" letter-spacing="6" filter="url(#glow)">FRESHWAY MARKET</text>` + T.shutter(340, 330, 1240, 280) + T.lamp(140, 900, 520) + T.lamp(1700, 900, 520));
+  const r = T.R(11); const list = []; for (let i = 0; i < 70; i++) { const tt = Math.pow(r(), 1.3); list.push({ x: 300 + r() * 1320, y: 620 + tt * 430, s: 0.32 + tt * 0.55, d: r() > 0.5 ? 1 : -1, ph: r() * 6 }); }
+  list.sort((a, b) => a.y - b.y).forEach((z, i) => { const c = T.char(svg, { who: 'zombie', s: z.s, x: z.x, y: z.y, zhair: i % 4 === 0 ? 1 : 0 }); c.pose({ arms: T.ZOMBIE_ARMS(z.ph, z.ph), lean: -6 * z.d, flip: z.d < 0, look: [z.d * 0.3, -0.4], head: Math.sin(z.ph) * 10 }); });
+  g(`<rect width="1920" height="1080" fill="#2a3a66" opacity="0.18"/><rect y="620" width="1920" height="460" fill="url(#vig)" opacity="0.4"/>`);
+}
+if (n === 4) { // red stockroom: Davis turns
+  let s = `<rect width="1920" height="1080" fill="#3a1212"/>`; const r = T.R(5);
+  for (let k = 0; k < 5; k++) { const x = -60 + k * 420; s += `<rect x="${x}" y="120" width="340" height="820" fill="#2a0c0c" stroke="${T.INK}" stroke-width="6"/>`; for (let l = 0; l < 4; l++) { s += `<rect x="${x}" y="${300 + l * 190}" width="340" height="14" fill="#a8582a" stroke="${T.INK}" stroke-width="5"/>`; for (let b = 0; b < 3; b++) { const w = 80 + r() * 30, h = 70 + r() * 50; s += `<rect x="${x + 14 + b * 108}" y="${300 + l * 190 - h}" width="${w}" height="${h}" fill="#8a5a36" stroke="${T.INK}" stroke-width="5"/><rect x="${x + 14 + b * 108}" y="${300 + l * 190 - h + h * 0.4}" width="${w}" height="12" fill="#c49a62"/>`; } } }
+  s += `<rect x="700" y="160" width="520" height="780" fill="#8d99a4" stroke="${T.INK}" stroke-width="8"/><rect x="730" y="190" width="460" height="750" fill="#b8c4ce" stroke="${T.INK}" stroke-width="6"/><rect x="1140" y="520" width="26" height="140" rx="10" fill="#59626b" stroke="${T.INK}" stroke-width="5"/>`;
+  s += `<rect y="940" width="1920" height="140" fill="#220909"/><ellipse cx="960" cy="40" rx="900" ry="420" fill="url(#redlamp)"/><rect x="900" y="40" width="120" height="30" rx="8" fill="#ff5a3a" stroke="${T.INK}" stroke-width="5" filter="url(#glow)"/>`;
+  g(`<g transform="rotate(-9 960 540)">${s}</g>`);
+  const d = T.char(svg, { who: 'davis', zombie: true, s: 2.3, x: 960, y: 1420 }); d.pose({ mood: 'angry', talk: 0.9, arms: [[-120, -20], [-60, -30]], head: -8, look: [0.1, -0.2], lean: -6 });
+  g(`<rect width="1920" height="1080" fill="#ff2a1a" opacity="0.16"/>`);
+}
+g(T.vignette());
+</script></body></html>
