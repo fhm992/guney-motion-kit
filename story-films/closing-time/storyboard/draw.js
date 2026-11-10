@@ -134,7 +134,8 @@ function person(o) {
   const pants = zombie ? '#232323' : (L.pants || '#121212');
   const shoes = zombie ? '#4f7d2c' : L.shoes;
   let legs = '';
-  const legA = { stand: [4, -4], run: [32 * dir, -38 * dir], crouch: [40, -40], sit: [-80 * dir, -72 * dir], walk: [14, -14] }[pose] || [4, -4];
+  let legA = { stand: [4, -4], run: [32 * dir, -38 * dir], crouch: [40, -40], sit: [-80 * dir, -72 * dir], walk: [14, -14] }[pose] || [4, -4];
+  if (o.phase !== undefined && (pose === 'run' || pose === 'walk')) { const amp = pose === 'run' ? 40 : 22; legA = [Math.sin(o.phase) * amp, -Math.sin(o.phase) * amp]; }
   const legCol = L.skirt ? '#151515' : pants;
   legs += limb(-0.05 * Hh, hipY, legA[0], legL * (pose === 'crouch' ? 0.75 : 1), legW, legCol, true, legW * 0.6, shoes);
   legs += limb(0.05 * Hh, hipY, legA[1], legL * (pose === 'crouch' ? 0.75 : 1), legW, legCol, true, legW * 0.6, shoes);
@@ -150,6 +151,8 @@ function person(o) {
   const sy = ty + 0.06 * Hh;
   let armA = { stand: [12, -12], run: [-70 * dir, 55 * dir], crouch: [-30, 30], sit: [-20, 20], reach: [-95 * dir, -80 * dir], up: [160, -160], hold: [-40, 40], walk: [10, -10] }[o.arms || pose] || [12, -12];
   if (zombie && !o.arms) armA = [-100 * dir, -78 * dir];
+  if (o.phase !== undefined && (pose === 'run' || pose === 'walk') && !o.arms) { const amp = pose === 'run' ? 55 : 18; armA = [-Math.sin(o.phase) * amp, Math.sin(o.phase) * amp]; }
+  if (o.phase !== undefined && zombie) { armA = [armA[0] + Math.sin(o.phase) * 10, armA[1] - Math.sin(o.phase) * 10]; }
   const hand = zombie ? '#4f7d2c' : '#141414';
   const armW = 0.075 * Hh, armL = 0.3 * Hh;
   const arms = limb(-0.14 * Hh, sy, armA[0], armL, armW, shirt, true, armW * 0.62, hand) + limb(0.14 * Hh, sy, armA[1], armL, armW, shirt, true, armW * 0.62, hand);

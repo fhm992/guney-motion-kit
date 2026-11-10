@@ -308,3 +308,5 @@ window.renderShot = async (S) => {
   return url;
 };
 window.ready = true;
+
+export { THREE, renderer, market, storeExterior, carPark, skyline, stockroom, city, actor, miniHorde, lampPost, carMesh, van, fire, mist, lightCone, TX, svgTex, rng, std, emis, box, add, canvasTex, nightSky, C };
