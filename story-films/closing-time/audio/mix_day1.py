@@ -19,17 +19,17 @@ N = int(TOTAL * SR) + SR
 
 # voice lines: (start, speaker, text, file or None, estimated seconds if missing)
 LINES = [
-    (2.6, 'N', 'The last thing you ever sell... is a bag of ice. Three forty-nine. Register two. Eleven fifty-two p.m.', None, 7.6),
-    (10.6, 'N', "He pays in cash, with his left hand. He doesn't wait for his change.", None, 5.0),
-    (17.3, 'N', "You notice the sleeve. You notice he's sweating... in October. You don't say anything. It's not your job to say anything. Your job is to stack shelves until six a.m.", None, 11.0),
-    (33.0, 'N', 'You count... without meaning to.', None, 2.6),
-    (56.0, 'D', 'Shutter! Sami, the shutter! The red button!', None, 3.0),
+    (2.6, 'N', 'The last thing you ever sell... is a bag of ice. Three forty-nine. Register two. Eleven fifty-two p.m.', 'voice/N1_ice.mp3', 0),
+    (11.2, 'N', "He pays in cash, with his left hand. He doesn't wait for his change.", 'voice/N2_cash.mp3', 0),
+    (17.3, 'N', "You notice the sleeve. You notice he's sweating... in October. You don't say anything. It's not your job to say anything. Your job is to stack shelves until six a.m.", 'voice/N3_sleeve.mp3', 0),
+    (33.0, 'N', 'You count... without meaning to.', 'voice/N4_count.mp3', 0),
+    (56.0, 'D', 'Shutter! Sami, the shutter! The red button!', 'voice/D1_shutter.mp3', 0),
     (62.0, 'N', 'Mr. Davis went out the back for a smoke at eleven forty. He came back with a bite on his neck.', 'voice/N5_davis_smoke.mp3', 0),
-    (70.5, 'N', 'Plan A was a normal night shift. A sandwich at three. The bus home at six. Plan A just hit the floor.', None, 8.6),
+    (70.5, 'N', 'Plan A was a normal night shift. A sandwich at three. The bus home at six. Plan A just hit the floor.', 'voice/N6_planA.mp3', 0),
     (87.3, 'N', "Ten seconds. That's how long it takes, from a bite on the neck. You lean on the freezer door and listen to your manager try to get through it. The lock is electric. You don't think about that yet. You will.", 'voice/N7_ten_seconds.mp3', 0),
     (104.0, 'M', "Sami? Sami, listen to me. Are you inside? Lock everything. Stay where you are. I'm coming to get you, okay? I'm coming. I love y—", 'voice/M1_mum_call.mp3', 0),
     (116.5, 'N', "No bars. You try her forty times. It doesn't go through once.", 'voice/N8_no_bars.mp3', 0),
-    (126.0, 'N', "Okay. Think. You're one guy, locked in forty thousand square feet of food. An adult needs about two thousand calories a day. One jar of peanut butter is nearly three thousand. Aisle six has two hundred jars. Food is not what kills you in here. Noise is.", None, 17.0),
+    (124.8, 'N', "Okay. Think. You're one guy, locked in forty thousand square feet of food. An adult needs about two thousand calories a day. One jar of peanut butter is nearly three thousand. Aisle six has two hundred jars. Food is not what kills you in here. Noise is.", 'voice/N9_noise.mp3', 0),
 ]
 
 # ---------- dsp helpers ----------
@@ -97,7 +97,7 @@ def tape_stop(x, d=2.2):
 MZ = muzak(150)
 music.add(0, tape_stop(store_speaker(MZ[: int(38.6 * SR)], 0.9), 1.8), 1.0)
 music.add(START['davis'], store_speaker(MZ[int(40 * SR): int(54.5 * SR)], 0.3) * env(int(14.5 * SR), 0.3, 1.0)[:, None])
-music.add(START['chalk'], store_speaker(MZ[int(60 * SR): int(80 * SR)], 0.32)[: int((144.0 - START['chalk']) * SR)])
+music.add(START['chalk'], store_speaker(MZ[int(60 * SR): int(81 * SR)], 0.32)[: int((145.0 - START['chalk']) * SR)])
 
 def drone(d, f0=55, bright=180, amp=0.25, seed=0):
     t = tt(d); x = sum(saw(f0 * m, t, k * 0.13) for k, m in enumerate([1, 1.006, 1.5, 0.5]))
@@ -211,7 +211,7 @@ amb.add(S['phone'], hum(22, 0.008))
 for k, f in enumerate([950, 700, 480]): sfx.add(114.2 + k * 0.33, beep(f, 0.26, 0.18))
 amb.add(S['chalk'], hum(20, 0.02))
 for a, b in [(2.5, 5.5), (7.0, 10.5), (11.5, 15.0), (18.0, 18.8)]: sfx.add(S['chalk'] + a, chalk(b - a, 0.12), 1.0, -0.3)
-sfx.add(144.0, thump(0.5, 160, 0.15) + 0, 1.0); sfx.add(144.02, crackle(0.1, 0.5))
+sfx.add(145.0, thump(0.5, 160, 0.15), 1.0); sfx.add(145.02, crackle(0.1, 0.5))
 
 # ---------- VOICES ----------
 def load_mp3(p):
@@ -234,7 +234,7 @@ for at, who, text, f, est in LINES:
 k = int(0.25 * SR); sm = np.convolve(vmask, np.ones(k) / k, 'same')
 duck = (1 - 0.55 * sm)[:, None]
 mix = music.b * duck * 0.8 + sfx.b * (1 - 0.35 * sm)[:, None] + amb.b + vox.b
-mix[int(144.06 * SR):] *= 0.0  # hard cut to silence when the plug is pulled
+mix[int(145.06 * SR):] *= 0.0  # hard cut to silence when the plug is pulled
 mix = mix[: int(TOTAL * SR)]
 peak = np.abs(mix).max(); mix = np.tanh(mix / peak * 1.2) * 0.89
 pcm = (mix * 32767).astype('<i2')
