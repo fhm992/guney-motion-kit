@@ -166,5 +166,22 @@
   // towel wrap on arm, bandage
   P.towel = (W) => mk(W, 0, 0, 90, 70, `<rect x="0" y="10" width="90" height="50" rx="14" fill="#F7F4EA"/><path d="M 0 22 L 90 22 M 0 48 L 90 48" stroke="#5FA8FF" stroke-width="5"/><circle cx="50" cy="35" r="10" fill="#C9302C" opacity=".6"/>`);
 
+  // PA microphone on its base with the red talk button and the GARY ONLY sticky note (sits on a desk top)
+  P.mic = (W) => mk(W, 0, 0, 420, 300, `
+      <rect x="40" y="230" width="190" height="64" rx="12" fill="#202329"/><rect class="btn" x="70" y="244" width="56" height="34" rx="7" fill="#C9302C"/>
+      <path d="M 170 232 C 170 120 120 80 70 50" stroke="#333" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <rect x="30" y="18" width="74" height="54" rx="22" fill="#1b1b1b" transform="rotate(-28 67 45)"/><rect x="38" y="26" width="60" height="10" rx="5" fill="#444" transform="rotate(-28 67 45)"/>
+      <g transform="rotate(-7 330 230)"><rect x="250" y="150" width="160" height="140" fill="#FFE14D"/><rect x="250" y="150" width="160" height="20" fill="#F2D23B"/>
+      <text x="330" y="212" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="50" fill="#1b1b1b">GARY</text><text x="330" y="262" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="50" fill="#1b1b1b">ONLY</text></g>`);
+  // lottery ticket
+  P.ticket = (W) => mk(W, 0, 0, 120, 74, `<rect x="0" y="0" width="120" height="74" rx="8" fill="#FFE14D"/><rect x="6" y="6" width="108" height="62" rx="6" fill="none" stroke="#E8382F" stroke-width="3" stroke-dasharray="6 4"/><text x="60" y="47" text-anchor="middle" font-family="Anton" font-size="30" fill="#C9302C">LOTTO</text>`);
+  // small grocery item for the belt
+  P.item = (W, col = '#E8382F', w = 120, h = 90) => mk(W, 0, 0, w, h, `<rect x="0" y="0" width="${w}" height="${h}" rx="10" fill="${col}"/><rect x="10" y="${h * 0.45}" width="${w - 20}" height="${h * 0.25}" fill="#fff" opacity=".85"/><rect x="6" y="4" width="10" height="${h - 8}" fill="#fff" opacity=".3"/>`);
+  // empty water bottle
+  P.bottle = (W) => mk(W, 0, 0, 90, 220, `<rect x="30" y="0" width="30" height="24" rx="6" fill="#2F7BE8"/><path d="M 22 30 Q 45 18 68 30 L 80 60 L 80 210 Q 45 224 10 210 L 10 60 Z" fill="rgba(200,230,255,.35)" stroke="rgba(255,255,255,.7)" stroke-width="4"/><rect x="10" y="100" width="70" height="50" fill="#5FA8FF" opacity=".8"/>`, 'transform-origin:45px 110px');
+  // Bob's hand + red sleeve reaching down (for the button press close-up)
+  P.pressHand = (W) => mk(W, 0, 0, 160, 620, `<defs><radialGradient id="ph" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#555"/><stop offset=".6" stop-color="#161616"/><stop offset="1" stop-color="#000"/></radialGradient></defs>
+      <rect x="30" y="0" width="100" height="440" rx="44" fill="#E8382F"/><rect x="26" y="410" width="108" height="34" rx="14" fill="#c42a22"/>
+      <ellipse cx="80" cy="500" rx="58" ry="56" fill="url(#ph)"/><rect x="66" y="520" width="28" height="100" rx="14" fill="url(#ph)"/><rect x="118" y="470" width="26" height="60" rx="13" fill="url(#ph)" transform="rotate(30 130 500)"/>`);
   window.PROPS = P;
 })();

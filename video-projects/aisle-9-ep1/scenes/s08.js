@@ -1,50 +1,61 @@
-// @scene s08 44 Beat 8 - Aisle 9, The Breather
+// @scene s08 46 Beat 8 - Aisle 9, the breather
 (() => {
   const S = STAGE, E = S.E, K = SH.k;
-  const cans = (W, o = {}) => SH.aisle(W, Object.assign({ seed: 9, mood: 'day', kind: 'cans', sign: 'AISLE 9\nCANNED GOODS', signZ: 6.5, lip: '#E8382F', vignette: 0.55 }, o));
-  const warm = (W) => SH.div(W, 'left:-200px;top:-200px;width:2400px;height:1500px;background:radial-gradient(ellipse at 50% 40%,rgba(255,190,110,.18),rgba(20,10,30,.55));pointer-events:none');
-  SH.run('s08', 's08', 44, [
-    { // A: he rolls between the shelves; everything goes muffled
-      t0: 0, setup(W) { cans(W, { seed: 9 }); warm(W); const bob = SH.actor(W, 'bob'); return { bob, W }; },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 960, 600, 1.0], [6, 900, 620, 1.2]]);
-        const roll = E.outCubic(S.seg(lt, 0, 1.4));
-        st.bob.set({ x: S.lerp(1900, 1100, roll), y: S.lerp(1250, 1260, roll), scale: 1.0, lean: lt < 1.4 ? -roll * 360 : 0, look: [-0.6, -0.3], eyeScale: 1.1, pupil: 0.6, browUp: 1, brow: 0.6,
-          mouth: { open: 0.2 + Math.abs(Math.sin(lt * 5)) * 0.15, smile: -0.4, wide: 0.6 }, armL: [-20, -130], armR: [-20, -130], bob: Math.sin(lt * 5) * 5 });
+  const A9 = (seed) => SETS.aisle('cans', 'night', { seed, sign: 'AISLE 9', sub: 'CANNED GOODS', signColor: '#C9302C', lip: '#E8382F', header: 'SOUP & BEANS' });
+  const FXN = { dust: 55, beamK: 0.6, beamMax: 10 };
+  const BX = -0.9, BZ = 8.6;                       // where Bob sits, back against the cans
+  const ZK = ['zPajama', 'zBasketW', 'zShopper', 'zHalloran'];
+  const atBob = (R, st, pose) => R.at(st.bob, BX, BZ, pose, { bias: 0.6 });
+  const sit = (lt, extra) => Object.assign({ face: Math.PI / 2, crouch: 0.72, armL: [-15, -125], armR: [-15, -125] }, extra);
+  SH.run('s08', 's08', 46, [
+    { // A: deep in Aisle 9, Bob pressed into the cans, chest heaving; at the far end the shoppers arrive at the mouth of the aisle
+      t0: 0, setup(W) { const R = SH.stage(W, A9(9), { fx: FXN }); return { R, bob: R.actor('bob'), zs: ZK.map((k, i) => R.actor(k, { seed: 90 + i })) }; },
+      draw(lt, st, t) {
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, 0.55, 1.2, 12.6, Math.PI - 0.08, -0.06, 1050], [6, 0.3, 1.1, 11.4, Math.PI - 0.12, -0.05, 1100]], { hand: 0.6 }));
+        atBob(R, st, sit(lt, Object.assign({}, EXPR.terror, { headFace: 0.2, look: [0.2, 0], bob: Math.sin(lt * 7) * 5 * Math.exp(-lt * 0.25), mouth: { open: 0.35 + Math.abs(Math.sin(lt * 3.5)) * 0.2, smile: -0.5, wide: 0.6 } })));
+        st.zs.forEach((z, i) => { const a = S.seg(lt, 0.4 + i * 0.5, 3.4 + i * 0.5), x = [-0.7, 0.2, 0.9, -0.15][i], zz = S.lerp(-2.6, [0.6, 0.2, 0.9, -0.4][i], E.outCubic(a));
+          R.at(z, x, zz, Object.assign({}, EXPR.zombie, { face: Math.PI + (i % 2 ? 0.3 : -0.3), gait: a < 1 ? { phase: lt * 0.5 + i, stride: 40, kind: 'shamble' } : null, headTilt: Math.sin(lt * 0.7 + i) * 10, look: [0, -0.4] })); });
       } },
-    { // B: at the mouth of the aisle they sway... and wander off
-      t0: 6.0, setup(W) { cans(W, { seed: 10 }); warm(W); const zs = ['zPajama', 'zShopper', 'zBasketW'].map((k) => SH.actor(W, k)); return { zs, W }; },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 960, 520, 1.6], [6.6, 960, 520, 1.7]]);
-        st.zs.forEach((z, i) => { const leave = S.seg(lt, 3.4 + i * 0.5, 6.2 + i * 0.5), sh = SH.shamble(lt, i * 2, 0.5);
-          z.set(Object.assign({}, sh, { x: 860 + i * 110 + leave * (i % 2 ? 500 : -500), y: 690, scale: 0.32, flip: i % 2 === 1, look: [0, 0], mouth: { open: 0.25, smile: -0.5 } })); z.svg.style.filter = 'blur(1.5px)'; });
+    { // B: behind the shoppers at the mouth of the aisle - they sniff and sway, ten feet away. "They stop at the mouth of the aisle..."
+      t0: 6.0, setup(W) { const R = SH.stage(W, A9(9), { fx: FXN, dof: 1.2 }); return { R, bob: R.actor('bob'), zs: ZK.map((k, i) => R.actor(k, { seed: 90 + i })) }; },
+      draw(lt, st, t) {
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, -0.9, 1.0, -2.6, 0.06, 0.02, 1050], [6.6, -0.5, 0.95, -2.1, 0.02, 0.02, 1150]], { hand: 0.5 }));
+        [[-0.7, 0.6], [0.2, 0.2], [0.9, 0.9], [-0.15, -0.4]].forEach(([x, z], i) => R.at(st.zs[i], x + Math.sin(lt * 0.5 + i) * 0.08, z, Object.assign({}, EXPR.zombie, { face: Math.PI + Math.sin(lt * 0.6 + i * 2) * 0.6, headFace: Math.PI + Math.sin(lt * 0.9 + i) * 0.9, headTilt: Math.sin(lt * 0.7 + i) * 12, look: [0, -0.5] })));
+        atBob(R, st, sit(lt, Object.assign({}, EXPR.scared, { headFace: -0.05, look: [0, 0], blink: TOON.blinkAt(lt, 3.4) })));
       } },
-    { // C: the camera glides down the aisle; blue sound rings die against the soup and beans
-      t0: 12.4, setup(W) { cans(W, { seed: 11 }); warm(W); const r1 = SH.rings(W, '#7FD3FF'), r2 = SH.rings(W, '#7FD3FF'); return { r1, r2, W }; },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 960, 600, 1.0], [9.1, 1000, 520, 1.55]], 0);
-        st.r1(lt, 0, 400, 600, 260, 0.9, 1.0); st.r2(lt, 0.45, 1520, 560, 260, 0.9, 1.0);
+    { // C: crane down the wall of cans, floor to ceiling. "Turns out a wall of soup and beans is the best soundproofing in America."
+      t0: 12.4, setup(W) { const R = SH.stage(W, A9(9), { fx: FXN }); return { R, bob: R.actor('bob') }; },
+      draw(lt, st, t) {
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, 0.75, 2.7, 3.2, -1.25, -0.16, 950], [9.6, 0.75, 1.0, 6.3, -0.95, -0.02, 1000]], { ease: E.inOutSine, hand: 0.3 }));
+        atBob(R, st, sit(lt, Object.assign({}, EXPR.worried, { headFace: 0.35, look: [0.3, -0.4], blink: TOON.blinkAt(lt, 3.0) })));
       } },
-    { // D: he laughs without a sound... then cries without one
-      t0: 21.5, setup(W) {
-        cans(W, { seed: 12 }); warm(W); const bob = SH.actor(W, 'bob');
-        const tears = [0, 1].map(() => SH.div(W, 'left:0;top:0;width:20px;height:28px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:radial-gradient(circle at 35% 35%,#fff 0 18%,rgba(140,200,255,.9) 40%,rgba(80,140,220,.5))'));
-        return { bob, tears, W };
-      },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 960, 500, 1.25], [8.5, 960, 460, 1.45]]);
-        const laugh = lt < 3.6, shake = laugh ? Math.abs(Math.sin(lt * 14)) * 10 : Math.sin(lt * 3) * 3;
-        st.bob.set({ x: 960, y: 1260, scale: 1.0, lid: laugh ? 0.7 : 0.35, brow: laugh ? -0.3 : 0.8, browUp: laugh ? 0.2 : 0.9, look: [0, laugh ? 0 : 0.4],
-          mouth: laugh ? { open: 0.5, smile: 1, wide: 1.1 } : { open: 0.15, smile: -0.8, wide: 0.7 }, armL: [-30, -140], armR: [-30, -140], bob: shake, headTilt: laugh ? 6 : -8 });
-        st.tears.forEach((d, i) => { const k = ((lt - 4 + i * 0.8) % 1.8) / 1.8; d.style.opacity = lt > 4 ? Math.sin(k * Math.PI) : 0; d.style.transform = `translate(${960 + (i ? 60 : -100)}px, ${560 + k * 80}px)`; });
+    { // D: close on him. A silent laugh. Then silent tears. "You laugh without a sound. Then you cry without one, too."
+      t0: 22.0, setup(W) { const R = SH.stage(W, A9(9), { fx: FXN, dof: 1.4 }); return { R, bob: R.actor('bob') }; },
+      draw(lt, st, t) {
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, 0.75, 0.62, 6.9, -0.82, 0.02, 1150], [9.2, 0.15, 0.6, 7.6, -0.98, 0.02, 1450]], { ease: E.inOutSine, hand: 0.4 }));
+        const laugh = lt < 3.4, s = laugh ? 1 : S.seg(lt, 3.4, 4.4);
+        atBob(R, st, sit(lt, Object.assign({}, laugh ? EXPR.happy : EXPR.sad, laugh ? { mouth: { open: 0.35 + Math.abs(Math.sin(lt * 9)) * 0.25, smile: 0.9, wide: 0.7 }, lid: 0.45, bob: Math.abs(Math.sin(lt * 9)) * 6, headTilt: 6 }
+          : { lid: S.lerp(0.2, 0.5, s), headTilt: -10, look: [0, 0.6], bob: Math.sin(lt * 3) * 2 * (1 - S.seg(lt, 6, 9)), mouth: { open: 0.08, smile: -0.8, wide: 0.55 }, blink: TOON.blinkAt(lt, 2.4) },
+          { headFace: Math.PI / 2 - 0.5 })));
       } },
-    { // E: hugs a can of peaches like a stuffed animal. "Okay, Aisle 9. You're home now."
-      t0: 30.0, setup(W) { cans(W, { seed: 13 }); warm(W); const bob = SH.actor(W, 'bob'); const can = PROPS.can(W, 'PEACH', '#F2B134', 0.9); return { bob, can, W }; },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 960, 540, 1.1], [14, 960, 600, 0.95]]);
-        st.bob.set({ x: 960, y: 1260, scale: 1.0, lid: 0.45, look: [0, 0.3], brow: 0.3, browUp: 0.5, headTilt: 10 + Math.sin(lt * 0.8) * 3,
-          mouth: SH.mouth(['b12'], { open: 0, smile: 0.6, wide: 0.8 }, { smile: 0.4, amp: 0.4 }), armL: [-20, -125], armR: [-20, -125], bob: Math.sin(lt * 1.2) * 4, blink: TOON.blinkAt(lt, 3.6) });
-        st.can.set(960, 880 + Math.sin(lt * 1.2) * 4, 0.9, -8);
+    { // E: low angle up past him at the towering cans. "Okay, Aisle 9. You're home now."
+      t0: 31.2, setup(W) { const R = SH.stage(W, A9(9), { fx: FXN }); return { R, bob: R.actor('bob'), can: R.prop(PROPS.can(R.A, 'PEACH', '#F2B134', 1)) }; },
+      draw(lt, st, t) {
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, 0.05, 0.3, 10.9, -2.78, 0.2, 1000], [6, -0.15, 0.3, 10.5, -2.7, 0.26, 1000]], { ease: E.inOutSine, hand: 0.3 }));
+        atBob(R, st, sit(lt, Object.assign({}, EXPR.relieved, { headFace: Math.PI / 2 + 0.6, look: [0.3, -0.7], mouth: SH.mouth(['b12'], { open: 0, smile: 0.35 }, { smile: 0.3, amp: 0.5 }), blink: TOON.blinkAt(lt, 2.6) })));
+        R.put(st.can, BX + 0.45, BZ + 0.35, 0.14, 190, { rot: 90 });
       } },
-  ], { fades: [[41.5, 44, 0, 1]] });
+    { // F: time-lapse through the night - Bob curled asleep, shadows drift past the end of the aisle. "You stay in Aisle 9 all night..."
+      t0: 37.0, setup(W, O) { const R = SH.stage(W, A9(9), { fx: Object.assign({}, FXN, { dustK: 0.6 }) }); const clk = SH.label(O, '11:40 PM', 'left:auto;right:70px'); return { R, clk, bob: R.actor('bob'), zs: [0, 1].map((i) => R.actor(ZK[i], { seed: 99 + i })) }; },
+      draw(lt, st, t) {
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, 0.3, 2.4, 13.8, Math.PI - 0.05, -0.22, 1050], [9, 0.4, 3.0, 15.6, Math.PI - 0.05, -0.24, 1050]], { ease: E.inOutSine }));
+        atBob(R, st, sit(lt, Object.assign({}, EXPR.exhausted, { crouch: 0.8, lid: 1, headTilt: -14, headFace: Math.PI / 2 - 0.4, bob: Math.sin(lt * 1.6) * 2 })));
+        st.zs.forEach((z, i) => { const p = ((lt * 0.9 + i * 3.1) % 6) / 6; R.at(z, S.lerp(-4, 4, i ? 1 - p : p), -0.6 - i * 0.8, Object.assign({}, EXPR.zombie, { face: i ? -Math.PI / 2 : Math.PI / 2, gait: { phase: lt * 0.5 + i, stride: 40, kind: 'shamble' } })); });
+        const m = 23 * 60 + 40 + S.seg(lt, 0.5, 7.5) * (6 * 60 + 20), h = Math.floor(m / 60) % 24, mm = Math.floor(m % 60);
+        st.clk.textContent = `${(h % 12) || 12}:${String(mm).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`;
+      } },
+  ], { fades: [[0, 0.4, 1, 0], [44.8, 46, 0, 1]], gfx: [
+    { type: 'stamp', text: 'AISLE 9', sub: 'CANNED GOODS · 11:40 PM', at: 12.8, dur: 3.6 },
+    { type: 'note', text: 'A WALL OF CANS BLOCKS SOUND', icon: '!', at: 16.8, dur: 4.4 },
+  ] });
 })();

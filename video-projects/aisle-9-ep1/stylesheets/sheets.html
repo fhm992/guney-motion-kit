@@ -1,0 +1,98 @@
+<!doctype html><html><head><meta charset="utf-8"><title>AISLE 9 style sheets</title>
+<script src="assets/gsap.min.js"></script><script src="assets/stage.js"></script><script src="assets/env.js"></script><script src="assets/toon.js"></script><script src="assets/cast.js"></script>
+<script src="assets/world.js"></script><script src="assets/sets.js"></script><script src="assets/fx.js"></script><script src="assets/props.js"></script><script src="assets/vo-env.js"></script><script src="assets/capwords.js"></script><script src="assets/gfx.js"></script><script src="assets/shot.js"></script>
+<link rel="stylesheet" href="assets/fonts.css">
+<style>html,body{margin:0;width:1920px;height:1080px;background:#000;overflow:hidden}
+.P{position:absolute;inset:0;visibility:hidden;overflow:hidden;background:#15161b}
+.hd{position:absolute;left:60px;top:36px;font:400 64px/1 'Anton';letter-spacing:.04em;color:#F4F1EA}.hd b{color:#C9302C;font-weight:400}
+.sub{position:absolute;left:62px;top:110px;font:700 22px/1.4 'JetBrains Mono';letter-spacing:.12em;color:#A6FF3D}
+.lb{position:absolute;font:700 22px/1 'JetBrains Mono';letter-spacing:.1em;color:#cfc8bd;text-align:center;width:260px}
+.nt{position:absolute;font:500 22px/1.45 Inter;color:#cfc8bd}
+.sw{position:absolute;width:70px;height:70px;border-radius:12px;border:3px solid #2a2c33}
+.floor{position:absolute;left:0;right:0;height:3px;background:#3a3d46}
+.cell{position:absolute;overflow:hidden;border-radius:14px;border:3px solid #2a2c33}
+canvas{position:absolute;left:0;top:0}
+</style></head><body>
+<div id="root" data-composition-id="sheets" data-start="0" data-duration="9" data-width="1920" data-height="1080"></div>
+<script>
+const root=document.getElementById('root'), pages=[], draws=[];
+const D=(p,css,html='',cls='')=>{const d=document.createElement('div');d.style.cssText='position:absolute;'+css;d.innerHTML=html;if(cls)d.className=cls;p.appendChild(d);return d;};
+function page(title,sub){const P=D(root,'','', 'P');D(P,'',`AISLE <b>9</b> &nbsp;·&nbsp; ${title}`,'hd');D(P,'',sub,'sub');pages.push(P);return P;}
+const lab=(P,x,y,t)=>D(P,`left:${x-130}px;top:${y}px`,t,'lb');
+// ---------- 1. Bob ----------
+{ const P=page('STYLE SHEET 01 · BOB','LEAD · NIGHT CASHIER · DEADPAN, KIND, SURVIVES BY THINKING · VOICE: JORDAN (WARM & GRITTY)');
+  D(P,'left:0;right:0;top:820px','', 'floor');
+  const views=[['FRONT',0],['3/4',0.5],['SIDE',1],['BACK',1.6]];
+  const vs=views.map(([n,y],i)=>{const c=TOON.make(P,CAST.bob);lab(P,190+i*270,860,n);return [c,y,190+i*270];});
+  draws.push(()=>vs.forEach(([c,y,x])=>c.set(Object.assign({x,y:820,scale:0.62,yaw:y},EXPR.deadpan))));
+  const ex=['neutral','deadpan','happy','worried','scared','terror','whisper','sad','relieved','determined','exhausted'];
+  const hs=ex.map((e,i)=>{const cell=D(P,`left:${1150+(i%4)*185}px;top:${170+Math.floor(i/4)*250}px;width:170px;height:230px`,'','cell');const c=TOON.make(cell,CAST.bob);D(cell,'left:0;right:0;bottom:8px;text-align:center;font:700 16px JetBrains Mono;color:#cfc8bd',e.toUpperCase());return [c,e];});
+  draws.push(()=>hs.forEach(([c,e])=>c.set(Object.assign({x:85,y:455,scale:0.42,yaw:0},EXPR[e]))));
+  [['#161616','SKIN'],['#0d0d0d','HAIR'],['#E8382F','HOODIE'],['#1F8A55','APRON'],['#2B3550','DENIM'],['#C9302C','SNEAKERS']].forEach(([c,n],i)=>{D(P,`left:${70+i*150}px;top:930px;background:${c}`,'','sw');D(P,`left:${150+i*150}px;top:950px;width:70px`,`<div style="font:700 16px JetBrains Mono;color:#cfc8bd">${n}<br>${c}</div>`);});
+  D(P,'left:1150px;top:930px;width:720px','HEAD ≈ 40% OF HEIGHT · GLOSSY BLACK SPHERE, SOFT TOP-LEFT KEY, RIM LIGHT FROM THE SCENE · BIG WHITE EYES CARRY ALL ACTING · ALWAYS GROUNDED: CONTACT SHADOW UNDER EACH FOOT','nt');
+}
+// ---------- 2. Supporting cast ----------
+{ const P=page('STYLE SHEET 02 · SUPPORTING CAST','TYLER (COWORKER, ANDREW) · MR. HALLORAN (REGULAR, ALDEN) · CUSTOMER');
+  D(P,'left:0;right:0;top:820px','', 'floor');
+  const row=[['tyler',0,'TYLER',EXPR.happy],['tyler',0.6,'',EXPR.worried],['tyler',1,'',EXPR.neutral],['halloran',0,'MR. HALLORAN',EXPR.happy],['halloran',-0.6,'',EXPR.neutral],['hallSick',0.3,'SICK',EXPR.exhausted],['customer',0,'CUSTOMER',EXPR.worried]];
+  const cs=row.map(([k,y,n,e],i)=>{const c=TOON.make(P,CAST[k]);lab(P,150+i*265,860,n||(y>0?'3/4 · SIDE':'3/4'));return [c,y,150+i*265,e];});
+  draws.push(()=>cs.forEach(([c,y,x,e])=>c.set(Object.assign({x,y:820,scale:0.6,yaw:y},e))));
+  D(P,'left:70px;top:930px;width:1780px','TYLER: ORANGE BEANIE + BLUE HOODIE, ALWAYS MOVING, OPEN FACE. &nbsp; HALLORAN: GOLD GLASSES, WHITE SIDE TUFTS, BROWN CARDIGAN; WHEN SICK HIS SKIN GOES GREY-GREEN BEFORE HE TURNS.','nt');
+}
+// ---------- 3. The Shoppers ----------
+{ const P=page('STYLE SHEET 03 · THE SHOPPERS (ZOMBIES)','MILKY EYES · GREY-GREEN SKIN · DARK VEINS · STAINS · THEY HUNT BY SOUND, NOT SIGHT');
+  D(P,'left:0;right:0;top:820px','', 'floor');
+  const ks=[['zHalloran',0.4,'HALLORAN'],['zPajama',-0.3,'PAJAMA MAN'],['zBasketW',0.2,'BASKET WOMAN'],['zShopper',-0.5,'HOODIE GUY'],['zShopper',1,'SIDE'],['zPajama',1.6,'BACK']];
+  const cs=ks.map(([k,y,n],i)=>{const c=TOON.make(P,CAST[k]);lab(P,170+i*300,860,n);return [c,y,170+i*300,i];});
+  draws.push(()=>cs.forEach(([c,y,x,i])=>c.set(Object.assign({x,y:820,scale:0.6,yaw:y,headTilt:[-14,12,-8,16,-10,0][i],lean:3},i===3?EXPR.zombieShriek:EXPR.zombie))));
+  D(P,'left:70px;top:930px;width:1780px','MOVEMENT: SLOW SHAMBLE (DRAG ONE FOOT), HEAD LOLLS, ARMS HALF RAISED. EYES NEVER TRACK BOB. WHEN A SOUND HITS: HEADS SNAP UP, THEN THEY RUN AT THE NOISE. IN THE FREEZER: FROST ON SHOULDERS, EVERYTHING HALF SPEED.','nt');
+}
+// ---------- 4. Motion ----------
+{ const P=page('STYLE SHEET 04 · MOTION','FEET PLANT AND STAY PLANTED · KNEES BEND · BODY BOBS ON EACH STEP · ARMS SWING OPPOSITE THE LEGS');
+  const rows=[['WALK','walk',150,6],['RUN','run',260,6],['SNEAK','sneak',110,6]]; const RH=270, RY=420;
+  const cs=[]; rows.forEach(([n,kind,stride,k],r)=>{D(P,`left:0;right:0;top:${RY+r*RH}px`,'','floor');D(P,`left:60px;top:${RY-80+r*RH}px;width:150px`,`<div style="font:400 44px Anton;color:#fff">${n}</div>`);
+    for(let i=0;i<k;i++){const c=TOON.make(P,kind==='sneak'?CAST.bob:CAST.bob);cs.push([c,kind,stride,i/k,330+i*255,RY+r*RH]);}});
+  const z=[];for(let i=0;i<4;i++){const c=TOON.make(P,CAST.zPajama);z.push(c);}
+  draws.push(()=>{cs.forEach(([c,kind,stride,ph,x,y])=>c.set(Object.assign({x,y,scale:0.27,yaw:1,gait:{phase:ph,stride,kind},lean:kind==='run'?10:kind==='sneak'?14:2,crouch:kind==='sneak'?0.25:0},kind==='run'?EXPR.terror:kind==='sneak'?EXPR.whisper:EXPR.neutral)));});
+  D(P,'left:60px;top:1010px;width:1780px','PHASE 0 → 5 LEFT TO RIGHT. RUN: LONG FLIGHT, BIG KNEE LIFT, LEAN 10°. SNEAK: CROUCH 25%, SHORT STEPS, ARMS IN. SHOPPERS: SHAMBLE GAIT (ONE FOOT DRAGS).','nt');
+}
+// ---------- 5. Environments ----------
+function setCell(P,x,y,w,h,world,cam,mood,label,o={}){const cell=D(P,`left:${x}px;top:${y}px;width:${w}px;height:${h}px`,'','cell');const inner=D(cell,`left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;transform:scale(${w/1920})`);
+  const cv=document.createElement('canvas');cv.width=1920;cv.height=1080;inner.appendChild(cv);const A=D(inner,'inset:0');const F=D(inner,'inset:0');const fx=FX.make(F,Object.assign({mood,beams:true,dust:30},o));D(cell,'left:12px;bottom:10px;padding:6px 12px;border-radius:8px;background:rgba(0,0,0,.6);font:700 18px JetBrains Mono;color:#A6FF3D;letter-spacing:.08em',label);
+  draws.push((t)=>{const c=cv.getContext('2d');world.render(c,cam,t);fx.draw(t,cam,world);});return A;}
+{ const P=page('STYLE SHEET 05 · LOCATIONS','ONE STORE, ONE LAYOUT · EVERY SHOT USES THE SAME 3D-PROJECTED SPACE, SO SIZES, FLOORS AND SHADOWS ALWAYS MATCH');
+  const L=[[SETS.store('day'),{x:0.3,y:1.5,z:-2.4,yaw:0.02,pitch:-0.02,f:1100},'day','REGISTER LANES · DAY 1 NIGHT SHIFT'],
+   [SETS.store('red',{flicker:true}),{x:-1.4,y:1.6,z:3.4,yaw:0.05,pitch:-0.05,f:1000},'red','STORE FLOOR · OUTBREAK (RED)'],
+   [SETS.aisle('cans','night',{sign:'AISLE 9',sub:'CANNED GOODS',signColor:'#C9302C',lip:'#E8382F',header:'SOUP & BEANS'}),{x:0.2,y:1.3,z:-1,yaw:0,pitch:-0.03,f:1100},'night','AISLE 9 · CANNED GOODS (SAFE ROOM)'],
+   [SETS.stockroom('warm'),{x:0,y:1.6,z:-2,yaw:0.05,pitch:-0.08,f:1000},'warm','STOCKROOM · STAFF ONLY'],
+   [SETS.service('gray'),{x:0.5,y:1.6,z:-1.5,yaw:0,pitch:-0.06,f:1050},'gray','CUSTOMER SERVICE · THE PA'],
+   [SETS.freezer('ice'),{x:0,y:1.4,z:-1.5,yaw:0,pitch:-0.04,f:1050},'ice','FREEZER AISLE · DEAD END']];
+  L.forEach(([w,cam,mood,n],i)=>setCell(P,60+(i%3)*610,170+Math.floor(i/3)*430,590,332,w,cam,mood,n,{flicker:mood==='red',beacon:mood==='red'?[1700,120]:null,haze:mood==='ice'?'220,245,255':null}));
+}
+// ---------- 6. Light & colour ----------
+{ const P=page('STYLE SHEET 06 · LIGHT & COLOUR','ONE MOOD PER BEAT · KEY FROM THE CEILING · BEAMS + DUST + FLOOR GLINTS · GRADE: WARM → RED → GREY → BLUE → HOPE');
+  const moods=[['day','DAY 1 · WARM NIGHT SHIFT'],['red','OUTBREAK · EMERGENCY RED'],['gray','DAY 2 · COLD GREY DAWN'],['night','AISLE 9 · BLUE SAFE DARK'],['ice','FREEZER · ICE BLUE'],['warm','STOCKROOM · AMBER']];
+  moods.forEach(([m,n],i)=>{const A=setCell(P,60+(i%3)*610,170+Math.floor(i/3)*430,590,332,SETS.aisle('mixed',m,{seed:12,sign:'AISLE 4',sub:'SNACKS'}),{x:0.4,y:1.4,z:-0.5,yaw:-0.03,pitch:-0.03,f:1100},m,n,{flicker:m==='red',beacon:m==='red'?[1700,120]:null});
+    const b=TOON.make(A,CAST.bob);draws.push(()=>WORLD.actorAt(b,{x:0.4,y:1.4,z:-0.5,yaw:-0.03,pitch:-0.03,f:1100},0.3,3.2,Object.assign({yaw:0.3,light:{x:-0.3,y:-0.8},rim:{color:{day:'#FFE9C0',red:'#FF4436',gray:'#C9D3DF',night:'#7FA8FF',ice:'#BFF1FF',warm:'#FFC070'}[m],k:0.8}},EXPR.worried)));});
+}
+// ---------- 7. Props ----------
+{ const P=page('STYLE SHEET 07 · PROPS','SIMPLE CHUNKY SHAPES · BRIGHT LABELS · EVERY PROP STANDS ON THE FLOOR WITH A SHADOW');
+  const items=[['CART',PROPS.cart(P,1),0.5],['SELF-CHECKOUT',PROPS.kiosk(P,0,0),0.42],['PA DESK',PROPS.desk(P,0,0),0.3],['PHONE',PROPS.phone(P,1),1],['PEACHES',PROPS.can(P,'PEACH','#F2B134',1),1],['CHILI',PROPS.can(P,'CHILI','#C9302C',1),1],['WAFFLES',PROPS.waffles(P),1],['BASKET',PROPS.basket(P),1],['STOOL',PROPS.stool(P,0,0),0.7],['SPEAKER',PROPS.speaker(P,0,0,1.2),1]];
+  items.forEach(([n,el,k],i)=>{const x=200+(i%5)*370,y=520+Math.floor(i/5)*400;el.style.left='0px';el.style.top='0px';el.style.transformOrigin='0 0';const w=el.offsetWidth*k,h=el.offsetHeight*k;el.style.transform=`translate(${x-w/2}px,${y-h}px) scale(${k})`;D(P,`left:${x-120}px;top:${y+4}px;width:240px;height:24px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.6),transparent 70%)`);lab(P,x,y+40,n);});
+}
+// ---------- 8. Type & graphics ----------
+{ const P=page('STYLE SHEET 08 · TYPE & GRAPHICS','ANTON (CAPTIONS, TITLES) · JETBRAINS MONO (LABELS) · TOXIC GREEN #A6FF3D = THE WORD BEING SPOKEN');
+  const box=(x,y,w,h,label)=>{const c=D(P,`left:${x}px;top:${y}px;width:${w}px;height:${h}px;background:#2a2d36`,'','cell');D(c,'left:10px;top:8px;font:700 16px JetBrains Mono;color:#A6FF3D;z-index:5',label);return D(c,`left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;transform:scale(${w/1920})`);};
+  const b1=box(160,160,760,428,'CAPTIONS · NARRATOR'),b2=box(1000,160,760,428,'CAPTIONS · DIALOGUE + SPEAKER'),b3=box(160,612,760,428,'NAME TAG · PLACE STAMP · EXPLAINER NOTE'),b4=b3,b5=b3,b6=box(1000,612,760,428,'RULE CARD');
+  const c1=GFX.captions(b1,[{id:'n02',at:0}]),c2=GFX.captions(b2,[{id:'b04',at:0}]),n1=GFX.nameTag(b3,'BOB','NIGHT CASHIER','#E8382F'),s1=GFX.stamp(b4,'DAY 1 · 11:48 PM','FRESHMART · ROUTE 9'),e1=GFX.note(b5,'THEY FOLLOW SOUND','!'),r1=SH.ruleCard(b6,1,'SILENCE IS<br>SURVIVAL');
+  draws.push(()=>{c1(1.4);c2(1.0);n1(2,0);s1(2,0);e1(2,0);r1(2,0);});
+}
+{ const P=page('STYLE SHEET 09 · TITLES, MAP & END CARD','THE STORE MAP SHOWS WHERE BOB IS BETWEEN BEATS · END CARD ALWAYS ASKS FOR THE NEXT EPISODE');
+  const box=(x,y,w,h,label)=>{const c=D(P,`left:${x}px;top:${y}px;width:${w}px;height:${h}px;background:#0b0c10`,'','cell');D(c,'left:10px;top:8px;font:700 16px JetBrains Mono;color:#A6FF3D;z-index:5',label);return D(c,`left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;transform:scale(${w/1920})`);};
+  const a=box(160,160,760,428,'SERIES TITLE'),b=box(1000,160,760,428,'STORE MAP · ROUTE'),c=box(160,612,760,428,'SUBSCRIBE END CARD'),d=box(1000,612,760,428,'DAY CARD');
+  const t1=GFX.title(a),m1=GFX.map(b,['reg','stock','desk','a9','frz']),u1=GFX.subscribe(c),d1=SH.dayCard(d,'DAY 2');
+  draws.push(()=>{t1(1,0,5);m1(3,0,9);u1(3,0);d1(1,0);});
+}
+const tl=STAGE.driver(pages.length,(t)=>{const k=Math.min(pages.length-1,Math.floor(t));pages.forEach((P,i)=>P.style.visibility=i===k?'visible':'hidden');draws.forEach((f)=>f(t%1+1));});
+window.__timelines={sheets:tl};
+</script></body></html>

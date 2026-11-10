@@ -1,80 +1,69 @@
-// @scene s07 52 Beat 7 - The Chase, Rule 2
+// @scene s07 50 Beat 7 - The Chase, Rule 2
 (() => {
   const S = STAGE, E = S.E, K = SH.k;
   const ZK = ['zPajama', 'zBasketW', 'zShopper', 'zHalloran'];
-  SH.run('s07', 's07', 52, [
-    { // A: dead silence. Heads up.
-      t0: 0, setup(W) { SH.aisle(W, { seed: 94, mood: 'night', kind: 'mixed' }); const zs = ZK.map((k) => SH.actor(W, k)); return { zs, W }; },
-      draw(lt, st) { SH.cam(st.W, lt, [[0, 960, 520, 1.12], [1.4, 960, 520, 1.16]]);
-        const pos = [[520, 1080, 0.86], [1420, 1060, 0.8], [880, 930, 0.58], [1180, 900, 0.5]];
-        st.zs.forEach((z, i) => { const [x, y, s] = pos[i]; z.set({ x, y, scale: s, flip: i % 2 === 1, look: [0, -0.9], mouth: { open: 0.2, smile: -0.5 }, armL: [16, -10], armR: [16, -10] }); }); } },
-    { // B: a guttural shriek
-      t0: 1.4, setup(W) { SH.aisle(W, { seed: 95, mood: 'night', kind: 'mixed' }); const z = SH.actor(W, 'zShopper'); return { z, W }; },
-      draw(lt, st) { SH.cam(st.W, lt, [[0, 960, 420, 2.0], [1.6, 960, 400, 2.3]], 16);
-        st.z.set({ x: 960, y: 1180, scale: 1.0, headTilt: Math.sin(lt * 30) * 4, look: [0, -0.2], eyeScale: 1.2, mouth: { open: 1.0, smile: -1, wide: 1.1 }, brow: 0.9, armL: [60, -20], armR: [60, -20], lean: -6 }); } },
-    { // C: they pour out of every aisle; Bob vaults the service counter. "Move, move, move!"
-      t0: 3.0, setup(W) {
-        SH.aisle(W, { seed: 96, mood: 'night', kind: 'mixed', vx: 0.35 });
-        const zs = [0, 1, 2, 3, 4, 5].map((i) => SH.actor(W, ZK[i % 4], { seed: 50 + i }));
-        const bob = SH.actor(W, 'bob'); const d = PROPS.desk(W, 1000, 640);
-        return { zs, bob, W };
-      },
+  const FX7 = { dust: 60, beamK: 0.5, beamMax: 9 };
+  const run = (t, sp = 1.25) => ({ phase: t * sp, stride: 230, kind: 'run' });
+  SH.run('s07', 's07', 50, [
+    { // A: one beat of dead silence. Every head is up.
+      t0: 0, setup(W) { const world = SETS.aisle('mixed', 'night', { seed: 94, sign: 'AISLE 4', sub: 'SNACKS', header: 'SNACKS' }); const R = SH.stage(W, world, { fx: { dust: 40, beamK: 0.5 } }); return { R, zs: ZK.map((k) => R.actor(k)) }; },
+      draw(lt, st, t) { const R = st.R; R.frame(t, SH.cam3(lt, [[0, 0.1, 1.5, -0.4, 0, 0.08, 1100], [1.4, 0.1, 1.5, -0.3, 0, 0.08, 1120]]));
+        [[-0.6, 2.2], [0.7, 3.0], [-0.2, 4.6], [0.5, 6.2]].forEach(([x, z], i) => R.at(st.zs[i], x, z, Object.assign({}, EXPR.zombie, { face: i % 2 ? 0.4 : -0.4, look: [0, -0.95] }))); } },
+    { // B: a guttural shriek tears through the store
+      t0: 1.4, setup(W) { const world = SETS.aisle('mixed', 'night', { seed: 95, header: 'SNACKS' }); const R = SH.stage(W, world, { fx: { dust: 40, beamK: 0.5 } }); return { R, z: R.actor('zShopper') }; },
+      draw(lt, st, t) { const R = st.R; R.frame(t, SH.cam3(lt, [[0, 0.05, 1.1, 1.6, 0, 0, 2000], [1.6, 0.05, 1.12, 1.75, 0, 0, 2300]], { hand: 5 }));
+        R.at(st.z, 0, 3.0, Object.assign({}, EXPR.zombieShriek, { face: 0, headTilt: Math.sin(lt * 30) * 4, armL: [60, -20], armR: [60, -20], lean: -6 })); } },
+    { // C: they pour out of every aisle. Bob vaults the service desk. "Move, move, move, move!"
+      t0: 3.0, setup(W) { const world = SETS.service('gray', { seed: 6 }); const R = SH.stage(W, world, { fx: FX7 }); return { R, bob: R.actor('bob'), mic: R.prop(PROPS.mic(R.A)), zs: [0, 1, 2, 3, 4, 5].map((i) => R.actor(ZK[i % 4], { seed: 50 + i })) }; },
       draw(lt, st, t) {
-        SH.cam(st.W, lt, [[0, 900, 560, 1.0], [6, 1100, 560, 1.06]], 4);
-        st.zs.forEach((z, i) => { const run = SH.walk(lt + i * 0.3, 1.1, 0.9, true), d = S.seg(lt, i * 0.35, 6 + i * 0.35);
-          z.set(Object.assign({}, run, { x: S.lerp(-200 + (i % 3) * 120, 900 + (i % 3) * 60, d), y: 900 + (i % 3) * 70, scale: 0.5 + (i % 3) * 0.1, look: [0.8, 0], mouth: { open: 0.7, smile: -0.6 }, armL: [100, -10], armR: [110, -10], lean: 12 })); });
-        const v = S.seg(lt, 5.6, 6.0), arc = Math.sin(v * Math.PI);
-        const x = lt < 5.6 ? 1500 : S.lerp(1500, 1900, v), wk = lt > 3 ? SH.walk(lt, 1.2, 0.9, true) : SH.idle(lt);
-        st.bob.set(Object.assign({ legL: 0, legR: 0 }, wk, { x, y: 1120 - arc * 300, scale: 0.95, flip: lt < 2.4, look: lt < 2.4 ? [-0.9, 0] : [0.9, 0], eyeScale: 1.15, pupil: 0.55, browUp: 1, brow: 0.8,
-          mouth: SH.mouth(['b11'], { open: 0.4, smile: -0.7, wide: 0.6 }, { smile: -0.5, amp: 0.8 }), lean: 10 + arc * 20 }));
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, -3.6, 1.6, 0.6, 0.38, -0.08, 900], [4.2, -3.3, 1.5, 0.7, 0.5, -0.07, 900], [6, -3.0, 1.45, 0.5, 0.85, -0.06, 900]], { hand: 2.5 }));
+        R.put(st.mic, 0.15, 3.25, 0.42, 300, { y: 0.8 });
+        st.zs.forEach((z, i) => { const d = S.seg(lt, i * 0.3, 5.5 + i * 0.3); R.at(z, S.lerp(-4.8 + (i % 3) * 0.6, -1.2 + (i % 3) * 0.5, d), S.lerp(6.6 - (i % 2) * 1.0, 5.0 - (i % 3) * 0.4, d), Object.assign({}, EXPR.zombieShriek, { face: SH.headingTo(-6, 7, 0, 4), gait: run(lt + i * 0.3, 1.1), armL: [100, -10], armR: [110, -10], lean: 12 })); });
+        const v = S.seg(lt, 4.3, 5.1), arc = Math.sin(v * Math.PI), bx = lt < 4.3 ? -0.15 : S.lerp(-0.15, 0.4, v), bz = lt < 4.3 ? 4.1 : S.lerp(4.1, 2.4, v);
+        R.at(st.bob, lt > 5.1 ? K(lt, [[5.1, 0.4], [6, 1.6]]) : bx, lt > 5.1 ? K(lt, [[5.1, 2.4], [6, 1.6]]) : bz, Object.assign({}, EXPR.terror, { face: lt < 2.2 ? SH.headingTo(-0.15, 4.1, -5, 7) : 0.6, gait: lt > 2.2 && lt < 4.3 || lt > 5.1 ? run(lt) : null, crouch: 0,
+          mouth: SH.mouth(['b11'], { open: 0.4, smile: -0.7, wide: 0.6 }, { smile: -0.5, amp: 0.8 }), lean: 10 + arc * 25 }), { y: arc * 1.15 });
       } },
-    { // D: slides under the deli case
-      t0: 9.0, setup(W) { SH.bokeh(W, { seed: 97, mood: 'night' }); const bob = SH.actor(W, 'bob'); PROPS.deli(W, 520, 640, 1000); const zs = [0, 1, 2].map((i) => SH.actor(W, ZK[i], { seed: 60 + i })); return { bob, zs, W }; },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 900, 600, 1.0], [5, 1060, 600, 1.0]], 5);
-        const s = S.seg(lt, 1.2, 2.6);
-        st.bob.set({ x: S.lerp(-100, 1900, E.outCubic(S.seg(lt, 0.4, 3.6))), y: 1080, scale: 0.9, lean: s > 0 && s < 1 ? 80 : 10, look: [0.9, 0], eyeScale: 1.15, pupil: 0.5, browUp: 1, mouth: { open: 0.4, smile: -0.7, wide: 0.6 }, armL: [150, 0], armR: [150, 0] });
-        st.zs.forEach((z, i) => { const run = SH.walk(lt + i, 1.1, 0.9, true); z.set(Object.assign({}, run, { x: S.lerp(-500 - i * 220, 1400 - i * 260, S.seg(lt, 0.8, 5)), y: 1000, scale: 0.78, look: [0.8, 0], mouth: { open: 0.7, smile: -0.6 }, armL: [100, -10], armR: [110, -10], lean: 12 })); });
+    { // D: tracking alongside as he sprints past the end caps; end caps whip through the foreground
+      t0: 9.0, setup(W) { const world = SETS.store('gray', { seed: 2, front: false }); const R = SH.stage(W, world, { fx: FX7 }); return { R, bob: R.actor('bob'), zs: [0, 1, 2].map((i) => R.actor(ZK[i], { seed: 60 + i })) }; },
+      draw(lt, st, t) {
+        const R = st.R, bx = K(lt, [[0, -7.5], [4.4, 1.5]], E.lin);
+        R.frame(t, SH.cam3(lt, [[0, -7.3, 1.1, 3.3, 0.55, -0.02, 1000], [4.4, 1.7, 1.1, 3.3, 0.55, -0.02, 1000]], { hand: 3 }));
+        R.at(st.bob, bx, 4.8, Object.assign({}, EXPR.terror, { face: Math.PI / 2, gait: run(lt), lean: 12 }));
+        st.zs.forEach((z, i) => R.at(z, bx - 2.2 - i * 0.9, 5.0 + (i % 2) * 0.5, Object.assign({}, EXPR.zombieShriek, { face: Math.PI / 2, gait: run(lt + i * 0.4, 1.15), armL: [100, -10], armR: [110, -10], lean: 12 })));
       } },
-    { // E: knocks over the cereal display
-      t0: 14.0, setup(W) { SH.aisle(W, { seed: 98, mood: 'night', kind: 'cereal', vx: 0.7 }); const c = PROPS.cereal(W, 820, 980); const bob = SH.actor(W, 'bob'); return { c, bob, W }; },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 1000, 620, 1.05], [4, 1000, 620, 1.0]], lt > 0.6 && lt < 1.2 ? 22 : 4);
-        st.c.topple(E.outCubic(S.seg(lt, 0.6, 2.0)));
-        const wk = SH.walk(lt, 1.2, 1, true); st.bob.set(Object.assign({}, wk, { x: S.lerp(300, 2200, S.seg(lt, 0, 3.4)), y: 1100, scale: 0.92, look: [0.9, 0], eyeScale: 1.15, pupil: 0.5, browUp: 1, mouth: { open: 0.4, smile: -0.7, wide: 0.6 }, lean: 14 }));
+    { // E: he knocks over the cereal display - boxes everywhere
+      t0: 13.4, setup(W) { const world = SETS.store('gray', { seed: 2, front: false }); const R = SH.stage(W, world, { fx: FX7 }); const c = R.prop(PROPS.cereal(R.A, 0, 0)); c.style.width = '440px'; c.style.height = '600px'; return { R, bob: R.actor('bob'), c }; },
+      draw(lt, st, t) {
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, 2.6, 0.9, 3.0, 0.3, 0.0, 1150], [3.6, 3.2, 0.95, 3.2, 0.45, 0.0, 1050]], { hand: lt > 0.5 && lt < 1.3 ? 8 : 2 }));
+        st.c.topple(E.outCubic(S.seg(lt, 0.55, 1.9))); R.put(st.c, 3.6, 4.4, 1.2, 600, { ax: 0.5 });
+        R.at(st.bob, K(lt, [[0, 2.4], [3.6, 6.4]], E.lin), 4.6, Object.assign({}, EXPR.terror, { face: Math.PI / 2, gait: run(lt), lean: 14 }));
       } },
-    { // F: running - every one of them heard that
-      t0: 18.0, setup(W) { SH.aisle(W, { seed: 99, mood: 'night', kind: 'mixed' }); const zs = [0, 1, 2, 3].map((i) => SH.actor(W, ZK[i], { seed: 70 + i })); const bob = SH.actor(W, 'bob'); return { zs, bob, W }; },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 960, 560, 1.05], [10, 960, 560, 1.12]], 6);
-        const wk = SH.walk(lt, 1.25, 1, true);
-        st.bob.set(Object.assign({}, wk, { x: 960 + Math.sin(lt * 0.9) * 40, y: 1230, scale: 1.12, look: [Math.sin(lt * 2) * 0.9, 0], eyeScale: 1.15, pupil: 0.5, browUp: 1, brow: 0.8, mouth: { open: 0.3 + Math.abs(Math.sin(lt * 7)) * 0.2, smile: -0.7, wide: 0.6 }, lean: 0 }));
-        st.zs.forEach((z, i) => { const run = SH.walk(lt + i * 0.4, 1.2, 0.9, true); z.set(Object.assign({}, run, { x: 560 + i * 260, y: 880 + (i % 2) * 40 + Math.sin(lt * 0.5 + i) * 30, scale: 0.55 + (i % 2) * 0.08, look: [0, 0.2], mouth: { open: 0.7, smile: -0.6 }, armL: [100, -10], armR: [110, -10], lean: 0 })); });
+    { // F: running straight at us down the aisle. "Every one of them heard that..." / "You need a way out..."
+      t0: 17.0, setup(W) { const world = SETS.aisle('snacks', 'gray', { seed: 99, header: 'SNACKS', sign: 'AISLE 4', sub: 'SNACKS' }); const R = SH.stage(W, world, { fx: FX7 }); return { R, bob: R.actor('bob'), zs: [0, 1, 2, 3].map((i) => R.actor(ZK[i], { seed: 70 + i })) }; },
+      draw(lt, st, t) {
+        const R = st.R, cam = SH.cam3(lt, [[0, 0.1, 1.15, 14 - 0, 0, -0.02, 1050], [11.4, 0.1, 1.15, 14 - 11.4 * 1.1, 0, -0.02, 1050]], { hand: 3 }); R.frame(t, cam);
+        const bz = cam.z + 2.8;
+        R.at(st.bob, Math.sin(lt * 0.9) * 0.3, bz, Object.assign({}, EXPR.terror, { face: 0, headFace: Math.sin(lt * 1.7) > 0.6 ? Math.PI * 0.85 : 0, gait: run(lt), lean: 8 }));
+        st.zs.forEach((z, i) => R.at(z, -0.6 + i * 0.4, bz + 3.0 + i * 0.7 + Math.sin(lt + i) * 0.2, Object.assign({}, EXPR.zombieShriek, { face: 0, gait: run(lt + i * 0.4, 1.15), armL: [100, -10], armR: [110, -10], lean: 10 })));
       } },
-    { // G: the PA loops "...help... help..." - they freeze and stare up at the speakers. "Stupid."
-      t0: 28.0, setup(W) {
-        SH.aisle(W, { seed: 100, mood: 'night', kind: 'mixed' }); const spk = PROPS.speaker(W, 880, 40, 1.2);
-        const zs = [0, 1, 2, 3].map((i) => SH.actor(W, ZK[i], { seed: 80 + i })); const rings = SH.rings(W, '#7FD3FF');
-        const end = SH.div(W, 'left:1480px;top:560px;width:520px;height:560px;border-radius:14px;background:linear-gradient(90deg,#C9302C,#8a1c1a)');
-        const bob = SH.actor(W, 'bob'); SH.div(W, 'left:1440px;top:820px;width:560px;height:320px;border-radius:14px;background:#E8382F;box-shadow:0 -6px 0 #F2B134', '<div style="font:900 64px/320px Basement Grotesque;color:#fff;text-align:center">SALE!</div>');
-        return { zs, rings, bob, W };
-      },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 960, 500, 1.0], [8, 1040, 520, 1.05]]);
-        st.rings(lt, 0, 960, 140, 1300, 1.1, 2.2, 6.4);
-        const pos = [[420, 1060, 0.8], [760, 960, 0.62], [1100, 980, 0.66], [1300, 920, 0.52]];
-        st.zs.forEach((z, i) => { const [x, y, s] = pos[i]; z.set({ x, y, scale: s, flip: i % 2 === 1, look: [0, -0.9], headTilt: (i % 2 ? 1 : -1) * 6, mouth: { open: 0.25, smile: -0.5 }, armL: [14, -10], armR: [14, -10], bob: Math.sin(lt * 1.3 + i) * 3 }); });
-        st.bob.set({ x: 1700, y: 1240, scale: 0.95, flip: true, look: [-0.7, -0.3], lid: 0.2, browUp: 0.6, brow: -0.2, mouth: { open: 0.15 + Math.abs(Math.sin(lt * 4)) * 0.15, smile: -0.4, wide: 0.6 }, lean: -6, bob: Math.sin(lt * 5) * 4 });
+    { // G: the PA loops "...help... help..." - they freeze and stare up at the speakers. "Stupid. You just rang the loudest dinner bell in the world."
+      t0: 28.4, setup(W) { const world = SETS.store('gray', { seed: 2, front: false }); const R = SH.stage(W, world, { fx: FX7 });
+        return { R, bob: R.actor('bob'), sp: R.prop(PROPS.speaker(R.A, 0, 0, 1.2)), rings: SH.rings(R.A, '#7FD3FF'), zs: [0, 1, 2, 3].map((i) => R.actor(ZK[i], { seed: 80 + i })) }; },
+      draw(lt, st, t) {
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, -0.2, 1.4, 1.6, 0.05, 0.06, 1000], [7.6, 0.4, 1.3, 2.0, 0.12, 0.04, 1050]]));
+        const P = R.put(st.sp, 0.2, 7.5, 0.5, 170, { y: 3.8 }); if (P.visible) st.rings(lt, 0, P.x, P.y - 40, 1300, 1.1, 2.2, 6.2);
+        [[-1.3, 5.6], [-0.4, 6.8], [0.9, 6.2], [1.6, 7.6]].forEach(([x, z], i) => R.at(st.zs[i], x, z, Object.assign({}, EXPR.zombie, { face: i % 2 ? 0.6 : -0.6, look: [0, -0.95], headTilt: (i % 2 ? 1 : -1) * 6, bob: Math.sin(lt * 1.3 + i) * 3 })));
+        R.at(st.bob, 2.6, 4.2, Object.assign({}, EXPR.exhausted, { face: -0.9, crouch: 0.45, look: [-0.7, -0.3], lid: 0.2, mouth: { open: 0.15 + Math.abs(Math.sin(lt * 4)) * 0.15, smile: -0.4, wide: 0.6 }, bob: Math.sin(lt * 5) * 4 }));
       } },
     { // H: a narrow gap - AISLE 9: CANNED GOODS. He dives in.
-      t0: 36.0, setup(W) { SH.aisle(W, { seed: 9, mood: 'night', kind: 'cans', sign: 'AISLE 9\nCANNED GOODS', signZ: 6.5, lip: '#E8382F' }); const bob = SH.actor(W, 'bob'); return { bob, W }; },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 960, 380, 1.4], [3.4, 960, 420, 1.25], [7, 960, 560, 1.0]]);
-        const dive = E.inCubic(S.seg(lt, 5.6, 6.8)), wk = lt > 5.4 ? SH.walk(lt, 1.2, 1, true) : SH.idle(lt);
-        st.bob.set(Object.assign({ legL: 0, legR: 0 }, wk, { x: 960, y: S.lerp(1300, 820, dive), scale: S.lerp(1.1, 0.35, dive), look: [0, -0.4], eyeScale: 1.1, browUp: 1, mouth: { open: 0.2, smile: -0.4 }, lean: dive * 30 }));
+      t0: 36.0, setup(W) { const world = SETS.store('gray', { seed: 2, front: false }); const R = SH.stage(W, world, { fx: FX7 }); return { R, bob: R.actor('bob') }; },
+      draw(lt, st, t) {
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, 2.9, 1.2, 0.6, -0.28, 0.02, 1050], [3.2, 1.6, 1.2, 2.0, -0.12, 0.0, 1000], [6.6, 0.5, 1.15, 3.6, -0.02, -0.02, 1000]]));
+        const dive = S.seg(lt, 4.6, 6.4);
+        R.at(st.bob, K(lt, [[0, 1.6], [4.6, 0.4], [6.4, 0.0]]), K(lt, [[0, 4.3], [4.6, 5.0], [6.4, 8.5]]), Object.assign({}, lt < 4.6 ? EXPR.determined : EXPR.terror, { face: lt < 4.6 ? -0.4 : Math.PI, headFace: lt < 3.6 ? Math.PI * 0.9 : null, gait: lt > 4.4 ? run(lt) : null, crouch: lt < 4.4 ? 0.3 : 0, lean: dive * 25 }));
       } },
     { // I: RULE #2
-      t0: 43.4, setup(W, O) { SH.aisle(W, { seed: 9, mood: 'night', kind: 'cans', sign: 'AISLE 9\nCANNED GOODS', signZ: 6.5, lip: '#E8382F' }); return { card: SH.ruleCard(O, 2, 'NEVER USE THE<br>PA SYSTEM'), W }; },
-      draw(lt, st) { SH.cam(st.W, lt, [[0, 960, 560, 1.0], [8.6, 960, 560, 1.06]]); st.card(lt, 0.2, 7.9); } },
-  ], { fades: [[51.3, 52, 0, 1]] });
+      t0: 42.6, setup(W, O) { const world = SETS.aisle('cans', 'night', { seed: 9, sign: 'AISLE 9', sub: 'CANNED GOODS', signColor: '#C9302C', lip: '#E8382F', header: 'SOUP & BEANS' }); const R = SH.stage(W, world, { fx: { dust: 50, beamK: 0.6 } }); return { R, card: SH.ruleCard(O, 2, 'NEVER USE THE<br>PA SYSTEM') }; },
+      draw(lt, st, t) { st.R.frame(t, SH.cam3(lt, [[0, 0.1, 1.3, -1.2, 0, -0.02, 1050], [7.4, 0.1, 1.3, 0.2, 0, -0.02, 1100]])); st.card(lt, 0.2, 6.6); } },
+  ], { fades: [[49.3, 50, 0, 1]], gfx: [{ type: 'note', text: 'AISLE 9 · CANNED GOODS', icon: '9', at: 37.4, dur: 3.6 }] });
 })();

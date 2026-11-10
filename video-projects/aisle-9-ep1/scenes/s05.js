@@ -1,76 +1,61 @@
-// @scene s05 56 Beat 5 - The Stockroom
+// @scene s05 48 Beat 5 - The Stockroom
 (() => {
   const S = STAGE, E = S.E, K = SH.k;
-  const room = (W, seed = 9) => { const c = SH.canvas(W); PROPS.stockroom(c, { seed }); return c; };
-  const boxesFront = (W, y = 900) => SH.div(W, `left:-200px;top:${y}px;width:2400px;height:400px`, `<svg viewBox="0 0 2400 400" width="2400" height="400">
-    ${[0, 1, 2, 3, 4, 5, 6].map((i) => `<rect x="${i * 360 + (i % 2) * 40}" y="${(i % 3) * 30}" width="${300 + (i % 2) * 40}" height="400" rx="10" fill="${['#8E6A44', '#A57A4B', '#7a5a3a'][i % 3]}"/><rect x="${i * 360 + 120}" y="${(i % 3) * 30}" width="50" height="400" fill="rgba(255,255,255,.18)"/>`).join('')}</svg>`);
-  const door = (W, x) => SH.div(W, `left:${x}px;top:120px;width:520px;height:860px;background:linear-gradient(90deg,#4a505a,#6b717c);border:14px solid #2a2d33;border-radius:6px`, '<div style="position:absolute;right:40px;top:420px;width:26px;height:80px;border-radius:8px;background:#c9ced6"></div><div style="position:absolute;left:150px;top:60px;width:200px;height:110px;background:#9aa0aa;border:6px solid #2a2d33"></div>');
-  SH.run('s05', 's05', 56, [
-    { // A: Bob slips in, eases the door shut, slides down the wall
-      t0: 0, setup(W) {
-        room(W, 11); const dr = door(W, 1180); const strip = SH.div(W, 'left:1194px;top:980px;width:520px;height:10px;background:#ff4a3a;box-shadow:0 0 40px 10px rgba(255,60,40,.6)');
-        const bob = SH.actor(W, 'bob'); return { bob, dr, W };
-      },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 1100, 560, 1.0], [5, 900, 620, 1.15]]);
-        const slide = E.inOutCubic(S.seg(lt, 2.4, 4.6)), wk = lt < 1.4 ? SH.walk(lt, 0.5, 0.4) : { legL: 0, legR: 0, bob: 0 };
-        st.bob.set(Object.assign({}, wk, { x: K(lt, [[0, 1400], [1.4, 1040]]), y: 1080 + slide * 300, scale: 0.98, flip: true, look: [0.8, 0], eyeScale: 1.08, browUp: 1, brow: 0.6,
-          mouth: { open: 0.15 + Math.abs(Math.sin(lt * 5)) * 0.1, smile: -0.5, wide: 0.6 }, armR: lt < 2.2 ? [60, -60] : [10, -10], armL: [16, -20], lid: slide * 0.2 }));
+  const room = () => SETS.stockroom('warm', { seed: 9 });
+  const FXW = { dust: 70, beamK: 0.9, dustK: 1.3 };
+  const doorCol = (u) => { const r = Math.round(S.lerp(255, 150, u)), g = Math.round(S.lerp(74, 165, u)), b = Math.round(S.lerp(58, 185, u)); return `rgb(${r},${g},${b})`; };
+  SH.run('s05', 's05', 48, [
+    { // A: Bob slips in, eases the door shut, slides down against it
+      t0: 0, setup(W) { const world = room(); const R = SH.stage(W, world, { fx: FXW }); return { R, world, bob: R.actor('bob') }; },
+      draw(lt, st, t) {
+        const R = st.R; st.world.doorStrip.fill = st.world.doorStrip.crack.fill = doorCol(0);
+        R.frame(t, SH.cam3(lt, [[0, 1.2, 1.3, 1.6, -2.75, -0.08, 1000], [2.4, 0.9, 1.1, 1.0, -2.8, -0.08, 1150]], { hand: 0.4 }));
+        const slide = E.inOutCubic(S.seg(lt, 1.0, 2.3));
+        R.at(st.bob, 0.15, -2.55, Object.assign({}, EXPR.scared, { face: lt < 1.0 ? 0 : Math.PI, crouch: slide * 0.7, armR: lt < 1.0 ? [60, -60] : [-10, -120], armL: lt < 1.0 ? [20, -20] : [-10, -120], look: [0.4, 0], mouth: { open: 0.2 + Math.abs(Math.sin(lt * 5)) * 0.1, smile: -0.5, wide: 0.6 } }));
       } },
-    { // B: sitting against the wall among the boxes, thinking
-      t0: 5.0, setup(W) {
-        room(W, 12); const bob = SH.actor(W, 'bob'); boxesFront(W, 840); return { bob, W };
-      },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 960, 560, 1.0], [13.2, 960, 470, 1.35]]);
-        st.bob.set({ x: 960, y: 1240, scale: 1.0, look: [Math.sin(lt * 0.4) * 0.6, 0.2], lid: 0.25, browUp: 0.6, brow: 0.5, mouth: { open: 0, smile: -0.4, wide: 0.7 },
-          armL: [-20, -130], armR: [-20, -130], headTilt: -6 + Math.sin(lt * 0.5) * 4, blink: TOON.blinkAt(lt, 3.4), bob: Math.sin(lt * 2.2) * 3 });
+    { // B: sitting against the door. "Okay. Think. Tyler's gone. The doors are sealed..."
+      t0: 2.4, setup(W) { const world = room(); const R = SH.stage(W, world, { fx: FXW, dof: 1.5 }); return { R, world, bob: R.actor('bob') }; },
+      draw(lt, st, t) {
+        const R = st.R; st.world.doorStrip.fill = st.world.doorStrip.crack.fill = doorCol(0);
+        R.frame(t, SH.cam3(lt, [[0, 0.9, 0.85, -0.6, -2.82, 0.04, 1050], [12.6, 0.25, 0.7, -1.55, -3.05, 0.04, 1450]], { ease: E.inOutSine, hand: 0.3 }));
+        R.at(st.bob, 0.15, -2.55, Object.assign({}, EXPR.exhausted, { face: Math.PI, crouch: 0.7, look: [Math.sin(lt * 0.4) * 0.6, 0.2], lid: 0.25, browUp: 0.6, brow: 0.5, armL: [-15, -125], armR: [-15, -125], headTilt: -6 + Math.sin(lt * 0.5) * 4, blink: TOON.blinkAt(lt, 3.4), bob: Math.sin(lt * 2.2) * 3 }));
       } },
     { // C: through the crack in the door - shoppers drifting: a woman with her basket, a man in pajamas
-      t0: 18.2, setup(W, O) {
-        SH.aisle(W, { seed: 81, mood: 'red', kind: 'mixed', vignette: 0.5 });
-        const zw = SH.actor(W, 'zBasketW'); const bk = PROPS.basket(W); const zp = SH.actor(W, 'zPajama');
-        SH.div(O, 'left:0;top:0;width:780px;height:1080px;background:#000;box-shadow:30px 0 60px 30px #000');
-        SH.div(O, 'left:1140px;top:0;width:780px;height:1080px;background:#000;box-shadow:-30px 0 60px 30px #000');
-        SH.div(O, 'left:780px;top:0;width:360px;height:1080px;background:linear-gradient(90deg,rgba(0,0,0,.5),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 70%,rgba(0,0,0,.5))');
-        return { zw, zp, bk, W };
+      t0: 15.0, setup(W, O) {
+        const world = SETS.aisle('mixed', 'red', { seed: 81, sign: 'AISLE 4', sub: 'SNACKS', signColor: '#7a1010', header: 'SNACKS' });
+        const R = SH.stage(W, world, { fx: { flicker: true, dust: 40, beamK: 0.6, beamMax: 9 } });
+        const bk = R.prop(PROPS.basket(R.A));
+        SH.div(O, 'left:0;top:0;width:800px;height:1080px;background:#000;box-shadow:40px 0 70px 40px #000'); SH.div(O, 'left:1120px;top:0;width:800px;height:1080px;background:#000;box-shadow:-40px 0 70px 40px #000');
+        SH.div(O, 'left:800px;top:0;width:320px;height:1080px;background:linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 70%,rgba(0,0,0,.55))');
+        return { R, zw: R.actor('zBasketW'), zp: R.actor('zPajama'), bk };
       },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 900, 540, 1.0], [14, 1020, 540, 1.05]]);
-        const a = SH.shamble(lt, 0, 0.6), xw = K(lt, [[0, 300], [8, 1500]], E.lin);
-        st.zw.set(Object.assign({}, a, { x: xw, y: 1010, scale: 0.78, look: [0, 0], mouth: { open: 0.3, smile: -0.5 }, armR: [40, -70] }));
-        st.bk.style.transform = `translate(${xw + 70}px, ${560 + a.bob}px)`;
-        const b = SH.shamble(lt + 2, 4, 0.5), xp = K(lt, [[4, 1700], [14, 600]], E.lin);
-        st.zp.set(Object.assign({}, b, { x: xp, y: 1050, scale: 0.84, flip: true, look: [0, 0.3], mouth: { open: 0.25, smile: -0.5 } }));
+      draw(lt, st, t) {
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, 0.1, 1.3, -1.0, -0.06, -0.03, 1100], [13.8, 0.1, 1.3, -0.6, 0.06, -0.03, 1150]]));
+        const xw = K(lt, [[0, -1.3], [9, 1.2]], E.lin);
+        const P = R.at(st.zw, xw, 4.2, Object.assign({}, EXPR.zombie, SH.shamble(lt, 0, 0.6), { face: Math.PI / 2, gait: { phase: lt * 0.35, stride: 70, kind: 'shamble' }, armR: [40, -70] }));
+        R.put(st.bk, xw + 0.12, 4.15, 0.32, 150, { y: 0.55 + Math.sin(lt * 2) * 0.02 });
+        R.at(st.zp, K(lt, [[4, 1.4], [13.8, -1.3]], E.lin), 6.0, Object.assign({}, EXPR.zombie, SH.shamble(lt + 2, 4, 0.5), { face: -Math.PI / 2, gait: { phase: lt * 0.3, stride: 60, kind: 'shamble' }, look: [0, 0.3] }));
       } },
-    { // D: a clink in the dark; Bob whips around; nothing - a can rolls out and stops
-      t0: 32.2, setup(W) {
-        room(W, 13); const bob = SH.actor(W, 'bob'); boxesFront(W, 880); const can = PROPS.can(W, 'BEANS', '#C9302C', 0.4);
-        const dark = SH.div(W, 'left:-200px;top:-200px;width:2400px;height:1500px;background:radial-gradient(ellipse at 30% 50%,rgba(0,0,0,0),rgba(0,0,0,.55))'); return { bob, can, W };
-      },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 1100, 560, 1.15], [0.6, 900, 560, 1.0], [9.3, 760, 560, 1.12]], lt > 0.2 && lt < 0.6 ? 10 : 0);
+    { // D: a metallic clink deep in the stockroom. A can rolls out of the dark and stops. "Hello?" / "Probably a rat."
+      t0: 28.8, setup(W) { const world = room(); const R = SH.stage(W, world, { fx: FXW }); return { R, world, bob: R.actor('bob'), can: R.prop(PROPS.can(R.A, 'BEANS', '#C9302C', 1)) }; },
+      draw(lt, st, t) {
+        const R = st.R; st.world.doorStrip.fill = st.world.doorStrip.crack.fill = doorCol(0.05);
         const whip = E.outCubic(S.seg(lt, 0.15, 0.45));
-        st.bob.set({ x: 1300, y: 1240, scale: 1.0, flip: whip > 0.5, look: [whip > 0.5 ? 0.8 : -0.5, 0], eyeScale: 1.15, pupil: 0.55, browUp: 1, brow: 0.7,
-          mouth: SH.mouth(['b07'], { open: 0, smile: -0.6, wide: 0.6 }, { smile: -0.5, amp: 0.4, wide: 0.6 }), armL: [-20, -130], armR: [-20, -130], headTilt: lt > 4 ? 8 : 0 });
-        const r = S.seg(lt, 0.3, 2.4); st.can.set(S.lerp(200, 640, E.outCubic(r)), 990, 0.4, r * 560);
+        R.frame(t, SH.cam3(lt, [[0, -0.2, 0.75, -1.3, -2.9, 0.03, 1300], [0.5, -0.2, 0.75, -1.3, -2.9, 0.03, 1300], [1.2, 0.4, 1.0, -0.6, 0.12, -0.06, 1000], [10.5, 0.35, 1.0, 0.4, 0.15, -0.05, 1250]], { hand: lt > 0.2 && lt < 1.2 ? 5 : 0.5 }));
+        R.at(st.bob, 0.15, -2.55, Object.assign({}, lt < 0.5 ? EXPR.exhausted : EXPR.scared, { face: Math.PI, headFace: Math.PI + S.lerp(0, 0.9, whip), crouch: 0.7, look: [0.3, 0], armL: [-15, -125], armR: [-15, -125], mouth: SH.mouth(['b07'], { open: 0, smile: -0.6, wide: 0.6 }, { smile: -0.5, amp: 0.4, wide: 0.6 }) }));
+        const r = S.seg(lt, 0.3, 2.6); R.put(st.can, S.lerp(-2.6, -0.9, E.outCubic(r)), S.lerp(6.0, 4.2, E.outCubic(r)), 0.14, 190, { rot: r * 520 });
       } },
-    { // E: time-lapse - the light under the door shifts from red to grey, the clock jumps 1:00 -> 6:00
-      t0: 41.5, setup(W) {
-        room(W, 14); const dr = door(W, 1180); const strip = SH.div(W, 'left:1194px;top:980px;width:520px;height:10px;background:#ff4a3a;box-shadow:0 0 40px 10px rgba(255,60,40,.6)');
-        const clk = PROPS.clock(W, 780, 260, 110); const bob = SH.actor(W, 'bob'); boxesFront(W, 900);
-        const tint = SH.div(W, 'left:-200px;top:-200px;width:2400px;height:1500px;background:#506078;mix-blend-mode:multiply;opacity:0');
-        return { bob, clk, strip, tint, W };
-      },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 960, 560, 1.0], [14.5, 1000, 600, 1.08]]);
-        const u = S.seg(lt, 1.0, 13.0), mins = 60 + u * 300;
-        st.clk.set(Math.floor(mins / 60), mins % 60);
-        const r = Math.round(S.lerp(255, 150, u)), g = Math.round(S.lerp(74, 160, u)), b = Math.round(S.lerp(58, 175, u));
-        st.strip.style.background = `rgb(${r},${g},${b})`; st.strip.style.boxShadow = `0 0 40px 10px rgba(${r},${g},${b},.6)`;
-        st.tint.style.opacity = u * 0.35;
-        st.bob.set({ x: 520, y: 1260, scale: 1.0, look: [0.5, -0.2], lid: S.lerp(0.25, 0.55, u), browUp: 0.3, mouth: { open: 0, smile: -0.4, wide: 0.7 },
-          armL: [-20, -130], armR: [-20, -130], headTilt: -6, blink: TOON.blinkAt(lt, 2.8), bob: Math.sin(lt * 2) * 2 });
+    { // E: time-lapse - the light under the door goes from red to grey while the clock jumps 1:00 -> 6:00
+      t0: 39.3, setup(W) { const world = room(); const R = SH.stage(W, world, { fx: FXW }); return { R, world, bob: R.actor('bob'), clk: R.prop(PROPS.clock(R.A, 110, 110, 110)) }; },
+      draw(lt, st, t) {
+        const R = st.R, u = S.seg(lt, 0.6, 7.6); st.world.doorStrip.fill = st.world.doorStrip.crack.fill = doorCol(u);
+        R.frame(t, SH.cam3(lt, [[0, 1.6, 1.4, 0.6, -2.62, -0.12, 950], [8.7, 1.3, 1.3, 0.2, -2.68, -0.1, 1050]]));
+        const mins = 60 + u * 300; st.clk.set(Math.floor(mins / 60), mins % 60); R.put(st.clk, -1.6, -2.95, 0.5, 220, { y: 2.2 });
+        R.at(st.bob, 0.15, -2.55, Object.assign({}, EXPR.exhausted, { face: Math.PI, crouch: 0.7, lid: S.lerp(0.3, 0.6, u), look: [0.5, -0.2], armL: [-15, -125], armR: [-15, -125], headTilt: -6, blink: TOON.blinkAt(lt, 2.8) }));
+        R.F.style.filter = ''; // grade handled by the door light
       } },
-  ], { fades: [[0, 0.4, 1, 0], [55.3, 56, 0, 1]] });
+  ], { fades: [[0, 0.5, 1, 0], [47.3, 48, 0, 1]], gfx: [
+    { type: 'stamp', text: 'THE STOCKROOM', sub: 'STAFF ONLY · 1:00 AM', at: 0.6, dur: 4 },
+    { type: 'note', text: 'THE SHOPPERS JUST WANDER... UNTIL THEY HEAR SOMETHING', icon: '!', at: 22.0, dur: 4.6 },
+  ] });
 })();

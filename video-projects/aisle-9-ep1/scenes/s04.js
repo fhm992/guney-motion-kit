@@ -1,94 +1,79 @@
-// @scene s04 52 Beat 4 - First Encounter, Rule 1
+// @scene s04 57 Beat 4 - First Encounter, Rule 1
 (() => {
   const S = STAGE, E = S.E, K = SH.k;
-  const redAisle = (W, seed) => SH.aisle(W, { seed, mood: 'red', kind: 'mixed', sign: 'AISLE 2\nCHECKOUT', signColor: '#6a0e0e' });
-  SH.run('s04', 's04', 52, [
-    { // A: red light; Bob kneels, fingers on Halloran's neck
-      t0: 0, setup(W, O) {
-        redAisle(W, 71); const bob = SH.actor(W, 'bob'); const h = SH.actor(W, 'hallSick'); const fl = SH.flicker(O);
-        return { bob, h, fl, W };
-      },
+  const HX = -0.3, HZ = 0.1;                     // where Mr. Halloran fell (store coordinates, by register 3)
+  const shutters = (cv) => { const c = cv.getContext('2d'); c.fillStyle = '#5b616c'; c.fillRect(0, 0, cv.width, cv.height); for (let y = 0; y < cv.height; y += 36) { c.fillStyle = '#3a3f48'; c.fillRect(0, y, cv.width, 6); } };
+  const red = () => SETS.store('red', { seed: 2, flicker: true });
+  const FXR = { flicker: true, beacon: [1760, 80], dust: 60, beamK: 0.8, beamMax: 9 };
+  SH.run('s04', 's04', 57, [
+    { // A: red emergency light. Bob kneels, fingers on Halloran's neck. "Two seconds. That's what he said..."
+      t0: 0, setup(W) { const R = SH.stage(W, red(), { outside: shutters, fx: FXR }); return { R, bob: R.actor('bob'), h: R.actor('hallSick') }; },
       draw(lt, st, t) {
-        SH.cam(st.W, lt, [[0, 900, 640, 1.25], [8.8, 960, 640, 1.45]]); st.fl(t);
-        st.h.set({ x: 1240, y: 1010, scale: 0.9, lean: -88, lid: 1, mouth: { open: 0.1, smile: -0.3 }, armL: [30, -10], armR: [80, -10], shadow: 0 });
-        st.bob.set({ x: 640, y: 1330, scale: 1.0, lean: 12, look: [0.4, 0.9], headTilt: 16, browUp: 1, brow: 0.7, mouth: { open: 0, smile: -0.7, wide: 0.6 },
-          armR: [62, -20], armL: [20, -40], blink: TOON.blinkAt(lt, 2.4), bob: Math.sin(lt * 3) * 2 });
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, 2.2, 0.85, -1.2, -1.15, -0.05, 1050], [8.4, 1.5, 0.75, -0.8, -1.2, -0.04, 1350]], { hand: 0.5 }));
+        R.at(st.h, HX, HZ, Object.assign({}, EXPR.exhausted, { face: Math.PI / 2, lean: -86, lid: 1, mouth: { open: 0.1, smile: -0.3 }, armL: [30, -10], armR: [80, -10], shadow: 0 }));
+        R.at(st.bob, HX + 0.45, HZ + 0.45, Object.assign({}, EXPR.worried, { face: -2.4, crouch: 0.55, lean: 14, armR: [62, -20], armL: [20, -40], look: [0, 0.8], blink: TOON.blinkAt(lt, 2.4), bob: Math.sin(lt * 3) * 2 }));
       } },
-    { // B: his eyes snap open, milky; he sits up; neck crack. Bob whispers
-      t0: 8.6, setup(W, O) {
-        redAisle(W, 72); const bob = SH.actor(W, 'bob'); const h = SH.actor(W, 'zHalloran'); const fl = SH.flicker(O);
-        return { bob, h, fl, W };
-      },
+    { // B: his eyes snap open - milky white. He sits up. Neck crack. "That's not Mr. Halloran anymore."
+      t0: 8.4, setup(W) { const R = SH.stage(W, red(), { outside: shutters, fx: FXR }); return { R, bob: R.actor('bob'), h: R.actor('zHalloran') }; },
       draw(lt, st, t) {
-        SH.cam(st.W, lt, [[0, 1200, 560, 1.6], [1.6, 1200, 480, 1.5], [5.0, 1040, 520, 1.25]], lt > 0.2 && lt < 0.5 ? 12 : 0); st.fl(t);
-        const up = E.outBack(S.seg(lt, 0.4, 1.4), 1.2), crack = lt > 0.8 && lt < 1.0 ? 14 : 0;
-        st.h.set({ x: 1240, y: 1010 + (1 - S.clamp(up)) * 0, scale: 0.9, lean: S.lerp(-88, -4, S.clamp(up)), headTilt: 18 + crack, lid: lt < 0.2 ? 1 : 0, look: [0, 0], eyeScale: 1.15,
-          mouth: { open: 0.3, smile: -0.5 }, armL: [20, -30], armR: [26, -20], shadow: 0.3 });
-        st.bob.set({ x: 780, y: 1330, scale: 1.0, lean: S.lerp(12, -4, S.seg(lt, 0.5, 1.2)), look: [0.9, 0], eyeScale: 1.12, pupil: 0.55, browUp: 1, brow: 0.6,
-          mouth: SH.mouth(['b05'], { open: 0.05, smile: -0.7, wide: 0.6 }, { smile: -0.5, amp: 0.45, wide: 0.7 }), armR: [40, -60], armL: [30, -40] });
+        const R = st.R, up = E.outBack(S.seg(lt, 0.4, 1.6), 1.1), crack = lt > 0.6 && lt < 0.85 ? 16 : 0;
+        R.frame(t, SH.cam3(lt, [[0, 1.3, 0.55, -0.6, -1.25, 0.05, 1500], [1.6, 1.3, 0.75, -0.6, -1.25, 0.0, 1450], [5.4, 1.6, 1.0, -0.9, -1.2, -0.03, 1250]], { hand: lt > 0.2 && lt < 0.5 ? 6 : 0.5 }));
+        R.at(st.h, HX, HZ, Object.assign({}, EXPR.zombie, { face: Math.PI / 2 - S.clamp(up) * 1.2, lean: S.lerp(-86, -3, S.clamp(up)), headTilt: 18 + crack, lid: lt < 0.25 ? 1 : 0, crouch: S.clamp(up) * 0.15, armL: [20, -30], armR: [26, -20], shadow: 0.3 }));
+        R.at(st.bob, HX + 0.45 + S.seg(lt, 0.5, 1.4) * 0.5, HZ + 0.45, Object.assign({}, EXPR.terror, { face: -2.4, crouch: S.lerp(0.55, 0.25, S.seg(lt, 0.5, 1.4)), lean: 6, armL: [40, -60], armR: [40, -60], look: [-0.5, 0] }));
       } },
-    { // C: Bob backs away; Halloran's head tilts, but his eyes follow nothing
-      t0: 13.6, setup(W, O) {
-        redAisle(W, 73); const h = SH.actor(W, 'zHalloran'); const bob = SH.actor(W, 'bob'); const fl = SH.flicker(O);
-        return { bob, h, fl, W };
-      },
+    { // C: Bob backs away. "Mr. Halloran? Can you hear me?" He faces Bob... but his eyes follow nothing.
+      t0: 13.8, setup(W) { const R = SH.stage(W, red(), { outside: shutters, fx: FXR }); return { R, bob: R.actor('bob'), h: R.actor('zHalloran') }; },
       draw(lt, st, t) {
-        SH.cam(st.W, lt, [[0, 960, 600, 1.05], [7.0, 900, 600, 1.12]]); st.fl(t);
-        const sh = SH.shamble(lt, 1, 0.3);
-        st.h.set({ x: 1280, y: 1080, scale: 0.92, flip: true, lean: sh.lean * 0.5, headTilt: Math.sin(lt * 0.7) * 22, look: [0, 0], eyeScale: 1.15, mouth: { open: 0.3, smile: -0.5 }, armL: [16, -20], armR: [20, -20], legL: 0, legR: 0 });
-        const back = S.seg(lt, 0, 7.0), wk = SH.walk(lt, 0.35, 0.35);
-        st.bob.set(Object.assign({}, wk, { x: S.lerp(760, 420, back), y: 1080, scale: 0.95, lean: -4, look: [0.9, 0], eyeScale: 1.1, pupil: 0.55, browUp: 1, brow: 0.6,
-          mouth: { open: 0, smile: -0.8, wide: 0.5 }, armL: [30, -30], armR: [40, -50] }));
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, 1.7, 1.15, -2.6, -0.42, -0.05, 1000], [10, 0.9, 1.1, -2.3, -0.32, -0.04, 1100]], { hand: 0.5 }));
+        const back = S.seg(lt, 0, 9.5), bx = S.lerp(HX + 1.0, HX + 2.6, back), bz = S.lerp(HZ + 0.3, HZ - 0.6, back);
+        R.at(st.h, HX, HZ, Object.assign({}, EXPR.zombie, { face: SH.headingTo(HX, HZ, bx, bz) * 0.8, headTilt: Math.sin(lt * 0.7) * 24, look: [0, 0], lean: Math.sin(lt * 0.9) * 3, armL: [16, -20], armR: [20, -20], gait: { phase: lt * 0.12, stride: 10, kind: 'shamble' } }));
+        R.at(st.bob, bx, bz, Object.assign({}, SH.speaking('b05') ? EXPR.whisper : EXPR.scared, { face: SH.headingTo(bx, bz, HX, HZ), gait: { phase: -lt * 0.45, stride: 60, kind: 'sneak' }, crouch: 0.12,
+          mouth: SH.mouth(['b05'], EXPR.scared.mouth, { smile: -0.5, amp: 0.45, wide: 0.7 }), armL: [30, -30], armR: [40, -50] }));
       } },
-    { // D: the apron pocket lights up - BREAK TIME, 1:00 AM - and the phone rings
-      t0: 20.6, setup(W, O) {
-        redAisle(W, 74); const bob = SH.actor(W, 'bob'); const ph = PROPS.phone(W, 2.2); const fl = SH.flicker(O); const rings = SH.rings(W, '#7FD3FF');
-        return { bob, ph, fl, rings, W };
-      },
+    { // D: his apron pocket lights up - BREAK TIME 1:00 AM - and the phone starts ringing. "No, no, no, no, no."
+      t0: 23.8, setup(W) { const R = SH.stage(W, red(), { outside: shutters, fx: FXR }); const ph = R.prop(PROPS.phone(R.A, 1)); const rings = SH.rings(R.A, '#7FD3FF'); return { R, bob: R.actor('bob'), ph, rings }; },
       draw(lt, st, t) {
-        SH.cam(st.W, lt, [[0, 960, 700, 2.4], [1.4, 960, 640, 1.5], [3.8, 960, 560, 1.15]], lt > 0.3 ? 4 : 0); st.fl(t);
-        st.bob.set({ x: 960, y: 1180, scale: 1.0, look: [0, 0.9], headTilt: 6, eyeScale: 1.2, pupil: 0.5, browUp: 1, brow: 0.9, phoneGlow: 0.9,
-          mouth: SH.mouth(['b06'], { open: 0.3, smile: -0.8, wide: 0.6 }, { smile: -0.7, amp: 0.5, wide: 0.6 }), armL: [40, -110], armR: [40, -110] });
-        const out = S.seg(lt, 1.2, 1.8); st.ph.set(960, S.lerp(870, 760, out), S.lerp(0.9, 1.4, out), Math.sin(lt * 50) * 4);
-        st.rings(lt, 0.3, 960, 760, 700, 0.3, 1.0);
+        const R = st.R, bx = HX + 2.6, bz = HZ - 0.6;
+        R.frame(t, SH.cam3(lt, [[0, bx, 0.7, bz - 0.75, 0, 0.06, 1900], [1.3, bx, 0.85, bz - 1.1, 0, 0.02, 1400], [3.6, bx, 1.05, bz - 1.7, 0, -0.02, 1100]], { hand: 1.5 }));
+        R.at(st.bob, bx, bz, Object.assign({}, lt > 0.8 ? EXPR.terror : EXPR.scared, { face: 0, phoneGlow: 0.95, look: [0, 0.9], headTilt: 6, armL: [40, -110], armR: [40, -110],
+          mouth: SH.mouth(['b06'], { open: 0.3, smile: -0.8, wide: 0.6 }, { smile: -0.7, amp: 0.5, wide: 0.6 }) }));
+        const out = S.seg(lt, 1.1, 1.7), P = R.put(st.ph, bx, bz - 0.12, S.lerp(0.13, 0.17, out), 220, { y: S.lerp(0.62, 0.78, out), rot: Math.sin(lt * 50) * 4, front: true });
+        st.rings(lt, 0.2, P.x, P.y - 60, 600, 0.3, 1.0);
       } },
-    { // E: he lunges - Bob hurls the phone over the shelves; blue rings ripple out; he spins and runs for the noise
-      t0: 24.4, setup(W, O) {
-        redAisle(W, 75); const h = SH.actor(W, 'zHalloran'); const bob = SH.actor(W, 'bob'); const ph = PROPS.phone(W, 0.8); const rings = SH.rings(W, '#7FD3FF'); const fl = SH.flicker(O);
-        return { bob, h, ph, rings, fl, W };
-      },
+    { // E: he lunges - Bob hurls the phone over the shelves - blue rings ripple out - Halloran spins and runs for the noise
+      t0: 27.4, setup(W) { const R = SH.stage(W, red(), { outside: shutters, fx: FXR }); const ph = R.prop(PROPS.phone(R.A, 1)); const rings = SH.rings(R.A, '#7FD3FF'); return { R, bob: R.actor('bob'), h: R.actor('zHalloran'), ph, rings }; },
       draw(lt, st, t) {
-        SH.cam(st.W, lt, [[0, 960, 560, 1.05], [0.6, 960, 560, 1.0], [8, 1040, 540, 1.0]], lt < 0.6 ? 14 : 0); st.fl(t);
-        const throwU = S.seg(lt, 0.5, 1.4), px = S.lerp(560, 1900, throwU), py = 640 - Math.sin(throwU * Math.PI) * 520;
-        st.ph.set(px, throwU < 1 ? py : 640, 0.8, throwU * 720); st.ph.style.opacity = throwU < 1 ? 1 : 0;
-        st.rings(lt, 1.4, 1900, 600, 1600, 0.35, 1.8);
-        const lunge = E.outCubic(S.seg(lt, 0, 0.5)), spin = S.seg(lt, 1.5, 2.0), run = S.seg(lt, 2.0, 5.0);
-        const hx = S.lerp(1400, 980, lunge) + run * 1300, wk = lt > 2 ? SH.walk(lt, 1.3, 1, true) : { legL: 0, legR: 0, bob: 0 };
-        st.h.set(Object.assign({}, wk, { x: hx, y: 1080, scale: 0.92, flip: spin < 0.5, lean: lt < 1.5 ? -14 * lunge : 10, headTilt: lt > 1.4 ? -10 : 0, look: [0, 0], eyeScale: 1.15,
-          mouth: { open: 0.6, smile: -0.6 }, armL: lt < 1.5 ? [100, -10] : [60, -40], armR: lt < 1.5 ? [110, -10] : [60, -40] }));
-        st.bob.set({ x: 520, y: 1080, scale: 0.95, lean: lt < 1.4 ? -8 : 0, look: lt > 1.4 ? [0.9, -0.2] : [0.9, 0], eyeScale: 1.15, pupil: 0.55, browUp: 1, brow: 0.7,
-          mouth: { open: lt < 1.5 ? 0.3 : 0, smile: -0.8, wide: 0.5 }, armR: throwU > 0 && throwU < 1 ? [160 - throwU * 60, 10] : [40, -40], armL: [40, -40] });
+        const R = st.R; R.frame(t, SH.cam3(lt, [[0, 3.6, 1.5, -2.2, -0.62, -0.03, 950], [0.6, 3.6, 1.5, -2.2, -0.62, -0.03, 950], [8, 2.6, 1.6, -2.4, -0.28, -0.04, 900]], { hand: lt < 1.6 ? 4 : 0.8 }));
+        const bx = HX + 2.6, bz = HZ - 0.6, throwU = S.seg(lt, 0.5, 1.4);
+        const px = S.lerp(bx, -3.0, throwU), pz = S.lerp(bz, 10.0, throwU), py = 1.2 + Math.sin(throwU * Math.PI) * 3.2;
+        const P = R.put(st.ph, px, pz, 0.15, 220, { y: throwU < 1 ? py : 0, rot: throwU * 720 }); st.ph.style.opacity = throwU < 1 ? 1 : 0;
+        const land = WORLD.place(R.cam, -3.0, 10.0, 0.4); if (land.visible) st.rings(lt, 1.4, land.x, land.y, 1400, 0.4, 1.8);
+        const lunge = E.outCubic(S.seg(lt, 0, 0.5)), spin = S.seg(lt, 1.5, 2.0), run = S.seg(lt, 2.0, 6.5);
+        const hx = S.lerp(HX, bx - 0.7, lunge * (1 - run)) + (-2.6 - HX) * E.inCubic(run), hz = S.lerp(HZ, bz, lunge * 0.6 * (1 - run)) + (9 - HZ) * E.inCubic(run);
+        R.at(st.h, hx, hz, Object.assign({}, EXPR.zombieShriek, { face: lt < 1.5 ? SH.headingTo(hx, hz, bx, bz) : SH.headingTo(hx, hz, -3, 10), gait: lt > 2 ? { phase: lt * 1.6, stride: 220, kind: 'run' } : null, armL: lt < 1.5 ? [100, -10] : [60, -40], armR: lt < 1.5 ? [110, -10] : [60, -40], lean: lt < 1.5 ? -10 : 10 }));
+        R.at(st.bob, bx, bz, Object.assign({}, EXPR.terror, { face: lt < 1.4 ? SH.headingTo(bx, bz, -3, 10) : SH.headingTo(bx, bz, hx, hz), crouch: lt > 1.6 ? 0.25 : 0, armR: throwU > 0 && throwU < 1 ? [160 - throwU * 60, 10] : [40, -40], armL: [40, -40], look: [0, -0.2] }));
       } },
-    { // F: Bob alone, frozen; the ringing is far away now. "They hunt by sound."
-      t0: 32.4, setup(W, O) {
-        redAisle(W, 76); const bob = SH.actor(W, 'bob'); const rings = SH.rings(W, '#7FD3FF'); const fl = SH.flicker(O);
-        return { bob, rings, fl, W };
-      },
+    { // F: Bob alone, frozen. Far away the ringing. "He doesn't come for you. He goes for the noise. They hunt by sound."
+      t0: 35.4, setup(W) { const R = SH.stage(W, red(), { outside: shutters, fx: FXR }); const rings = SH.rings(R.A, '#7FD3FF'); return { R, bob: R.actor('bob'), rings }; },
       draw(lt, st, t) {
-        SH.cam(st.W, lt, [[0, 960, 560, 1.0], [11, 900, 470, 1.45]]); st.fl(t);
-        st.rings(lt, 0, 1700, 420, 500, 0.6, 1.6, 4);
-        st.bob.set({ x: 900, y: 1080, scale: 0.95, look: [0.7, -0.3], eyeScale: 1.1, pupil: 0.6, browUp: 0.8, brow: 0.5, mouth: { open: 0, smile: -0.6, wide: 0.6 },
-          armL: [16, -20], armR: [16, -20], bob: Math.sin(lt * 4) * 3, blink: TOON.blinkAt(lt, 2.0) });
+        const R = st.R, bx = HX + 2.6, bz = HZ - 0.6; R.frame(t, SH.cam3(lt, [[0, bx - 0.3, 1.2, bz - 3.0, 0.05, -0.03, 1000], [8, bx - 0.15, 1.05, bz - 1.3, 0.04, -0.02, 1500]], { hand: 0.5 }));
+        R.at(st.bob, bx, bz, Object.assign({}, EXPR.scared, { face: 0.5, headFace: 1.0, look: [0.7, -0.3], armL: [16, -20], armR: [16, -20], bob: Math.sin(lt * 4) * 3, blink: TOON.blinkAt(lt, 2.0) }));
+        const land = WORLD.place(R.cam, -3.0, 10.0, 0.4); if (land.visible) st.rings(lt, 0, land.x, land.y, 500, 0.7, 1.6, 4);
       } },
-    { // G: RULE #1 over the frozen frame
-      t0: 43.4, setup(W, O) {
-        redAisle(W, 76); const bob = SH.actor(W, 'bob'); const card = SH.ruleCard(O, 1, 'SILENCE IS<br>SURVIVAL');
-        return { bob, card, W };
-      },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 900, 470, 1.45], [8.6, 900, 470, 1.5]]);
-        st.bob.set({ x: 900, y: 1080, scale: 0.95, look: [0.7, -0.3], eyeScale: 1.1, pupil: 0.6, browUp: 0.8, mouth: { open: 0, smile: -0.6, wide: 0.6 }, armL: [16, -20], armR: [16, -20] });
-        st.card(lt, 0.1, 7.8);
+    { // G: RULE #1
+      t0: 43.4, setup(W, O) { const R = SH.stage(W, red(), { outside: shutters, fx: FXR }); return { R, bob: R.actor('bob'), card: SH.ruleCard(O, 1, 'SILENCE IS<br>SURVIVAL') }; },
+      draw(lt, st, t) { const R = st.R, bx = HX + 2.6, bz = HZ - 0.6; R.frame(t, SH.cam3(lt, [[0, bx - 0.15, 1.05, bz - 1.3, 0.04, -0.02, 1500], [7, bx - 0.12, 1.02, bz - 1.15, 0.04, -0.02, 1600]]));
+        R.at(st.bob, bx, bz, Object.assign({}, EXPR.scared, { face: 0.5, headFace: 1.0, look: [0.7, -0.3], armL: [16, -20], armR: [16, -20] })); st.card(lt, 0.1, 6.6); } },
+    { // H: "You need a place to hide. The stockroom has a door..." Bob sneaks along the end caps toward STAFF ONLY
+      t0: 50.4, setup(W) { const R = SH.stage(W, red(), { outside: shutters, fx: FXR }); return { R, bob: R.actor('bob') }; },
+      draw(lt, st, t) {
+        const R = st.R, bx = K(lt, [[0, 2.0], [6.6, 7.4]], E.lin), bz = 4.6;
+        R.frame(t, SH.cam3(lt, [[0, 0.6, 1.0, 2.6, 0.5, -0.04, 1000], [6.6, 4.8, 1.0, 2.7, 0.55, -0.04, 1000]]));
+        R.at(st.bob, bx, bz, Object.assign({}, EXPR.whisper, { face: Math.PI / 2, gait: { phase: lt * 0.7, stride: 120, kind: 'sneak' }, crouch: 0.25, lean: 14, armL: [20, -40], armR: [20, -40], headFace: Math.PI / 2 + Math.sin(lt * 0.8) * 0.8 }));
       } },
-  ], { fades: [[51.4, 52, 0, 1]] });
+  ], { fades: [[56.3, 57, 0, 1]], gfx: [
+    { type: 'note', text: "HIS EYES DON'T FOLLOW ANYTHING", icon: '?', at: 18.6, dur: 4.2 },
+    { type: 'note', text: "THEY CAN'T SEE. THEY FOLLOW SOUND", icon: '!', at: 37.8, dur: 4.6 },
+    { type: 'map', route: ['reg', 'stock'], at: 51.0, dur: 4.6 },
+  ] });
 })();

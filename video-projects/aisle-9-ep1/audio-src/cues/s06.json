@@ -1,16 +1,18 @@
-{"length": 56, "cues": [
+{"length": 60, "cues": [
  {"f": "assets/audio/sfx9/sub_hit.wav", "at": 0.3, "db": 6},
- {"f": "assets/audio/bgm/ambient_sparse.wav", "bus": "music", "at": 3.4, "db": -5, "from": 10, "len": 12.0, "fi": 1.5, "fo": 1.5},
- {"f": "assets/audio/vo/n13.mp3", "bus": "vo", "at": 4.0},
- {"f": "assets/audio/bgm/pulse.wav", "bus": "music", "at": 15.0, "db": -3, "len": 25.0, "fi": 1.0, "fo": 0.05},
- {"f": "assets/audio/sfx9/moans_layered.wav", "at": 16.0, "db": -18, "len": 8, "fi": 1.0, "fo": 1.0},
- {"f": "assets/audio/vo/b08.mp3", "bus": "vo", "at": 21.0},
- {"f": "assets/audio/vo/n14.mp3", "bus": "vo", "at": 25.5},
- {"f": "assets/audio/vo/b09.mp3", "bus": "vo", "at": 28.7},
- {"f": "assets/audio/sfx9/heartbeat_loop.wav", "at": 30.4, "db": -6, "len": 3.6, "fo": 0.05},
- {"f": "assets/audio/sfx9/beep.wav", "at": 33.8, "db": -10},
- {"f": "assets/audio/sfx9/static.wav", "at": 33.9, "db": 6},
- {"f": "assets/audio/bgm/drone.wav", "bus": "music", "at": 34.0, "db": -4, "len": 22, "fi": 0.5, "fo": 1.0},
- {"f": "assets/audio/sfx9/b10_pa.wav", "bus": "vo", "sync": "b10", "at": 40.4, "db": -1},
- {"f": "assets/audio/sfx9/help_echo.wav", "bus": "vo", "at": 47.6, "db": -6}
-], "duck": [[4.0, 14.7, -4], [21.0, 30.2, -5], [40.4, 47.8, -4]]}
+ {"f": "assets/audio/bgm/ambient_sparse.wav", "bus": "music", "at": 3.4, "db": -4, "from": 10, "len": 18.6, "fi": 1.5, "fo": 1.0},
+ {"f": "assets/audio/vo/n13.mp3", "bus": "vo", "at": 3.9},
+ {"f": "assets/audio/vo/x05.mp3", "bus": "vo", "at": 15.2},
+ {"f": "assets/audio/sfx9/moans_layered.wav", "at": 16.0, "db": -14, "len": 6, "fi": 1.0, "fo": 1.0},
+ {"f": "assets/audio/bgm/pulse.wav", "bus": "music", "at": 22.0, "db": -2, "len": 12.2, "fi": 1.0, "fo": 0.05},
+ {"f": "assets/audio/vo/b08.mp3", "bus": "vo", "at": 22.8},
+ {"f": "assets/audio/vo/n14.mp3", "bus": "vo", "at": 27.2},
+ {"f": "assets/audio/vo/b09.mp3", "bus": "vo", "at": 30.4},
+ {"f": "assets/audio/sfx9/heartbeat_loop.wav", "at": 31.9, "db": -2, "len": 1.6, "fo": 0.05},
+ {"f": "assets/audio/sfx9/beep.wav", "at": 33.4, "db": -6},
+ {"f": "assets/audio/sfx9/static.wav", "at": 33.5, "db": 8},
+ {"f": "assets/audio/bgm/drone.wav", "bus": "music", "at": 34.0, "db": -3, "len": 26, "fi": 0.5, "fo": 2.0},
+ {"f": "assets/audio/sfx9/b10_pa.wav", "bus": "vo", "sync": "b10", "at": 39.5, "db": -1},
+ {"f": "assets/audio/sfx9/help_echo.wav", "bus": "vo", "at": 46.7, "db": -5},
+ {"f": "assets/audio/vo/x06.mp3", "bus": "vo", "at": 52.4}
+], "duck": [[3.9, 14.6, -4], [15.2, 22.0, -4], [22.8, 31.9, -5], [39.5, 46.8, -4], [52.4, 58.0, -4]]}

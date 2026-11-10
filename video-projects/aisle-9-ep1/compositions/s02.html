@@ -4,116 +4,128 @@
 <meta charset="utf-8">
 <script src="assets/gsap.min.js"></script><script src="assets/stage.js"></script>
 <script src="assets/env.js"></script><script src="assets/toon.js"></script><script src="assets/cast.js"></script>
-<script src="assets/props.js"></script><script src="assets/vo-env.js"></script><script src="assets/cues.js"></script><script src="assets/shot.js"></script>
+<script src="assets/props.js"></script><script src="assets/world.js"></script><script src="assets/sets.js"></script><script src="assets/fx.js"></script><script src="assets/vo-env.js"></script><script src="assets/capwords.js"></script><script src="assets/cues.js"></script><script src="assets/gfx.js"></script><script src="assets/shot.js"></script>
 <link rel="stylesheet" href="assets/fonts.css">
 <style>
 html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
 #stage{position:absolute;inset:0;overflow:hidden}
 .shot{position:absolute;inset:0;overflow:hidden;visibility:hidden}
-.world{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
-.over{position:absolute;inset:0}
+.world{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;isolation:isolate;z-index:0}
+.over{position:absolute;inset:0;z-index:5}
 .fadeblack{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
 .grain{position:absolute;inset:0;opacity:.05;pointer-events:none;mix-blend-mode:overlay;background-image:repeating-radial-gradient(circle at 17% 32%,#fff 0 1px,transparent 1px 3px)}
 </style>
 </head><body>
-<div id="root" data-composition-id="s02" data-start="0" data-duration="40" data-width="1920" data-height="1080">
- <div id="stage" class="clip" data-start="0" data-duration="40" data-track-index="0"></div>
+<div id="root" data-composition-id="s02" data-start="0" data-duration="52" data-width="1920" data-height="1080">
+ <div id="stage" class="clip" data-start="0" data-duration="52" data-track-index="0"></div>
 </div>
 <script>
-// @scene s02 40 Beat 2 - The Normal Night
+// @scene s02 52 Beat 2 - The Normal Night
 (() => {
   const S = STAGE, E = S.E, K = SH.k;
-  const BOBREST = { open: 0, smile: 0.05, wide: 0.9 };
-  SH.run('s02', 's02', 40, [
-    { // A: establishing - bright FreshMart aisle, 11:48 PM
-      t0: 0, setup(W, O) {
-        SH.aisle(W, { seed: 21, mood: 'day', kind: 'mixed', sign: 'AISLE 4\nSNACKS', backSign: 'FRESHMART', lip: '#F2B134' });
-        const cart = PROPS.cart(W, 0.55); const lbl = SH.label(O, '11:48 PM', 'font-size:72px;opacity:0');
-        return { cart, lbl };
-      },
-      draw(lt, st) {
-        SH.cam(st.cart.parentNode, lt, [[0, 960, 560, 1.0], [3.4, 960, 540, 1.12]]);
-        st.cart.set(1180, 830, 0.55); st.lbl.style.opacity = S.seg(lt, 0.4, 0.8);
-        st.lbl.textContent = '11:48 PM'.slice(0, Math.floor(S.seg(lt, 0.4, 1.2) * 8));
-      } },
-    { // B: Bob, deadpan at register 3, scanning
-      t0: 3.4, setup(W) {
-        SH.bokeh(W, { seed: 11, mood: 'day' });
-        const ctr = PROPS.counter(W, 380, 690, 1300);
-        const bob = SH.actor(W, 'bob');
-        const item = SH.div(W, 'left:0;top:0;width:110px;height:80px;border-radius:10px;background:linear-gradient(90deg,#E8382F,#FF8A3D);box-shadow:0 6px 0 rgba(0,0,0,.25)');
-        const front = PROPS.counterFront(W, 380, 760, 1300);
-        return { bob, item, W };
-      },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 960, 540, 1.0], [8.6, 900, 500, 1.18]]);
-        const sc = (lt % 3.0) / 3.0, sweep = Math.sin(sc * Math.PI);
-        st.bob.set({ x: 820, y: 1190, scale: 1.12, lid: 0.42, brow: -0.2, look: [0.35 * sweep, 0.25], mouth: BOBREST,
-          armR: [30 + 50 * sweep, -60], armL: [20, -50], headTilt: 2 + Math.sin(lt * 0.6) * 2, blink: TOON.blinkAt(lt, 3.1), bob: Math.sin(lt * 1.5) * 2 });
-        st.item.style.transform = `translate(${S.lerp(560, 1180, S.seg(sc, 0.1, 0.9))}px, 690px)`;
-      } },
-    { // C: Tyler pushes the squeaky cart past register 3; Bob answers
-      t0: 12.0, setup(W) {
-        SH.bokeh(W, { seed: 12, mood: 'day' });
-        const ctr = PROPS.counter(W, 120, 660, 1100);
-        const bob = SH.actor(W, 'bob');
-        PROPS.counterFront(W, 120, 730, 1100);
-        const ty = SH.actor(W, 'tyler'); const cart = PROPS.cart(W, 0.95);
-        return { bob, ty, cart, W };
+  const LANE3 = -0.85, BOBZ = 1.95; // Bob's spot behind register 3 (lane 3 counter spans x -2.0 .. 0.3 at z = 1.2)
+  const outside = (cv) => PROPS.lot(cv, { seed: 3, lampX: 0.5 });
+  const deadpan = Object.assign({}, EXPR.deadpan);
+  SH.run('s02', 's02', 52, [
+    { // A: "Let's go back..." crane down over the bright store toward the checkout lanes
+      t0: 0, setup(W) {
+        const world = SETS.store('day', { seed: 2 }); const R = SH.stage(W, world, { fx: { dust: 50, beamK: 0.8 } });
+        return { R, bob: R.actor('bob'), ty: R.actor('tyler'), cust: R.actor('customer') };
       },
       draw(lt, st, t) {
-        SH.cam(st.W, lt, [[0, 960, 540, 1.0], [10.6, 1000, 560, 1.06]]);
-        // Tyler enters from the right, stops to talk, then rolls on out to the left
-        const x = K(lt, [[0, 2300], [1.6, 1500, E.outCubic], [5.4, 1440], [8.2, 1440], [10.6, 500, E.inCubic]]);
-        const moving = lt < 1.6 || lt > 8.2;
-        const wk = moving ? SH.walk(lt, 1) : { legL: 0, legR: 0, armL: [10, -10], armR: [10, -10], bob: 0, lean: 0 };
-        st.cart.set(x - 560, 640, 0.95, false);
-        st.ty.set(Object.assign({}, wk, { x: x + 120, y: 1100, scale: 0.92, flip: true, armL: [60, -40], armR: [64, -44], look: [-0.7, 0],
-          mouth: SH.mouth(['t01'], { open: 0.1, smile: 0.7 }, { smile: 0.6 }), browUp: 0.5, blink: TOON.blinkAt(lt, 2.7, 1) }));
-        const lookT = S.clamp((1500 - x) / -800 + 0.6, -1, 1);
-        st.bob.set({ x: 560, y: 1150, scale: 1.05, lid: 0.4, brow: -0.25, look: [lookT, 0.1], headTilt: 4,
-          mouth: SH.mouth(['b01'], BOBREST, { smile: 0.0, amp: 0.6 }), armL: [16, -40], armR: [16, -40], blink: TOON.blinkAt(lt, 3.4, 2) });
+        const R = st.R, cam = SH.cam3(t, [[0, 0.6, 4.2, -2.6, -0.16, -0.36, 920], [7.0, -0.3, 1.75, -1.4, 0.02, -0.06, 1050]], { ease: E.inOutSine });
+        R.frame(t, cam);
+        R.at(st.bob, LANE3, BOBZ, Object.assign({}, deadpan, { face: 0, armR: [30 + 30 * Math.sin(t * 2), -60], armL: [18, -40], blink: TOON.blinkAt(t, 3.1) }));
+        R.at(st.ty, 3.0, K(t, [[0, 12], [7, 8.2]], E.lin), Object.assign({}, EXPR.neutral, { face: 0, gait: { phase: t * 0.9, stride: 150, kind: 'walk' } }));
+        R.at(st.cust, 5.8, 9 - t * 0.4, Object.assign({}, EXPR.neutral, { face: 0.3, gait: { phase: t * 0.8, stride: 140, kind: 'walk' } }));
+      } },
+    { // B: register three. Push in on Bob, deadpan, scanning. "...The night shift."
+      t0: 7.0, setup(W) {
+        const world = SETS.store('day', { seed: 2 }); const R = SH.stage(W, world, { fx: { dust: 40, beamK: 0.7 }, dof: 2.2 });
+        const items = ['#E8382F', '#2F7BE8', '#F2B134'].map((c) => R.prop(PROPS.item(R.A, c)));
+        return { R, bob: R.actor('bob'), items };
+      },
+      draw(lt, st, t) {
+        const R = st.R, cam = SH.cam3(lt, [[0, -0.8, 1.32, -0.9, -0.02, -0.04, 1100], [8.6, -0.88, 1.2, 0.05, -0.01, -0.02, 1450]], { hand: 0.3 });
+        R.frame(t, cam);
+        const sc = (lt % 2.6) / 2.6, sweep = Math.sin(sc * Math.PI);
+        R.at(st.bob, LANE3, BOBZ, Object.assign({}, deadpan, { face: 0.1, look: [0.35 * sweep, 0.35], armR: [36 + 46 * sweep, -64], armL: [20, -50], headTilt: 2 + Math.sin(lt * 0.6) * 2, blink: TOON.blinkAt(lt, 3.1), mouth: SH.mouth(['b01'], deadpan.mouth) }));
+        st.items.forEach((el, i) => { const u = ((lt + i * 0.9) % 2.7) / 2.7; R.put(el, S.lerp(-2.0, -0.6, u), 1.2, 0.12, 90, { y: 0.74 }); el.style.opacity = u < 0.9 ? 1 : 0; });
+      } },
+    { // C: Tyler pushes the squeaky cart past the lanes. "Sorry! ...since, like, forever." / Bob: "...So, never."
+      t0: 15.6, setup(W) {
+        const world = SETS.store('day', { seed: 2 }); const R = SH.stage(W, world, { fx: { dust: 40 } });
+        return { R, bob: R.actor('bob'), ty: R.actor('tyler'), cart: R.prop(PROPS.cart(R.A, 1)) };
+      },
+      draw(lt, st, t) {
+        const R = st.R, tx = K(lt, [[0, 3.6], [1.8, 0.6, E.outCubic], [5.6, 0.25], [8.6, 0.0], [10.6, -3.2, E.inCubic]]);
+        const cam = SH.cam3(lt, [[0, 1.7, 1.45, -2.8, -0.3, -0.05, 1000], [10.6, -0.5, 1.4, -2.9, -0.1, -0.04, 1050]], { hand: 0.25 });
+        R.frame(t, cam);
+        const moving = lt < 1.8 || lt > 8.6;
+        R.at(st.ty, tx + 0.35, 0.05, Object.assign({}, SH.speaking('t01') ? EXPR.happy : EXPR.neutral, { face: -Math.PI / 2, headFace: SH.speaking('t01') ? SH.headingTo(tx + 0.35, 0.05, LANE3, BOBZ) : -1.3, look: [-0.4, 0], armL: [44, -40], armR: [48, -44],
+          gait: moving ? { phase: lt * 0.95, stride: 140, kind: 'walk' } : null, mouth: SH.mouth(['t01'], { open: 0.05, smile: 0.6 }, { smile: 0.6 }), blink: TOON.blinkAt(lt, 2.7, 1) }));
+        R.put(st.cart, tx - 0.25, 0.05, 1.0, 420, { flip: true });
+        const lookAt = S.clamp((tx - LANE3) / 2.4, -1, 1);
+        R.at(st.bob, LANE3, BOBZ, Object.assign({}, deadpan, { face: 0, headFace: S.clamp(SH.headingTo(LANE3, BOBZ, tx, 0.05), -1.2, 1.2), look: [S.clamp(lookAt, -1, 1) * 0.5, 0.1], headTilt: 4, armL: [16, -40], armR: [16, -40],
+          mouth: SH.mouth(['b01'], deadpan.mouth, { smile: 0.0, amp: 0.6 }), blink: TOON.blinkAt(lt, 3.4, 2) }));
       } },
     { // D: a customer fights the self-checkout and slaps the screen
-      t0: 22.6, setup(W) {
-        SH.aisle(W, { seed: 33, mood: 'day', kind: 'cereal', vx: 0.7, vignette: 0.35 });
-        const k = PROPS.kiosk(W, 980, 330);
-        const c = SH.actor(W, 'customer');
-        return { k, c, W };
+      t0: 26.2, setup(W) {
+        const world = SETS.store('day', { seed: 2 }); const R = SH.stage(W, world, { fx: { dust: 40 } });
+        return { R, k: R.prop(PROPS.kiosk(R.A, 0, 0)), c: R.actor('customer') };
       },
       draw(lt, st, t) {
-        SH.cam(st.W, lt, [[0, 1000, 560, 1.1], [5.2, 1060, 520, 1.22]], lt > 3.7 && lt < 4.6 ? 10 : 0);
-        const slap = lt > 3.7 && lt < 3.9 || lt > 4.2 && lt < 4.4;
-        st.k.flash(Math.floor(lt * 4) % 2 === 0);
-        st.c.set({ x: 760, y: 1110, scale: 0.98, look: [0.8, -0.1], brow: 0.8, browUp: 0.3,
-          mouth: lt > 3 ? { open: 0.35, smile: -0.6, wide: 0.8 } : { open: 0, smile: -0.5 },
-          armR: slap ? [115, -20] : [60 + Math.sin(lt * 6) * 10, -50], armL: [24, -60], lean: slap ? 6 : 2, blink: TOON.blinkAt(lt, 2.2) });
+        const R = st.R, slap = (lt > 3.4 && lt < 3.6) || (lt > 3.9 && lt < 4.1);
+        const cam = SH.cam3(lt, [[0, 4.4, 1.45, -1.3, 0.32, -0.04, 1250], [4.8, 4.85, 1.4, -0.8, 0.22, -0.03, 1500]], { hand: slap ? 4 : 0.4 });
+        R.frame(t, cam);
+        st.k.flash(Math.floor(lt * 4) % 2 === 0); R.put(st.k, 6.45, 0.35, 1.55, 620);
+        R.at(st.c, 5.75, 0.25, Object.assign({}, lt > 2.6 ? EXPR.worried : EXPR.neutral, { face: SH.headingTo(5.75, 0.25, 6.45, 0.35) - 0.5, brow: 0.8, look: [0.6, -0.1], mouth: lt > 2.8 ? { open: 0.35, smile: -0.6, wide: 0.8 } : { open: 0, smile: -0.4 },
+          armR: slap ? [100, -10] : [52 + Math.sin(lt * 6) * 10, -40], armL: [24, -60], lean: slap ? 6 : 2, blink: TOON.blinkAt(lt, 2.2) }));
       } },
-    { // E: slow pan to the customer service desk: the PA mic and the GARY ONLY note
-      t0: 27.8, setup(W) {
-        SH.bokeh(W, { seed: 44, mood: 'day' });
-        const d = PROPS.desk(W, 520, 560); PROPS.speaker(W, 1500, 40, 1.2);
-        return { W };
+    { // E: "...and the PA belongs to Gary." Slow dolly to the customer service desk; rack focus onto the GARY ONLY note
+      t0: 31.0, setup(W) {
+        const world = SETS.service('day', { seed: 6 }); const R = SH.stage(W, world, { fx: { dust: 50 }, dof: (t) => S.lerp(0, 3.5, S.seg(t, 34, 36.5)) });
+        return { R, mic: R.prop(PROPS.mic(R.A)), sp: R.prop(PROPS.speaker(R.A, 0, 0, 1.2)) };
       },
-      draw(lt, st) { SH.cam(st.W, lt, [[0, 760, 640, 1.0], [3.2, 1000, 680, 1.25], [7.0, 1300, 680, 2.1]]); } },
-    { // F: door chime; Mr. Halloran shuffles in with cat food and a lottery ticket
-      t0: 34.8, setup(W) {
-        SH.bokeh(W, { seed: 55, mood: 'day' });
-        const dr = PROPS.doors(W, 300, 130, 1300, 900);
-        const lot = SH.canvas(W, 1240, 860, 330, 150); PROPS.lot(lot, { seed: 3 }); W.insertBefore(lot, dr);
-        const h = SH.actor(W, 'halloran');
-        const can = PROPS.can(W, 'MEOW', '#F06EA9', 0.45);
-        const tk = SH.div(W, "left:0;top:0;width:90px;height:56px;border-radius:6px;background:linear-gradient(135deg,#FFE14D,#F2B134);font:900 16px/56px Inter;text-align:center;color:#7a1010", 'LOTTO');
-        return { h, can, tk, W };
-      },
-      draw(lt, st) {
-        SH.cam(st.W, lt, [[0, 960, 560, 1.0], [5.2, 900, 600, 1.12]]);
-        const x = K(lt, [[0, 960], [5.2, 640]], E.lin), wk = SH.walk(lt, 0.55, 0.45);
-        st.h.set(Object.assign({}, wk, { x, y: 1120, scale: 0.98, flip: true, lean: 6, armL: [30, -60], armR: [30, -70], headTilt: -4,
-          mouth: { open: 0, smile: 0.5 }, look: [-0.5, 0.1], blink: TOON.blinkAt(lt, 2.8), browUp: 0.3 }));
-        st.can.set(x + 70 + wk.bob * 0.2, 750 + wk.bob, 0.45); st.tk.style.transform = `translate(${x - 170}px, ${720 + wk.bob}px) rotate(-12deg)`;
+      draw(lt, st, t) {
+        const R = st.R, cam = SH.cam3(lt, [[0, -2.6, 1.6, -0.6, 0.32, -0.05, 1000], [3.6, -0.6, 1.4, 0.6, 0.14, -0.06, 1200], [7.2, 0.15, 1.25, 1.75, 0.02, -0.06, 1900]], { ease: E.inOutSine });
+        R.frame(t, cam);
+        R.put(st.mic, 0.15, 3.25, 0.42, 300, { y: 0.8 }); R.put(st.sp, 1.6, 4.0, 0.4, 170, { y: 3.6 });
       } },
-  ], { fades: [[0, 0.3, 1, 0]] });
+    { // F: door chime; Mr. Halloran shuffles in from the dark parking lot
+      t0: 38.2, setup(W) {
+        const world = SETS.entrance('day', { seed: 7 }); const R = SH.stage(W, world, { outside: (cv) => PROPS.lot(cv, { seed: 3, lampX: 0.62 }), fx: { dust: 40 } });
+        return { R, h: R.actor('halloran'), can: R.prop(PROPS.can(R.A, 'MEOW', '#F06EA9', 1)), tk: R.prop(PROPS.ticket(R.A)) };
+      },
+      draw(lt, st, t) {
+        const R = st.R, cam = SH.cam3(lt, [[0, 0.4, 1.35, 0.4, 0, -0.02, 1050], [5.0, 0.3, 1.3, 1.1, 0, -0.02, 1150]]);
+        R.frame(t, cam);
+        const z = K(lt, [[0, 8.2], [5.0, 4.4]], E.lin), wk = { phase: lt * 0.6, stride: 90, kind: 'walk' };
+        const P = R.at(st.h, 0.2, z, Object.assign({}, EXPR.happy, { face: 0, lean: 5, armL: [30, -70], armR: [30, -80], headTilt: -4, look: [0.2, 0.1], gait: wk, blink: TOON.blinkAt(lt, 2.8), mouth: { open: 0, smile: 0.55 } }));
+        R.put(st.can, 0.42, z - 0.25, 0.14, 190, { y: 0.62 + Math.sin(lt * 4) * 0.01 }); R.put(st.tk, -0.05, z - 0.25, 0.07, 74, { y: 0.66 });
+      } },
+    { // G: at the counter. Over his shoulder: "Same as always, sweetheart." -> reverse over Bob's shoulder: "...my most predictable man."
+      t0: 43.2, setup(W) {
+        const world = SETS.store('day', { seed: 2 }); const R = SH.stage(W, world, { outside, fx: { dust: 40 }, dof: 1.8 });
+        return { R, bob: R.actor('bob'), h: R.actor('halloran'), can: R.prop(PROPS.can(R.A, 'MEOW', '#F06EA9', 1)), tk: R.prop(PROPS.ticket(R.A)) };
+      },
+      draw(lt, st, t) {
+        const R = st.R, rev = t >= 45.9;
+        const cam = rev ? SH.cam3(t - 45.9, [[0, -0.3, 1.5, 3.4, 3.30, -0.06, 1400], [6.1, -0.32, 1.45, 3.15, 3.28, -0.06, 1550]], { hand: 0.25 })
+                        : SH.cam3(lt, [[0, -0.05, 1.5, -1.05, -0.24, -0.06, 1250], [2.7, -0.1, 1.47, -0.8, -0.26, -0.06, 1350]], { hand: 0.25 });
+        R.frame(t, cam);
+        const sc = S.seg(t, 46.4, 47.2);
+        R.at(st.bob, LANE3, BOBZ, Object.assign({}, SH.speaking('b02') ? EXPR.happy : EXPR.relieved, { face: 0, look: [0, 0.1], armR: [40 + 40 * Math.sin(sc * Math.PI), -70], armL: [16, -40], headTilt: 5, mouth: SH.mouth(['b02'], { open: 0, smile: 0.6 }, { smile: 0.55 }), blink: TOON.blinkAt(lt, 3.2) }));
+        R.at(st.h, LANE3 + 0.55, 0.42, Object.assign({}, EXPR.happy, { face: Math.PI, look: [0, -0.1], armL: [30, -50], armR: [24, -40], lean: 4, headTilt: -5, mouth: SH.mouth(['h01'], { open: 0, smile: 0.55 }, { smile: 0.5, amp: 0.55 }), blink: TOON.blinkAt(lt, 2.9, 1), browUp: 0.4 }));
+        R.put(st.can, S.lerp(LANE3 + 0.3, LANE3 - 0.4, sc), 1.05, 0.14, 190, { y: 0.74 }); R.put(st.tk, LANE3 + 0.45, 0.95, 0.07, 74, { y: 0.74 });
+      } },
+  ], { fades: [[0, 0.5, 1, 0]], gfx: [
+    { type: 'stamp', text: 'DAY 1 · 11:48 PM', sub: 'FRESHMART · ROUTE 9', at: 1.2, dur: 5 },
+    { type: 'tag', name: 'BOB', role: 'NIGHT CASHIER · REGISTER 3', color: '#E8382F', at: 8.4 },
+    { type: 'tag', name: 'TYLER', role: 'COWORKER', color: '#2F7BE8', at: 16.6 },
+    { type: 'note', text: 'NOTICE THE NOISES: THE CART, THE MACHINE, THE PA', icon: '!', at: 32.0, dur: 4.5 },
+    { type: 'tag', name: 'MR. HALLORAN', role: 'REGULAR CUSTOMER', color: '#E0B070', at: 39.6 },
+  ] });
 })();
 
 </script></body></html>

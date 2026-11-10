@@ -4,7 +4,7 @@ import glob, json, os, subprocess
 import numpy as np
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 env = {}
-for f in sorted(glob.glob(os.path.join(ROOT, 'assets/audio/vo/[nbthr][0-9][0-9].mp3'))):
+for f in sorted(glob.glob(os.path.join(ROOT, 'assets/audio/vo/[nbthrx][0-9][0-9].mp3'))):
     k = os.path.basename(f)[:-4]
     raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', f, '-f', 'f32le', '-ac', '1', '-ar', '16000', '-'], capture_output=True, check=True).stdout
     x = np.frombuffer(raw, '<f4'); hop = 16000 // 30

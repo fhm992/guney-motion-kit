@@ -1,0 +1,50 @@
+// @scene s08 44 Beat 8 - Aisle 9, The Breather
+(() => {
+  const S = STAGE, E = S.E, K = SH.k;
+  const cans = (W, o = {}) => SH.aisle(W, Object.assign({ seed: 9, mood: 'day', kind: 'cans', sign: 'AISLE 9\nCANNED GOODS', signZ: 6.5, lip: '#E8382F', vignette: 0.55 }, o));
+  const warm = (W) => SH.div(W, 'left:-200px;top:-200px;width:2400px;height:1500px;background:radial-gradient(ellipse at 50% 40%,rgba(255,190,110,.18),rgba(20,10,30,.55));pointer-events:none');
+  SH.run('s08', 's08', 44, [
+    { // A: he rolls between the shelves; everything goes muffled
+      t0: 0, setup(W) { cans(W, { seed: 9 }); warm(W); const bob = SH.actor(W, 'bob'); return { bob, W }; },
+      draw(lt, st) {
+        SH.cam(st.W, lt, [[0, 960, 600, 1.0], [6, 900, 620, 1.2]]);
+        const roll = E.outCubic(S.seg(lt, 0, 1.4));
+        st.bob.set({ x: S.lerp(1900, 1100, roll), y: S.lerp(1250, 1260, roll), scale: 1.0, lean: lt < 1.4 ? -roll * 360 : 0, look: [-0.6, -0.3], eyeScale: 1.1, pupil: 0.6, browUp: 1, brow: 0.6,
+          mouth: { open: 0.2 + Math.abs(Math.sin(lt * 5)) * 0.15, smile: -0.4, wide: 0.6 }, armL: [-20, -130], armR: [-20, -130], bob: Math.sin(lt * 5) * 5 });
+      } },
+    { // B: at the mouth of the aisle they sway... and wander off
+      t0: 6.0, setup(W) { cans(W, { seed: 10 }); warm(W); const zs = ['zPajama', 'zShopper', 'zBasketW'].map((k) => SH.actor(W, k)); return { zs, W }; },
+      draw(lt, st) {
+        SH.cam(st.W, lt, [[0, 960, 520, 1.6], [6.6, 960, 520, 1.7]]);
+        st.zs.forEach((z, i) => { const leave = S.seg(lt, 3.4 + i * 0.5, 6.2 + i * 0.5), sh = SH.shamble(lt, i * 2, 0.5);
+          z.set(Object.assign({}, sh, { x: 860 + i * 110 + leave * (i % 2 ? 500 : -500), y: 690, scale: 0.32, flip: i % 2 === 1, look: [0, 0], mouth: { open: 0.25, smile: -0.5 } })); z.svg.style.filter = 'blur(1.5px)'; });
+      } },
+    { // C: the camera glides down the aisle; blue sound rings die against the soup and beans
+      t0: 12.4, setup(W) { cans(W, { seed: 11 }); warm(W); const r1 = SH.rings(W, '#7FD3FF'), r2 = SH.rings(W, '#7FD3FF'); return { r1, r2, W }; },
+      draw(lt, st) {
+        SH.cam(st.W, lt, [[0, 960, 600, 1.0], [9.1, 1000, 520, 1.55]], 0);
+        st.r1(lt, 0, 400, 600, 260, 0.9, 1.0); st.r2(lt, 0.45, 1520, 560, 260, 0.9, 1.0);
+      } },
+    { // D: he laughs without a sound... then cries without one
+      t0: 21.5, setup(W) {
+        cans(W, { seed: 12 }); warm(W); const bob = SH.actor(W, 'bob');
+        const tears = [0, 1].map(() => SH.div(W, 'left:0;top:0;width:20px;height:28px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:radial-gradient(circle at 35% 35%,#fff 0 18%,rgba(140,200,255,.9) 40%,rgba(80,140,220,.5))'));
+        return { bob, tears, W };
+      },
+      draw(lt, st) {
+        SH.cam(st.W, lt, [[0, 960, 500, 1.25], [8.5, 960, 460, 1.45]]);
+        const laugh = lt < 3.6, shake = laugh ? Math.abs(Math.sin(lt * 14)) * 10 : Math.sin(lt * 3) * 3;
+        st.bob.set({ x: 960, y: 1260, scale: 1.0, lid: laugh ? 0.7 : 0.35, brow: laugh ? -0.3 : 0.8, browUp: laugh ? 0.2 : 0.9, look: [0, laugh ? 0 : 0.4],
+          mouth: laugh ? { open: 0.5, smile: 1, wide: 1.1 } : { open: 0.15, smile: -0.8, wide: 0.7 }, armL: [-30, -140], armR: [-30, -140], bob: shake, headTilt: laugh ? 6 : -8 });
+        st.tears.forEach((d, i) => { const k = ((lt - 4 + i * 0.8) % 1.8) / 1.8; d.style.opacity = lt > 4 ? Math.sin(k * Math.PI) : 0; d.style.transform = `translate(${960 + (i ? 60 : -100)}px, ${560 + k * 80}px)`; });
+      } },
+    { // E: hugs a can of peaches like a stuffed animal. "Okay, Aisle 9. You're home now."
+      t0: 30.0, setup(W) { cans(W, { seed: 13 }); warm(W); const bob = SH.actor(W, 'bob'); const can = PROPS.can(W, 'PEACH', '#F2B134', 0.9); return { bob, can, W }; },
+      draw(lt, st) {
+        SH.cam(st.W, lt, [[0, 960, 540, 1.1], [14, 960, 600, 0.95]]);
+        st.bob.set({ x: 960, y: 1260, scale: 1.0, lid: 0.45, look: [0, 0.3], brow: 0.3, browUp: 0.5, headTilt: 10 + Math.sin(lt * 0.8) * 3,
+          mouth: SH.mouth(['b12'], { open: 0, smile: 0.6, wide: 0.8 }, { smile: 0.4, amp: 0.4 }), armL: [-20, -125], armR: [-20, -125], bob: Math.sin(lt * 1.2) * 4, blink: TOON.blinkAt(lt, 3.6) });
+        st.can.set(960, 880 + Math.sin(lt * 1.2) * 4, 0.9, -8);
+      } },
+  ], { fades: [[41.5, 44, 0, 1]] });
+})();

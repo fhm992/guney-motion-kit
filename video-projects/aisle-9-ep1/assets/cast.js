@@ -14,3 +14,19 @@
   };
   window.CAST = C;
 })();
+// Expression presets: merge into a pose (EXPR.scared etc.). Mouth/eye/brow values for the rig.
+window.EXPR = {
+  neutral:   { lid: 0.1, brow: 0, browUp: 0.2, mouth: { open: 0, smile: 0.3 }, look: [0, 0] },
+  deadpan:   { lid: 0.42, brow: -0.25, browUp: 0, mouth: { open: 0, smile: 0.05, wide: 0.9 } },
+  happy:     { lid: 0.15, brow: 0.1, browUp: 0.6, mouth: { open: 0.45, smile: 0.9, wide: 1.05 } },
+  worried:   { lid: 0.05, brow: 0.6, browUp: 0.9, mouth: { open: 0, smile: -0.45, wide: 0.75 } },
+  scared:    { lid: 0, brow: 0.7, browUp: 1, eyeScale: 1.14, pupil: 0.55, mouth: { open: 0, smile: -0.85, wide: 0.5 } },
+  terror:    { lid: 0, brow: 0.9, browUp: 1, eyeScale: 1.22, pupil: 0.45, mouth: { open: 0.75, smile: -0.9, wide: 0.75 } },
+  whisper:   { lid: 0.2, brow: 0.5, browUp: 0.7, mouth: { open: 0.12, smile: -0.3, wide: 0.55 } },
+  sad:       { lid: 0.4, brow: 0.85, browUp: 0.9, look: [0, 0.4], mouth: { open: 0.1, smile: -0.8, wide: 0.7 } },
+  relieved:  { lid: 0.45, brow: 0.3, browUp: 0.5, mouth: { open: 0, smile: 0.65, wide: 0.85 } },
+  determined:{ lid: 0.3, brow: -0.6, browUp: 0, mouth: { open: 0, smile: -0.2, wide: 0.8 } },
+  exhausted: { lid: 0.58, brow: 0.3, browUp: 0.2, look: [0, 0.5], mouth: { open: 0.06, smile: -0.5, wide: 0.6 } },
+  zombie:    { lid: 0, brow: 0, browUp: 0, look: [0, 0], eyeScale: 1.12, mouth: { open: 0.35, smile: -0.55 } },
+  zombieShriek: { lid: 0, brow: 0.9, eyeScale: 1.2, mouth: { open: 1, smile: -1, wide: 1.1 } },
+};
