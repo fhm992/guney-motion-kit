@@ -57,7 +57,7 @@ html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
       draw(lt, st, t) {
         const R = st.R, hit = lt - 0.5; R.frame(t, SH.cam3(lt, [[0, -0.6, 0.9, 7.6, 0.08, 0.02, 1000], [5, -0.3, 1.0, 9.6, 0.04, 0.0, 1150]], { hand: hit > 0 && hit < 0.4 ? 7 : 0.6, ease: E.outCubic }));
         const bz = K(lt, [[0, 11.4], [0.5, 13.55]], E.lin);
-        R.at(st.bob, 0.1, bz, Object.assign({}, lt < 0.5 ? EXPR.terror : EXPR.scared, { face: lt < 1.1 ? Math.PI : 0, headFace: lt > 1.1 && lt < 3.2 ? Math.PI / 2 * Math.sin(lt * 2.4) : null, gait: lt < 0.5 ? run(lt) : null, lean: lt < 0.5 ? 12 : -4, squash: hit > 0 && hit < 0.3 ? 0.12 : 0,
+        R.at(st.bob, 0.1, bz, Object.assign({}, lt < 0.5 ? EXPR.terror : EXPR.scared, { face: lt < 1.1 ? Math.PI : 0, headFace: lt > 1.1 && lt < 3.2 ? Math.PI / 2 * Math.sin(lt * 2.4) : null, gait: lt < 0.5 ? run(lt) : null, lean: lt < 0.5 ? 12 : -4, squash: hit > 0 && hit < 0.3 ? [1.1, 0.88] : [1, 1],
           look: [Math.sin(lt * 2.4) * 0.6, 0], armL: [-30, -20], armR: [-30, -20] }));
       } },
     { // B2: reverse - from behind him, the shoppers fill the mouth of the aisle
