@@ -37,7 +37,7 @@
         R.frame(t, SH.cam3(lt, [[0, bx, 0.7, bz - 0.75, 0, 0.06, 1900], [1.3, bx, 0.85, bz - 1.1, 0, 0.02, 1400], [3.6, bx, 1.05, bz - 1.7, 0, -0.02, 1100]], { hand: 1.5 }));
         R.at(st.bob, bx, bz, Object.assign({}, lt > 0.8 ? EXPR.terror : EXPR.scared, { face: 0, phoneGlow: 0.95, look: [0, 0.9], headTilt: 6, armL: [40, -110], armR: [40, -110],
           mouth: SH.mouth(['b06'], { open: 0.3, smile: -0.8, wide: 0.6 }, { smile: -0.7, amp: 0.5, wide: 0.6 }) }));
-        const out = S.seg(lt, 1.1, 1.7), P = R.put(st.ph, bx, bz - 0.12, S.lerp(0.13, 0.17, out), 220, { y: S.lerp(0.62, 0.78, out), rot: Math.sin(lt * 50) * 4, front: true });
+        const out = S.seg(lt, 1.1, 1.7), r0 = (R.hold(st.ph, st.bob, 'R', S.lerp(0.13, 0.17, out), { rot: Math.sin(lt * 50) * 4 }), st.ph.getBoundingClientRect()), P = { x: r0.left + r0.width / 2, y: r0.top + r0.height / 2 + 60 };
         st.rings(lt, 0.2, P.x, P.y - 60, 600, 0.3, 1.0);
       } },
     { // E: he lunges - Bob hurls the phone over the shelves - blue rings ripple out - Halloran spins and runs for the noise
@@ -72,6 +72,7 @@
         R.at(st.bob, bx, bz, Object.assign({}, EXPR.whisper, { face: Math.PI / 2, gait: { phase: lt * 0.7, stride: 120, kind: 'sneak' }, crouch: 0.25, lean: 14, armL: [20, -40], armR: [20, -40], headFace: Math.PI / 2 + Math.sin(lt * 0.8) * 0.8 }));
       } },
   ], { fades: [[56.3, 57, 0, 1]], gfx: [
+    { type: 'note', text: 'MR. HALLORAN HAS TURNED INTO ONE OF THEM', icon: '!', at: 10.2, dur: 3.4 },
     { type: 'note', text: "HIS EYES DON'T FOLLOW ANYTHING", icon: '?', at: 18.6, dur: 4.2 },
     { type: 'note', text: "THEY CAN'T SEE. THEY FOLLOW SOUND", icon: '!', at: 37.8, dur: 4.6 },
     { type: 'map', route: ['reg', 'stock'], at: 51.0, dur: 4.6 },

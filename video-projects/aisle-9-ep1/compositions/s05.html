@@ -53,19 +53,19 @@ html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
       },
       draw(lt, st, t) {
         const R = st.R; R.frame(t, SH.cam3(lt, [[0, 0.1, 1.3, -1.0, -0.06, -0.03, 1100], [13.8, 0.1, 1.3, -0.6, 0.06, -0.03, 1150]]));
-        const xw = K(lt, [[0, -1.3], [9, 1.2]], E.lin);
+        const xw = K(lt, [[0, -1.1], [9, 1.0]], E.lin);
         const P = R.at(st.zw, xw, 4.2, Object.assign({}, EXPR.zombie, SH.shamble(lt, 0, 0.6), { face: Math.PI / 2, gait: { phase: lt * 0.35, stride: 70, kind: 'shamble' }, armR: [40, -70] }));
-        R.put(st.bk, xw + 0.12, 4.15, 0.32, 150, { y: 0.55 + Math.sin(lt * 2) * 0.02 });
-        R.at(st.zp, K(lt, [[4, 1.4], [13.8, -1.3]], E.lin), 6.0, Object.assign({}, EXPR.zombie, SH.shamble(lt + 2, 4, 0.5), { face: -Math.PI / 2, gait: { phase: lt * 0.3, stride: 60, kind: 'shamble' }, look: [0, 0.3] }));
+        R.hold(st.bk, st.zw, 'R', 0.32, { gy: 0.15 });
+        R.at(st.zp, K(lt, [[4, 1.0], [13.8, -1.1]], E.lin), 6.0, Object.assign({}, EXPR.zombie, SH.shamble(lt + 2, 4, 0.5), { face: -Math.PI / 2, gait: { phase: lt * 0.3, stride: 60, kind: 'shamble' }, look: [0, 0.3] }));
       } },
     { // D: a metallic clink deep in the stockroom. A can rolls out of the dark and stops. "Hello?" / "Probably a rat."
-      t0: 28.8, setup(W) { const world = room(); const R = SH.stage(W, world, { fx: FXW }); return { R, world, bob: R.actor('bob'), can: R.prop(PROPS.can(R.A, 'BEANS', '#C9302C', 1)) }; },
+      t0: 28.8, setup(W) { const world = room(); const R = SH.stage(W, world, { fx: FXW }); return { R, world, bob: R.actor('bob'), can: R.prop(PROPS.can(R.A, 'BEANS', '#C9302C', 1)), rings: SH.rings(R.F, '#7FD3FF') }; },
       draw(lt, st, t) {
         const R = st.R; st.world.doorStrip.fill = st.world.doorStrip.crack.fill = doorCol(0.05);
-        const whip = E.outCubic(S.seg(lt, 0.15, 0.45));
-        R.frame(t, SH.cam3(lt, [[0, -0.2, 0.75, -1.3, -2.9, 0.03, 1300], [0.5, -0.2, 0.75, -1.3, -2.9, 0.03, 1300], [1.2, 0.4, 1.0, -0.6, 0.12, -0.06, 1000], [10.5, 0.35, 1.0, 0.4, 0.15, -0.05, 1250]], { hand: lt > 0.2 && lt < 1.2 ? 5 : 0.5 }));
-        R.at(st.bob, 0.15, -2.55, Object.assign({}, lt < 0.5 ? EXPR.exhausted : EXPR.scared, { face: Math.PI, headFace: Math.PI + S.lerp(0, 0.9, whip), crouch: 0.7, look: [0.3, 0], armL: [-15, -125], armR: [-15, -125], mouth: SH.mouth(['b07'], { open: 0, smile: -0.6, wide: 0.6 }, { smile: -0.5, amp: 0.4, wide: 0.6 }) }));
-        const r = S.seg(lt, 0.3, 2.6); R.put(st.can, S.lerp(-2.6, -0.9, E.outCubic(r)), S.lerp(6.0, 4.2, E.outCubic(r)), 0.14, 190, { rot: r * 520 });
+        const whip = E.outCubic(S.seg(lt, 0.6, 0.9)); st.rings(lt, 0.2, 1900, 560, 1400, 0.25, 1.2, 0.8);
+        R.frame(t, SH.cam3(lt, [[0, -0.2, 0.75, -1.3, -2.9, 0.03, 1300], [0.95, -0.2, 0.75, -1.3, -2.9, 0.03, 1300], [1.6, 0.4, 1.0, -0.6, 0.12, -0.06, 1000], [10.5, 0.35, 1.0, 0.4, 0.15, -0.05, 1250]], { hand: lt > 0.9 && lt < 1.6 ? 5 : 0.5 }));
+        R.at(st.bob, 0.15, -2.55, Object.assign({}, lt < 0.3 ? EXPR.exhausted : EXPR.scared, { face: Math.PI, headFace: Math.PI + S.lerp(0, 0.9, whip), crouch: 0.7, look: [0.3, 0], armL: [-15, -125], armR: [-15, -125], mouth: SH.mouth(['b07'], { open: 0, smile: -0.6, wide: 0.6 }, { smile: -0.5, amp: 0.4, wide: 0.6 }) }));
+        const r = S.seg(lt, 0.9, 3.2); R.put(st.can, S.lerp(-2.6, -0.9, E.outCubic(r)), S.lerp(6.0, 4.2, E.outCubic(r)), 0.14, 190, { rot: r * 520 });
       } },
     { // E: time-lapse - the light under the door goes from red to grey while the clock jumps 1:00 -> 6:00
       t0: 39.3, setup(W) { const world = room(); const R = SH.stage(W, world, { fx: FXW }); return { R, world, bob: R.actor('bob'), clk: R.prop(PROPS.clock(R.A, 110, 110, 110)) }; },
@@ -79,6 +79,7 @@ html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
   ], { fades: [[0, 0.5, 1, 0], [47.3, 48, 0, 1]], gfx: [
     { type: 'stamp', text: 'THE STOCKROOM', sub: 'STAFF ONLY · 1:00 AM', at: 0.6, dur: 4 },
     { type: 'note', text: 'THE SHOPPERS JUST WANDER... UNTIL THEY HEAR SOMETHING', icon: '!', at: 22.0, dur: 4.6 },
+    { type: 'note', text: '*CLINK* SOMETHING MOVED IN THE DARK', icon: '!', at: 29.0, dur: 2.4 },
   ] });
 })();
 

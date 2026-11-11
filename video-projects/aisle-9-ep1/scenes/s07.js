@@ -52,7 +52,7 @@
       draw(lt, st, t) {
         const R = st.R; R.frame(t, SH.cam3(lt, [[0, -0.2, 1.4, 1.6, 0.05, 0.06, 1000], [7.6, 0.4, 1.3, 2.0, 0.12, 0.04, 1050]]));
         const P = R.put(st.sp, 0.2, 7.5, 0.5, 170, { y: 3.8 }); if (P.visible) st.rings(lt, 0, P.x, P.y - 40, 1300, 1.1, 2.2, 6.2);
-        [[-1.3, 5.6], [-0.4, 6.8], [0.9, 6.2], [1.6, 7.6]].forEach(([x, z], i) => R.at(st.zs[i], x, z, Object.assign({}, EXPR.zombie, { face: i % 2 ? 0.6 : -0.6, look: [0, -0.95], headTilt: (i % 2 ? 1 : -1) * 6, bob: Math.sin(lt * 1.3 + i) * 3 })));
+        [[-1.3, 5.2], [-0.4, 4.6], [0.9, 5.4], [0.1, 7.6]].forEach(([x, z], i) => R.at(st.zs[i], x, z, Object.assign({}, EXPR.zombie, { face: i % 2 ? 0.6 : -0.6, look: [0, -0.95], headTilt: (i % 2 ? 1 : -1) * 6, bob: Math.sin(lt * 1.3 + i) * 3 })));
         R.at(st.bob, 2.6, 4.2, Object.assign({}, EXPR.exhausted, { face: -0.9, crouch: 0.45, look: [-0.7, -0.3], lid: 0.2, mouth: { open: 0.15 + Math.abs(Math.sin(lt * 4)) * 0.15, smile: -0.4, wide: 0.6 }, bob: Math.sin(lt * 5) * 4 }));
       } },
     { // H: a narrow gap - AISLE 9: CANNED GOODS. He dives in.
@@ -65,5 +65,5 @@
     { // I: RULE #2
       t0: 42.6, setup(W, O) { const world = SETS.aisle('cans', 'night', { seed: 9, sign: 'AISLE 9', sub: 'CANNED GOODS', signColor: '#C9302C', lip: '#E8382F', header: 'SOUP & BEANS' }); const R = SH.stage(W, world, { fx: { dust: 50, beamK: 0.6 } }); return { R, card: SH.ruleCard(O, 2, 'NEVER USE THE<br>PA SYSTEM') }; },
       draw(lt, st, t) { st.R.frame(t, SH.cam3(lt, [[0, 0.1, 1.3, -1.2, 0, -0.02, 1050], [7.4, 0.1, 1.3, 0.2, 0, -0.02, 1100]])); st.card(lt, 0.2, 6.6); } },
-  ], { fades: [[49.3, 50, 0, 1]], gfx: [{ type: 'note', text: 'AISLE 9 · CANNED GOODS', icon: '9', at: 37.4, dur: 3.6 }] });
+  ], { fades: [[49.3, 50, 0, 1]], gfx: [{ type: 'note', text: 'THE PA WOKE UP THE WHOLE STORE', icon: '!', at: 0.6, dur: 2.6 }, { type: 'note', text: 'CRASH! MORE NOISE = MORE OF THEM', icon: '!', at: 14.2, dur: 2.6 }, { type: 'note', text: 'THE PA IS STUCK ON REPEAT', icon: '!', at: 29.0, dur: 3.0 }, { type: 'note', text: 'AISLE 9 · CANNED GOODS', icon: '9', at: 37.4, dur: 3.6 }] });
 })();

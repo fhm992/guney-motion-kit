@@ -148,6 +148,10 @@
   SH.vignette = (O, a = 0.55) => SH.div(O, `inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,0) 55%,rgba(0,0,0,${a}));pointer-events:none`);
 
   // ---------- 3D stage: far world pass, actors, near world pass, cinematic fx ----------
+  // does the ground segment (ax,az)-(bx,bz) pass through the footprint box o?
+  const segBox = (ax, az, bx, bz, o) => { let t0 = 0, t1 = 1; const d = [bx - ax, bz - az], p = [ax, az], lo = [o.x0 + 0.02, o.z0 + 0.02], hi = [o.x1 - 0.02, o.z1 - 0.02];
+    for (let i = 0; i < 2; i++) { if (Math.abs(d[i]) < 1e-9) { if (p[i] < lo[i] || p[i] > hi[i]) return false; continue; } let a = (lo[i] - p[i]) / d[i], b = (hi[i] - p[i]) / d[i]; if (a > b) [a, b] = [b, a]; t0 = Math.max(t0, a); t1 = Math.min(t1, b); if (t0 > t1) return false; } return t1 > 0.001 && t0 < 0.999; };
+  SH.segBox = segBox;
   SH.stage = (W, world, o = {}) => {
     const mk = (z) => { const c = document.createElement('canvas'); c.width = 1920; c.height = 1080; c.style.cssText = `position:absolute;left:0;top:0;z-index:${z}`; W.appendChild(c); return c; };
     const back = o.outside ? mk(0) : null; if (back) o.outside(back);
@@ -166,24 +170,41 @@
         const p = Object.assign({}, SH.lit(world.moodName), pose);
         if (p.face != null) p.yaw = SH.faceYaw(R.cam, x, z, p.face);
         if (p.headFace != null) p.headYaw = SH.faceYaw(R.cam, x, z, p.headFace);
-        const P = WORLD.actorAt(actor, R.cam, x, z, p, opt2); if (P.visible) placed.push([P.depth - ((opt2 && opt2.bias) || 0), actor.svg]); return P;
+        const P = WORLD.actorAt(actor, R.cam, x, z, p, opt2); actor._P = P; if (P.visible) placed.push([P.depth, actor.svg, x, z, (opt2 && opt2.y) || 0, actor]); return P;
       },
-      put: (el, x, z, mH, pxH, opt2) => { const P = WORLD.spriteAt(el, R.cam, x, z, mH, pxH, opt2); if (P.visible) placed.push([P.depth - (opt2 && (opt2.front || (opt2.y || 0) > 0.3) ? 0.6 : 0), el]); return P; },
+      put: (el, x, z, mH, pxH, opt2) => { const P = WORLD.spriteAt(el, R.cam, x, z, mH, pxH, opt2); if (P.visible) placed.push([P.depth - (opt2 && opt2.front ? 0.3 : 0), el, x, z, (opt2 && opt2.y) || 0]); return P; },
+      // a prop held in a hand ('L', 'R' or 'both'): its grip point (gx, gy as fractions of the prop) sits on the hand; mH = prop height in metres
+      hold: (el, actor, side, mH, o = {}) => {
+        const P = actor._P; if (!P || !P.visible) { el.style.visibility = 'hidden'; return; } el.style.visibility = '';
+        const hs = side === 'L' ? [actor.hands[0]] : side === 'R' ? [actor.hands[1]] : actor.hands, rs = hs.map((h) => h.getBoundingClientRect());
+        const hx = rs.reduce((a, r) => a + r.left + r.width / 2, 0) / rs.length + (o.dx || 0), hy = rs.reduce((a, r) => a + r.top + r.height / 2, 0) / rs.length + (o.dy || 0);
+        const w = el.offsetWidth, hh = el.offsetHeight, gy0 = o.gy == null ? 0.5 : o.gy, k = o.ground ? Math.max(0.01, (P.y - hy) / ((1 - gy0) * hh)) : P.ppm * mH / hh, fl = o.flip ? -1 : 1, gx = o.gx == null ? 0.5 : o.gx, gy = o.gy == null ? 0.5 : o.gy;
+        el.style.transformOrigin = '0 0'; el.style.left = '0px'; el.style.top = '0px';
+        el.style.transform = `translate(${hx}px, ${hy}px) rotate(${o.rot || 0}deg) scale(${k * fl}, ${k}) translate(${-gx * w}px, ${-gy * hh}px)`;
+        el.style.zIndex = Math.round(1000 - P.depth * 10) + (o.behind ? -1 : 1); placed.push([P.depth, el, null, null, 0, null, actor.svg]);
+      },
       frame: (t, cam) => { R.cam = cam; tNow = t; placed = []; pending = true; },
       flush: () => {
         if (!pending) return; pending = false; const t = tNow, cam = R.cam;
         // band edges = the distinct actor depths (far -> near), capped to NB-1 bands
         const ds = [...new Set(placed.map(([d]) => Math.round(d * 20) / 20))].sort((a, b) => b - a).slice(0, NB - 1);
+        // an object goes just in front of every actor/prop it hides (line of sight from the camera to the feet, +-0.2 m), otherwise behind everyone
+        const objs = world.objs || [], objD = objs.map(() => Infinity);
+        placed.forEach(([d, , x, z, y]) => { if (x == null) return; const dx = x - cam.x, dz = z - cam.z, L = Math.hypot(dx, dz) || 1, px = -dz / L * 0.2, pz = dx / L * 0.2;
+          objs.forEach((o, k) => { if (o.y1 <= y + 0.05) return; if ([[0, 0], [px, pz], [-px, -pz]].some(([ox, oz]) => segBox(cam.x, cam.z, x + ox, z + oz, o))) objD[k] = Math.min(objD[k], d - 0.04); }); });
+        R.objD = objD;
+        // QA: feet inside a solid object = walking through it
+        window.__probe = (window.__probe || []).concat(placed.filter((q) => q[5]).flatMap(([d, , x, z, y, a]) => objs.filter((o) => y < o.y1 - 0.05 && x > o.x0 - 0.12 && x < o.x1 + 0.12 && z > o.z0 - 0.12 && z < o.z1 + 0.12).map((o) => `${a.opt.name || a.opt.key || 'actor'}@${x.toFixed(2)},${z.toFixed(2)} in [${o.x0.toFixed(1)}..${o.x1.toFixed(1)} x ${o.z0.toFixed(1)}..${o.z1.toFixed(1)}]`)));
         const edges = ds.map((d) => d + 0.02);
         cvs.forEach((c) => c.getContext('2d').clearRect(0, 0, 1920, 1080));
         // canvas 0: everything at least edges[0] away (plus floor/ceiling/walls); canvas i: between edges[i] and edges[i-1]; last: nearer than the last edge
         if (!edges.length) world.render(cvs[0].getContext('2d'), cam, t);
         else {
-          world.render(cvs[0].getContext('2d'), cam, t, { far: edges[0] });
-          for (let i = 1; i < edges.length; i++) world.render(cvs[i].getContext('2d'), cam, t, { near: edges[i - 1], far: edges[i] });
-          world.render(cvs[edges.length].getContext('2d'), cam, t, { near: edges[edges.length - 1] });
+          world.render(cvs[0].getContext('2d'), cam, t, { far: edges[0], objD });
+          for (let i = 1; i < edges.length; i++) world.render(cvs[i].getContext('2d'), cam, t, { near: edges[i - 1], far: edges[i], objD });
+          world.render(cvs[edges.length].getContext('2d'), cam, t, { near: edges[edges.length - 1], objD });
         }
-        placed.forEach(([d, el]) => { let k = 0; while (k < edges.length && d < edges[k] - 0.02 - 1e-6) k++; const L = lays[Math.min(lays.length - 1, k)]; if (el.parentNode !== L) L.appendChild(el); });
+        placed.forEach(([d, el, , , , , owner]) => { let k = 0; while (k < edges.length && d < edges[k] - 0.02 - 1e-6) k++; const L = owner ? owner.parentNode : lays[Math.min(lays.length - 1, k)]; if (L && el.parentNode !== L) L.appendChild(el); });
         fx.draw(t, cam, world, o.fxExtra ? o.fxExtra(t) : {});
         if (o.dof) cvs[0].style.filter = `blur(${typeof o.dof === 'function' ? o.dof(t) : o.dof}px)`;
       },

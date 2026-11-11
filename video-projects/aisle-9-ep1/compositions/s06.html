@@ -31,7 +31,7 @@ html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
       draw(lt, st, t) {
         const R = st.R; R.frame(t, SH.cam3(lt, [[0, 1.2, 0.8, -0.2, -2.8, 0.05, 1050], [11.6, 0.45, 0.72, -1.45, -3.0, 0.05, 1500]], { ease: E.inOutSine, hand: 0.3 }));
         R.at(st.bob, 0.15, -2.55, Object.assign({}, EXPR.exhausted, { face: Math.PI, crouch: 0.7, lid: 0.55, look: [0.2, 0.6], armR: [-10, -150], armL: [10, -20], headTilt: -4, blink: TOON.blinkAt(lt, 4.5) }));
-        R.put(st.bt, 0.32, -2.3, 0.24, 220, { y: 0.55, rot: 160 + Math.sin(lt * 0.8) * 10 });
+        R.hold(st.bt, st.bob, 'R', 0.24, { rot: 160 + Math.sin(lt * 0.8) * 10 });
       } },
     { // C: "So you sneak out. Slow steps. No talking." - crouch-walk past the end caps; foreground displays slide by
       t0: 15.2, setup(W) { const world = SETS.store('gray', { seed: 2, front: false }); const R = SH.stage(W, world, { fx: FXG }); return { R, bob: R.actor('bob'), z: R.actor('zShopper') }; },
@@ -90,6 +90,7 @@ html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
       } },
   ], { fades: [[59.3, 60, 0, 1]], gfx: [
     { type: 'map', route: ['stock', 'desk'], at: 15.6, dur: 4.4 },
+    { type: 'note', text: 'BOB\'S PLAN: CALL FOR HELP ON THE PA', icon: '!', at: 8.6, dur: 4.0 },
     { type: 'note', text: 'THE PA PLAYS IN EVERY SPEAKER IN THE STORE', icon: '!', at: 41.0, dur: 4.4 },
   ] });
 })();

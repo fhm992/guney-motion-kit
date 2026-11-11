@@ -192,8 +192,9 @@
       const zavg = pc.reduce((a, p) => a + p[2], 0) / pc.length;
       const zmin = Math.min(...it.pts.map((p) => C.flat(p[0], p[2])));
       const bg = it.floor || it.ceil || it.wall || it.shelfBack || it.window;
-      if (ro.near != null && (bg || zmin >= ro.near)) continue;
-      if (ro.far != null && !bg && zmin < ro.far) continue;
+      const zb = it.obj != null && ro.objD ? ro.objD[it.obj] : zmin;
+      if (ro.near != null && (bg || zb >= ro.near)) continue;
+      if (ro.far != null && !bg && zb < ro.far) continue;
       list.push({ clipped, it, z: zavg + (it.floor ? 1000 : it.ceil ? 900 : it.wall ? 800 : it.shelfBack ? 0.6 : 0) - (it.product ? 0.02 : 0) - (it.glass ? 0.05 : 0), sp, pc });
     }
     list.sort((a, b) => b.z - a.z);

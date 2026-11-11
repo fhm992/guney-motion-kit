@@ -25,7 +25,7 @@
       draw(lt, st, t) {
         const R = st.R; R.frame(t, SH.cam3(lt, [[0, -0.3, 1.0, 3.2, 0.12, 0.0, 1300], [4.2, -0.15, 1.0, 3.5, 0.08, 0.0, 1450]], { ease: E.inOutSine, hand: 0.4 }));
         R.at(st.bob, 0.1, 5.0, Object.assign({}, EXPR.happy, { face: 0.25, headFace: 0.1, armR: [70, -60], armL: [40, -70], mouth: SH.mouth(['b15'], { open: 0, smile: 0.6, wide: 0.9 }, { smile: 0.5, amp: 0.45 }), headTilt: 6, blink: TOON.blinkAt(lt, 2.4) }));
-        R.put(st.wf, 0.32, 4.8, 0.2, 160, { y: 0.78 + Math.sin(lt * 2) * 0.02, rot: -8 });
+        R.hold(st.wf, st.bob, 'R', 0.2, { rot: -8 });
       } },
     { // C: home base in Aisle 9 - a towel for a blanket, cans stacked like a fort. "Cold air, canned goods, and silence..."
       t0: 12.4, setup(W) { const R = SH.stage(W, A9('warm'), { fx: { dust: 60, beamK: 0.7, lightColor: '255,200,130' } }); const cans = [0, 1, 2, 3, 4, 5].map((i) => R.prop(PROPS.can(R.A, ['BEANS', 'SOUP', 'CHILI', 'PEACH', 'BEANS', 'SOUP'][i], ['#C9302C', '#2FA36B', '#E8382F', '#F2B134', '#C9302C', '#2FA36B'][i], 1)));
@@ -87,6 +87,8 @@
         const up = E.inOutCubic(S.seg(lt, 9.0, 9.6)); [st.t1, st.t2, st.t3].forEach((e) => { e.style.marginTop = `${-up * 70}px`; });
       } },
   ], { fades: [[0, 0.4, 1, 0], [63.0, 64, 0, 1]], gfx: [
+    { type: 'note', text: 'THE COLD KEEPS THEM SLOW. HE CAN WALK OUT', icon: '!', at: 1.2, dur: 3.6 },
+    { type: 'note', text: 'AISLE 9 BECOMES HIS HOME BASE', icon: '!', at: 13.4, dur: 3.6 },
     { type: 'note', text: 'NIGHT 3 · STILL ALIVE', icon: '!', at: 23.0, dur: 3.6 },
     { type: 'note', text: 'SOMEONE ELSE IS OUT THERE', icon: '!', at: 39.6, dur: 3.6 },
   ] });

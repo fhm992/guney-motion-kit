@@ -24,5 +24,5 @@
       } },
     { t0: 8.3, t1: 10.7, setup(W, O) { return { tt: GFX.title(O) }; }, draw(lt, st) { st.tt(lt, 0, 2.0); } },
     { t0: 10.7, setup(W, O) { return { card: SH.dayCard(O, 'DAY 1') }; }, draw(lt, st) { st.card(lt, 0.05); } },
-  ], { fades: [[0, 1.5, 1, 1], [1.5, 2.4, 1, 0]] });
+  ], { fades: [[0, 1.5, 1, 1], [1.5, 2.4, 1, 0]], gfx: [{ type: 'stamp', text: 'NIGHT 3', sub: 'AISLE 4 · THE STORE IS FULL OF THEM', at: 2.6, dur: 4.2 }] });
 })();

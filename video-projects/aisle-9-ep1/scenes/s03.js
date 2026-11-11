@@ -110,6 +110,7 @@
       } },
   ], { gfx: [
     { type: 'note', text: "MR. HALLORAN IS VERY SICK", icon: '!', at: 1.6, dur: 3.6 },
+    { type: 'note', text: 'STRANGE PEOPLE ARE GATHERING OUTSIDE', icon: '!', at: 20.2, dur: 3.6 },
     { type: 'note', text: 'TYLER WENT OUTSIDE', icon: '!', at: 33.4, dur: 3.2 },
     { type: 'note', text: 'THE DOORS LOCKED. BOB IS TRAPPED INSIDE', icon: '!', at: 43.0, dur: 4.2 },
   ] });

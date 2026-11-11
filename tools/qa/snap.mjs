@@ -31,8 +31,8 @@ for (const t of times) {
   }, { t, COMP });
   if (process.env.WAIT) await new Promise((r) => setTimeout(r, +process.env.WAIT));
   if (process.env.ALPHA) await page.evaluate(() => { for (const el of [document.documentElement, document.body]) el.style.background = 'transparent'; });   // plates: ALPHA=1 + a #dbg flag that hides the backdrop
-  await page.screenshot({ path: `${OUT}/t${t.toFixed(3)}.png`, omitBackground: !!process.env.ALPHA });
-  if (process.env.PROBE) console.log('probe', t, JSON.stringify(await page.evaluate(() => window.__probe || null)));
+  if (!process.env.NOSHOT) await page.screenshot({ path: `${OUT}/t${t.toFixed(3)}.png`, omitBackground: !!process.env.ALPHA });
+  if (process.env.PROBE) { const pr = await page.evaluate(() => { const v = window.__probe; window.__probe = null; return v; }); if (pr && pr.length) console.log('probe', t, JSON.stringify([...new Set(pr)])); }
 }
 console.log('shots', times.length, errs.length ? 'ERRORS:\n' + [...new Set(errs)].join('\n') : 'no errors');
 await browser.close(); fs.rmSync(TMP, { force: true });

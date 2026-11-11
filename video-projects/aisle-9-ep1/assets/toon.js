@@ -322,7 +322,7 @@
       shadow.setAttribute('opacity', s.shadow == null ? 0.4 : s.shadow); shadow.setAttribute('rx', 150 + crouch * 30);
     }
     set({});
-    return { svg, set, state: st, opt: o };
+    return { svg, set, state: st, opt: o, hands: ARMS.map((A) => A.hand) };
   }
 
   function blinkAt(t, period = 3.7, phase = 0) { const p = ((t + phase) % period + period) % period; return p < 0.14 ? Math.sin(p / 0.14 * Math.PI) : 0; }

@@ -39,7 +39,7 @@ html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
         atBob(R, st, sit(Object.assign({}, EXPR.exhausted, { headFace: Math.PI / 2 + 0.4, look: [0.4, 0.5], armR: [55, -70], armL: [30, -60], headTilt: turn * 5, blink: TOON.blinkAt(lt, 2.8),
           mouth: lt > 6.4 ? { open: 0.1, smile: -0.7, wide: 0.6 } : undefined })));
         R.put(st.tw, BX + 0.02, BZ + 0.14, 0.12, 70, { y: 0.66 });
-        R.put(st.can, BX + 0.42, BZ - 0.05, 0.15, 190, { y: 0.55, rot: turn * 25 + (lt > 6.4 ? Math.sin(lt * 18) * 6 : 0) });
+        R.hold(st.can, st.bob, 'R', 0.15, { rot: turn * 25 + (lt > 6.4 ? Math.sin(lt * 18) * 6 : 0) });
       } },
     { // C: then he spots it - one red can with a ring pull, glowing on the shelf. "Then you spot it. Pop-top chili..."
       t0: 12.4, setup(W) { const R = SH.stage(W, A9('gray'), { fx: FXM }); const can = R.prop(PROPS.can(R.A, 'CHILI', '#E8382F', 1)); can.style.filter = 'drop-shadow(0 0 22px rgba(255,220,120,.9))'; return { R, bob: R.actor('bob'), can }; },
@@ -55,7 +55,7 @@ html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
         const R = st.R, pop = lt - 0.2, sh = pop > 0 && pop < 0.5 ? 10 : 0.3;
         R.frame(t, SH.cam3(lt, [[0, 0.4, 0.8, 8.0, -1.01, -0.14, 1900], [0.2, 0.4, 0.8, 8.0, -1.01, -0.14, 1900], [3.4, 0.75, 0.95, 7.75, -0.98, -0.12, 1150]], { hand: sh, ease: E.outCubic }));
         atBob(R, st, sit(Object.assign({}, lt < 0.2 ? EXPR.happy : EXPR.terror, { headFace: Math.PI / 2 + 0.5, look: [0.5, 0.4], armR: [55, -70], lid: lt < 0.2 ? 0.2 : 0 })));
-        const P = R.put(st.can, BX + 0.42, BZ - 0.05, 0.15, 190, { y: 0.55 });
+        R.hold(st.can, st.bob, 'R', 0.15); const P = Object.assign({}, st.bob._P, (() => { const r = st.can.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 + 70, visible: true }; })());
         const tab = st.can.querySelector('.tab'); tab.style.transformOrigin = '58px 8px'; tab.style.transform = `rotate(${-80 * E.outBack(S.seg(lt, 0.0, 0.25))}deg)`;
         if (P.visible) st.rings(lt, 0.2, P.x, P.y - 70, 2400, 0.22, 1.6, 1.3);
         st.fl.style.opacity = pop > 0 ? 0.55 * Math.exp(-pop * 7) : 0;
@@ -74,7 +74,7 @@ html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
       draw(lt, st, t) {
         const R = st.R; R.frame(t, SH.cam3(lt, [[0, 0.35, 0.72, 7.5, -0.95, 0.0, 1500], [3, 0.2, 0.72, 7.75, -1.0, 0.0, 1700]], { hand: 0.4 }));
         atBob(R, st, sit(Object.assign({}, EXPR.deadpan, { headFace: Math.PI / 2 - 0.8, look: [0, 0], armR: [55, -70], mouth: SH.mouth(['b13'], { open: 0, smile: -0.2, wide: 0.9 }, { smile: -0.3, amp: 0.5 }), blink: TOON.blinkAt(lt, 2.2) })));
-        R.put(st.can, BX + 0.42, BZ - 0.05, 0.15, 190, { y: 0.55 });
+        R.hold(st.can, st.bob, 'R', 0.15);
       } },
     { // G: whip pan from one end of the aisle to the other - they're coming from BOTH sides. "Both ends. You're boxed in."
       t0: 29.4, setup(W) { const R = SH.stage(W, A9('gray'), { fx: FXM }); return { R, bob: R.actor('bob'), zs: [0, 1, 2, 3, 4, 5].map((i) => R.actor(ZK[i % 4], { seed: 120 + i })) }; },
@@ -95,6 +95,7 @@ html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
   ], { fades: [[39.6, 40, 0, 0.6]], gfx: [
     { type: 'note', text: 'NO CAN OPENER = NO FOOD', icon: '!', at: 9.0, dur: 3.2 },
     { type: 'note', text: 'A POP-TOP CAN IS LOUD', icon: '!', at: 20.2, dur: 2.2 },
+    { type: 'note', text: 'THEY HEARD IT', icon: '!', at: 22.8, dur: 3.0 },
   ] });
 })();
 

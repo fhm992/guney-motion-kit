@@ -18,6 +18,15 @@
   };
   W.wallPoster = function (x0, x1, y0, y1, z, color, text) { return this.quad([[x0, y0, z], [x1, y0, z], [x1, y1, z], [x0, y1, z]], color, { poster: text, dir: 1 }); };
 
+  // solid objects: every quad a builder adds is grouped, with a ground footprint, so actors sort against the whole object
+  W.obj = function (fn) {
+    const n0 = this.items.length; this._grp = (this._grp || 0) + 1; fn(); this._grp--;
+    if (this._grp) return this;
+    const its = this.items.slice(n0).filter((i) => i.pts && !(i.floor || i.ceil || i.wall)); if (!its.length) return this;
+    let x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9, y1 = -1e9; its.forEach((i) => i.pts.forEach(([x, y, z]) => { x0 = Math.min(x0, x); x1 = Math.max(x1, x); z0 = Math.min(z0, z); z1 = Math.max(z1, z); y1 = Math.max(y1, y); }));
+    this.objs = this.objs || []; const id = this.objs.length; this.objs.push({ x0, x1, z0, z1, y1 }); its.forEach((i) => { i.obj = id; }); return this;
+  };
+  ['box', 'shelves', 'checkout', 'freezers', 'racks', 'pallet', 'storefront', 'door', 'endcap'].forEach((k) => { const f = W[k]; W[k] = function (...a) { let r; this.obj(() => { r = f.apply(this, a); }); return r; }; });
   const S = {};
   const AISLES = [[-6, 'drinks', 'DRINKS', 'AISLE 5'], [-3, 'snacks', 'SNACKS', 'AISLE 4'], [0, 'cans', 'CANNED GOODS', 'AISLE 9'], [3, 'cereal', 'BREAKFAST', 'AISLE 7'], [6, 'mixed', 'HOUSEHOLD', 'AISLE 8']];
   // the whole store interior (aisles + end caps), used behind the checkout and for wide shots
@@ -66,8 +75,8 @@
   S.service = (mood = 'day', o = {}) => {
     const w = new WORLD.World({ mood, seed: o.seed || 6 });
     w.room(-7, 7, -3, 9, 4.2, { lightRows: [-2.5, 2.5], lightGap: 2.6, flicker: o.flicker });
-    w.box(-2.4, 0, 3.0, 2.4, 0.8, 3.8, '#2F7BE8', { colors: { top: '#5FA8FF', front: '#2F7BE8' } });
-    w.quad([[-2.4, 0.22, 2.99], [2.4, 0.22, 2.99], [2.4, 0.66, 2.99], [-2.4, 0.66, 2.99]], '#2F7BE8', { poster: 'CUSTOMER SERVICE', dir: 1 });
+    w.obj(() => { w.box(-2.4, 0, 3.0, 2.4, 0.8, 3.8, '#2F7BE8', { colors: { top: '#5FA8FF', front: '#2F7BE8' } });
+      w.quad([[-2.4, 0.22, 2.99], [2.4, 0.22, 2.99], [2.4, 0.66, 2.99], [-2.4, 0.66, 2.99]], '#2F7BE8', { poster: 'CUSTOMER SERVICE', dir: 1 }); });
     w.wallPoster(-6.9, -3.2, 1.8, 3.4, 8.99, '#F2B134', 'WEEKLY DEALS'); w.wallPoster(3.2, 6.9, 1.8, 3.4, 8.99, '#2FA36B', 'THANK YOU!');
     w.wallPoster(-1.2, 1.2, 2.4, 3.2, 8.99, '#E8382F', 'LOST & FOUND');
     w.endcap(-6.5, -5.0, 5.5, { kind: 'snacks', seed: 8 }); w.endcap(5.0, 6.5, 5.5, { kind: 'drinks', seed: 9 });
