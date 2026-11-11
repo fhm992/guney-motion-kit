@@ -202,7 +202,7 @@
       if (it.sign) { drawSign(ctx, L, M); continue; }
       const z = L.pc.reduce((a, p) => a + p[2], 0) / L.pc.length;
       let fill = it.fill;
-      if (it.window) { ctx.globalCompositeOperation = 'destination-out'; ctx.beginPath(); L.sp.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.closePath(); ctx.fill(); ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = 'rgba(160,190,230,0.10)'; ctx.fill(); continue; }
+      if (it.window) { ctx.globalCompositeOperation = 'destination-out'; ctx.beginPath(); L.sp.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.closePath(); ctx.fillStyle = '#000'; ctx.fill(); ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = 'rgba(160,190,230,0.10)'; ctx.fill(); continue; }
       if (it.emissive) { const fl = it.flick >= 0 ? flicker(t, it.flick) : 1; fill = M.light; ctx.globalAlpha = 0.25 + 0.75 * fl; }
       else if (!it.glowStrip) fill = fogMix(fill, z, M);
       ctx.beginPath(); L.sp.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.closePath();
